@@ -1,31 +1,35 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth-guard';
+import { AuthLayout } from './layout/auth-layout/auth-layout'; 
+import { MainLayoutComponent } from './layout/main-layout/main-layout'; 
 // import { roleGuard } from './core/auth/role.guard'; // Lo crearemos luego
 
 export const routes: Routes = [
-  // RUTA DE LOGIN
+ // RUTA DE LOGIN (Usa el AuthLayout sin sidebar)
   { 
-    path: 'login', 
-    // component: AuthLayoutComponent, // Comentado hasta que exista el Layout
+    path: '', 
+    component: AuthLayout, 
     children: [
       { 
-        path: '', 
+        path: 'login', 
         loadComponent: () => import('./features/auth/login/login').then(m => m.Login) 
-      }
+      },
+      { path: '', redirectTo: 'login', pathMatch: 'full' }
     ]
   },
 
-  // RUTAS PROTEGIDAS (Requieren estar logueado)
+  // RUTAS PROTEGIDAS (Usa el MainLayout con Sidebar y Topbar)
   {
     path: '',
-    // component: MainLayoutComponent, // Comentado hasta que exista el Layout
+    component: MainLayoutComponent,
     canActivate: [authGuard],
     children: [
       { 
         path: 'dashboard', 
         loadComponent: () => import('./features/dashboard/dashboard/dashboard').then(m => m.Dashboard) 
       },
-      /* 
+      // futuras features: agents, users, etc.
+       /* 
       { 
         path: 'agents', 
         canActivate: [roleGuard('TECNICO')], 
@@ -40,7 +44,8 @@ export const routes: Routes = [
     ]
   },
 
-  // REDIRECCIONES
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // REDIRECCIONES GLOBALES
   { path: '**', redirectTo: 'login' }
 ];
+     
+ 
