@@ -11,8 +11,11 @@ export class AuthService {
   private router = inject(Router);
   
   // Guardamos el usuario actual en un Signal para que la UI reaccione a los cambios
-  currentUser = signal<any | null>(this.decodeToken());
+ currentUser = signal<any>(null);
 
+constructor() {
+  this.currentUser.set(this.decodeToken());
+}
   login(credentials: any): Observable<void> {
     return this.http.post<any>(`${environment.apiUrl}${API.auth.login}`, credentials)
       .pipe(
