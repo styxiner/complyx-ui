@@ -13,19 +13,18 @@ import { AuthService } from '../../../core/auth/auth.service';
 })
 export class Login {
   private authService = inject(AuthService);
-  private router = inject(Router);
+  private router      = inject(Router);
 
-  // Estados del formulario con Signals
-  public email = signal('');
-  public password = signal('');
-  public errorMessage = signal('');
-  public isLoading = signal(false);
+  username     = signal('');
+  password     = signal('');
+  errorMessage = signal('');
+  isLoading    = signal(false);
 
   onSubmit() {
-    const emailValue = this.email();
-    const passValue = this.password();
+    const username = this.username();
+    const password = this.password();
 
-    if (!emailValue || !passValue) {
+    if (!username || !password) {
       this.errorMessage.set('Por favor, rellena todos los campos.');
       return;
     }
@@ -33,41 +32,24 @@ export class Login {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    // --- MODO SIMULACIÓN (Para probar sin Backend) ---
-    console.log('Modo simulación activo');
-    
-    setTimeout(() => {
-      // 1. Simulamos guardar los tokens que normalmente enviaría el servidor
-      localStorage.setItem('complyx_access_token', 'fake-jwt-token');
-      localStorage.setItem('complyx_refresh_token', 'fake-refresh-token');
-
-      // 2. Simulamos los datos del usuario en el Signal del servicio
-      this.authService.currentUser.set({
-        name: 'Usuario de Prueba',
-        email: emailValue,
-        role: 'ADMIN'
-      });
-
-      // 3. Navegamos al dashboard
-      this.router.navigate(['/dashboard']);
-    }, 1500); // Simulamos un segundo y medio de espera de red
-
-
-    /* 
-    // --- MODO REAL (Descomentar esto cuando el Backend funcione) ---
-    
-    this.authService.login({ email: emailValue, password: passValue }).subscribe({
+    this.authService.login({ username, password }).subscribe({
       next: () => {
-        // El login fue exitoso, el guardado de tokens ocurre dentro del servicio (tap)
-        this.router.navigate(['/dashboard']);
+        // Login OK — cargar roles desde /api/users/me y navegar
+        this.authService.fetchCurrentUser().subscribe({
+          next: () => this.router.navigate(['/dashboard']),
+          error: () => this.router.navigate(['/dashboard']), // si /me falla, ir igual
+        });
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set('Credenciales incorrectas o error de conexión.');
-        console.error('Login error:', err);
-      }
+        if (err.status === 401) {
+          this.errorMessage.set('Usuario o contraseña incorrectos.');
+        } else if (err.status === 0) {
+          this.errorMessage.set('No se puede conectar con el servidor.');
+        } else {
+          this.errorMessage.set('Error inesperado. Inténtalo de nuevo.');
+        }
+      },
     });
-    
-    */
   }
 }
