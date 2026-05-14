@@ -1,1 +1,22 @@
-<p>main-layout works!</p>
+<div class="main-wrapper">
+  <!-- Sidebar lateral -->
+  <app-sidebar></app-sidebar>
+  
+  <div class="content-area">
+    <!-- Barra superior -->
+    <header class="topbar">
+      <div class="user-info">
+        <span>Bienvenido, <strong>{{ user()?.name || user()?.email || 'Usuario' }}</strong></span>
+      </div>
+      
+      <button class="logout-btn" (click)="onLogout()">
+        Cerrar Sesión
+      </button>
+    </header>
+
+    <!-- Contenido dinámico de las páginas (Dashboard, etc.) -->
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

@@ -1,1 +1,30 @@
-<p>sidebar works!</p>
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">COMPLYX</div>
+  </div>
+
+  <ul class="nav-menu">
+    <li>
+      <a routerLink="/dashboard" routerLinkActive="active-link">
+        <span class="icon">📊</span> Dashboard
+      </a>
+    </li>
+
+    <!-- Estos se gestionarán con *ngIf o @if según el rol más adelante -->
+    <li>
+      <a routerLink="/users" routerLinkActive="active-link">
+        <span class="icon">👥</span> Usuarios
+      </a>
+    </li>
+
+    <li>
+      <a routerLink="/reports" routerLinkActive="active-link">
+        <span class="icon">📋</span> Reportes
+      </a>
+    </li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <small>v1.0.0</small>
+  </div>
+</nav>
