@@ -1,1 +1,8 @@
-<p>empty-state works!</p>
+<div class="empty-state">
+  <div class="empty-state__icon">{{ icon }}</div>
+  <h3 class="empty-state__title">{{ title }}</h3>
+  <p class="empty-state__desc">{{ description }}</p>
+  @if (actionLabel) {
+    <button class="btn btn--primary" (click)="action.emit()">{{ actionLabel }}</button>
+  }
+</div>

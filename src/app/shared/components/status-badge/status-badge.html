@@ -1,1 +1,4 @@
-<p>status-badge works!</p>
+<span class="badge" [ngClass]="'badge--' + status">
+  <span class="badge__dot"></span>
+  <span class="badge__label">{{ displayLabel }}</span>
+</span>

@@ -1,1 +1,23 @@
-<p>topbar works!</p>
+<header class="topbar">
+
+  <div class="topbar__left">
+    <h1 class="topbar__title">{{ pageTitle() }}</h1>
+  </div>
+
+  <div class="topbar__right">
+
+    @if (auth.currentUser()?.roles?.[0]; as role) {
+      <span class="topbar__role">{{ role.toLowerCase() }}</span>
+    }
+
+    <div class="topbar__divider"></div>
+
+    <a class="topbar__user" routerLink="/profile" title="Mi perfil">
+      <span class="topbar__avatar">
+        {{ auth.currentUser()?.username?.charAt(0)?.toUpperCase() ?? '?' }}
+      </span>
+      <span class="topbar__username">{{ auth.currentUser()?.username ?? '—' }}</span>
+    </a>
+
+  </div>
+</header>

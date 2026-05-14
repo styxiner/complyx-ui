@@ -1,1 +1,9 @@
-<p>loading-spinner works!</p>
+<div class="spinner-wrap" [ngClass]="'spinner-wrap--' + mode">
+  <div class="spinner">
+    <div class="spinner__ring spinner__ring--outer"></div>
+    <div class="spinner__ring spinner__ring--inner"></div>
+  </div>
+  @if (message) {
+    <p class="spinner__message">{{ message }}</p>
+  }
+</div>
