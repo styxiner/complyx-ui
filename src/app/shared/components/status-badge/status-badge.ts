@@ -1,9 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+export type StatusVariant =
+  | 'active' | 'inactive' | 'online' | 'offline'
+  | 'critical' | 'high' | 'medium' | 'low' | 'info'
+  | 'compliant' | 'non-compliant' | 'pending' | 'unknown';
 
 @Component({
   selector: 'app-status-badge',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './status-badge.html',
-  styleUrl: './status-badge.scss',
+  styleUrls: ['./status-badge.scss'],
 })
-export class StatusBadge {}
+export class StatusBadge {
+  @Input() status: StatusVariant = 'unknown';
+  @Input() label?: string;
+
+  get displayLabel(): string {
+    return this.label ?? this.status;
+  }
+}

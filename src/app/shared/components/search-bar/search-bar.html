@@ -1,1 +1,17 @@
-<p>search-bar works!</p>
+<div class="search-bar">
+  <span class="search-bar__icon">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+  </span>
+  <input
+    class="search-bar__input"
+    type="text"
+    [placeholder]="placeholder"
+    [value]="value"
+    (input)="onInput($any($event.target).value)"
+  />
+  @if (value) {
+    <button class="search-bar__clear" (click)="clear()" aria-label="Limpiar búsqueda">✕</button>
+  }
+</div>

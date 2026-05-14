@@ -1,9 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-export-buttons',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './export-buttons.html',
-  styleUrl: './export-buttons.scss',
+  styleUrls: ['./export-buttons.scss'],
 })
-export class ExportButtons {}
+export class ExportButtons {
+  @Input() showCsv = true;
+  @Input() showPdf = true;
+  @Input() loading = false;
+
+  @Output() exportCsv = new EventEmitter<void>();
+  @Output() exportPdf = new EventEmitter<void>();
+}

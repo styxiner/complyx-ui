@@ -1,30 +1,70 @@
-<nav class="sidebar">
-  <div class="sidebar-header">
-    <div class="logo">COMPLYX</div>
+<aside class="sidebar" [class.sidebar--collapsed]="collapsed()">
+
+  <!-- Header / Logo -->
+  <div class="sidebar__header">
+    <div class="sidebar__logo">
+      <span class="sidebar__logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+        </svg>
+      </span>
+      @if (!collapsed()) {
+        <span class="sidebar__logo-text">COMPLYX</span>
+      }
+    </div>
+
+    <button class="sidebar__collapse-btn" (click)="toggle()"
+            [attr.aria-label]="collapsed() ? 'Expandir menú' : 'Colapsar menú'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        @if (collapsed()) {
+          <path d="m9 18 6-6-6-6"/>
+        } @else {
+          <path d="m15 18-6-6 6-6"/>
+        }
+      </svg>
+    </button>
   </div>
 
-  <ul class="nav-menu">
-    <li>
-      <a routerLink="/dashboard" routerLinkActive="active-link">
-        <span class="icon">📊</span> Dashboard
-      </a>
-    </li>
+  <!-- Navigation -->
+  <nav class="sidebar__nav" aria-label="Navegación principal">
+    <ul class="sidebar__list">
+      @for (item of visibleItems; track item.route) {
+        <li>
+          <a class="sidebar__link"
+             [routerLink]="item.route"
+             routerLinkActive="sidebar__link--active"
+             [title]="collapsed() ? item.label : ''">
+            <span class="sidebar__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path [attr.d]="item.svgPath"/>
+              </svg>
+            </span>
+            @if (!collapsed()) {
+              <span class="sidebar__label">{{ item.label }}</span>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
 
-    <!-- Estos se gestionarán con *ngIf o @if según el rol más adelante -->
-    <li>
-      <a routerLink="/users" routerLinkActive="active-link">
-        <span class="icon">👥</span> Usuarios
-      </a>
-    </li>
-
-    <li>
-      <a routerLink="/reports" routerLinkActive="active-link">
-        <span class="icon">📋</span> Reportes
-      </a>
-    </li>
-  </ul>
-
-  <div class="sidebar-footer">
-    <small>v1.0.0</small>
+  <!-- Footer / Perfil -->
+  <div class="sidebar__footer">
+    <a class="sidebar__profile"
+       routerLink="/profile"
+       routerLinkActive="sidebar__profile--active"
+       [title]="collapsed() ? (auth.currentUser()?.username ?? 'Perfil') : ''">
+      <span class="sidebar__avatar">
+        {{ auth.currentUser()?.username?.charAt(0)?.toUpperCase() ?? '?' }}
+      </span>
+      @if (!collapsed()) {
+        <span class="sidebar__user-meta">
+          <span class="sidebar__user-name">{{ auth.currentUser()?.username ?? '—' }}</span>
+          <span class="sidebar__user-role">{{ auth.currentUser()?.roles?.[0]?.toLowerCase() ?? '' }}</span>
+        </span>
+      }
+    </a>
   </div>
-</nav>
+
+</aside>

@@ -1,1 +1,93 @@
-<p>data-table works!</p>
+<div class="data-table-wrap">
+
+  <!-- Loading overlay -->
+  @if (loading) {
+    <div class="data-table-wrap__overlay">
+      <app-loading-spinner mode="page" message="Cargando datos…" />
+    </div>
+  }
+
+  <!-- Table -->
+  <div class="data-table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          @for (col of columns; track col.key) {
+            <th
+              [style.width]="col.width || ''"
+              [class.data-table__th--sortable]="col.sortable"
+              [class.data-table__th--sorted]="sortKey === col.key"
+              (click)="sort(col)"
+            >
+              <span class="data-table__th-inner">
+                {{ col.header }}
+                @if (col.sortable) {
+                  <span class="data-table__sort-icon">
+                    @if (sortKey === col.key) {
+                      {{ sortDir === 'asc' ? '↑' : '↓' }}
+                    } @else {
+                      <span class="data-table__sort-idle">↕</span>
+                    }
+                  </span>
+                }
+              </span>
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @if (!loading && rows.length === 0) {
+          <tr>
+            <td [colSpan]="columns.length" class="data-table__empty-cell">
+              <app-empty-state [description]="emptyMessage" />
+            </td>
+          </tr>
+        }
+        @for (row of rows; track $index) {
+          <tr
+            class="data-table__row"
+            [ngClass]="rowClass(row)"
+            (click)="rowClick.emit(row)"
+          >
+            @for (col of columns; track col.key) {
+              <td>
+                <ng-container *ngTemplateOutlet="col.template; context: { $implicit: row, row: row }" />
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  @if (!loading && total > 0) {
+    <div class="data-table-pagination">
+      <span class="data-table-pagination__info">
+        {{ (page - 1) * pageSize + 1 }}–{{ pageEnd }} de {{ total }}
+      </span>
+
+      <div class="data-table-pagination__controls">
+        <button class="pager-btn" [disabled]="page === 1" (click)="goToPage(page - 1)">‹</button>
+
+        @for (p of pageNumbers; track $index) {
+          @if (p === -1) {
+            <span class="pager-ellipsis">…</span>
+          } @else {
+            <button class="pager-btn" [class.pager-btn--active]="p === page" (click)="goToPage(p)">
+              {{ p }}
+            </button>
+          }
+        }
+
+        <button class="pager-btn" [disabled]="page === totalPages" (click)="goToPage(page + 1)">›</button>
+      </div>
+
+      <select class="pager-size" [value]="pageSize" (change)="changePageSize(+$any($event.target).value)">
+        @for (s of pageSizeOptions; track s) {
+          <option [value]="s">{{ s }} / pág.</option>
+        }
+      </select>
+    </div>
+  }
+</div>

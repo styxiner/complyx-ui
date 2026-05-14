@@ -1,67 +1,247 @@
+// ── Tokens ───────────────────────────────────────────────────────────────────
+$w:           240px;
+$w-col:        60px;
+$bg:          #07111f;
+$border:       rgba(255, 255, 255, 0.06);
+$accent:      #38bdf8;
+$accent-dim:   rgba(56, 189, 248, 0.12);
+$accent-border: rgba(56, 189, 248, 0.22);
+$text-dim:    #3d5068;
+$text-mid:    #64748b;
+$text-base:   #94a3b8;
+$text-hi:     #cbd5e1;
+$hover-bg:     rgba(255, 255, 255, 0.045);
+$active-bg:    rgba(56, 189, 248, 0.09);
+$ease:         cubic-bezier(0.4, 0, 0.2, 1);
+
+// ── Host ─────────────────────────────────────────────────────────────────────
+:host {
+  display: flex;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+// ── Shell ─────────────────────────────────────────────────────────────────────
 .sidebar {
-  width: 260px;
-  height: 100vh;
-  background-color: #1e293b; 
-  color: #f8fafc;
+  width: $w;
+  height: 100%;
+  background: $bg;
+  border-right: 1px solid $border;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
+  transition: width 0.22s $ease;
+  overflow: hidden;
 
-  .sidebar-header {
-    padding: 2rem 1.5rem;
-    text-align: center;
+  // ── Estado colapsado ─────────────────────────────────────────────────────
+  &--collapsed {
+    width: $w-col;
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      color: #38bdf8; 
+    .sidebar__header     { padding: 18px 0; justify-content: center; }
+    .sidebar__logo       { justify-content: center; }
+    .sidebar__collapse-btn { position: static; }
+    .sidebar__list       { padding: 0 8px; }
+    .sidebar__link       { justify-content: center; padding: 10px 0; }
+    .sidebar__icon       { margin: 0; }
+    .sidebar__footer     { padding: 10px 0; }
+    .sidebar__profile    { justify-content: center; padding: 8px 0; }
+  }
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 14px;
+  border-bottom: 1px solid $border;
+  flex-shrink: 0;
+  gap: 6px;
+  transition: padding 0.22s $ease;
+}
+
+.sidebar__logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  transition: justify-content 0.22s $ease;
+}
+
+.sidebar__logo-mark {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  background: $accent-dim;
+  border: 1px solid $accent-border;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $accent;
+
+  svg { width: 16px; height: 16px; }
+}
+
+.sidebar__logo-text {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: $accent;
+  white-space: nowrap;
+}
+
+.sidebar__collapse-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: $text-mid;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background 0.15s;
+
+  svg { width: 14px; height: 14px; }
+
+  &:hover { color: $text-base; background: $hover-bg; }
+}
+
+// ── Nav ───────────────────────────────────────────────────────────────────────
+.sidebar__nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 0;
+  scrollbar-width: thin;
+  scrollbar-color: $border transparent;
+}
+
+.sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  transition: padding 0.22s $ease;
+}
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  color: $text-mid;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  position: relative;
+  transition: background 0.14s, color 0.14s, padding 0.22s $ease;
+
+  &:hover {
+    background: $hover-bg;
+    color: $text-hi;
+
+    .sidebar__icon { color: $text-base; }
+  }
+
+  // Indicador de activo: barra izquierda + fondo tintado
+  &--active {
+    background: $active-bg;
+    color: $accent;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 25%;
+      bottom: 25%;
+      width: 2px;
+      background: $accent;
+      border-radius: 0 2px 2px 0;
     }
+
+    .sidebar__icon { color: $accent; }
   }
+}
 
-  .nav-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex: 1;
+.sidebar__icon {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  display: flex;
+  color: $text-dim;
+  transition: color 0.14s;
 
-    li {
-      margin: 0.25rem 1rem;
+  svg { width: 100%; height: 100%; }
+}
 
-      a {
-        display: flex;
-        align-items: center;
-        padding: 0.8rem 1rem;
-        color: #94a3b8;
-        text-decoration: none;
-        border-radius: 8px;
-        transition: all 0.2s ease;
+.sidebar__label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-        .icon {
-          margin-right: 0.75rem;
-          font-size: 1.1rem;
-        }
+// ── Footer / Perfil ───────────────────────────────────────────────────────────
+.sidebar__footer {
+  border-top: 1px solid $border;
+  padding: 10px 8px;
+  flex-shrink: 0;
+  transition: padding 0.22s $ease;
+}
 
-        &:hover {
-          background-color: #334155;
-          color: white;
-        }
+.sidebar__profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  text-decoration: none;
+  transition: background 0.14s, padding 0.22s $ease;
+  cursor: pointer;
 
-        // Clase que Angular añade automáticamente al routerLink activo
-        &.active-link {
-          background-color: #0284c7;
-          color: white;
-          font-weight: 600;
-        }
-      }
-    }
-  }
+  &:hover { background: $hover-bg; }
 
-  .sidebar-footer {
-    padding: 1rem;
-    text-align: center;
-    border-top: 1px solid #334155;
-    color: #64748b;
-    font-size: 0.75rem;
-  }
+  &--active { background: $active-bg; }
+}
+
+.sidebar__avatar {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background: $accent-dim;
+  border: 1px solid $accent-border;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: $accent;
+}
+
+.sidebar__user-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.sidebar__user-name {
+  font-size: 0.79rem;
+  font-weight: 600;
+  color: $text-hi;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__user-role {
+  font-size: 0.67rem;
+  color: $text-mid;
+  text-transform: capitalize;
 }

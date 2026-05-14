@@ -1,1 +1,18 @@
-<p>error-banner works!</p>
+@if (visible) {
+  <div class="error-banner" role="alert">
+    <span class="error-banner__icon">⚠</span>
+    <span class="error-banner__msg">{{ message }}</span>
+    <div class="error-banner__actions">
+      @if (retry.observed) {
+        <button class="error-banner__btn error-banner__btn--retry" (click)="retry.emit()">
+          Reintentar
+        </button>
+      }
+      @if (dismissible) {
+        <button class="error-banner__btn error-banner__btn--close" (click)="dismiss()" aria-label="Cerrar">
+          ✕
+        </button>
+      }
+    </div>
+  </div>
+}

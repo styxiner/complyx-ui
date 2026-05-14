@@ -1,1 +1,10 @@
-<p>confirm-dialog works!</p>
+<app-modal [title]="title" size="sm" (closed)="cancelled.emit()">
+  <p class="confirm-dialog__message">{{ message }}</p>
+
+  <div class="confirm-dialog__footer" modal-footer>
+    <button class="btn btn--ghost" (click)="cancelled.emit()">{{ cancelLabel }}</button>
+    <button class="btn" [ngClass]="danger ? 'btn--danger' : 'btn--primary'" (click)="confirmed.emit()">
+      {{ confirmLabel }}
+    </button>
+  </div>
+</app-modal>
