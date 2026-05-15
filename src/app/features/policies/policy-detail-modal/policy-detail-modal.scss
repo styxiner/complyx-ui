@@ -1,0 +1,258 @@
+$border:   rgba(255, 255, 255, 0.06);
+$text-hi:  #e2e8f0;
+$text-mid: #94a3b8;
+$text-dim: #475569;
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+.tabs {
+  display: flex;
+  border-bottom: 1px solid $border;
+  margin-bottom: 20px;
+}
+
+.tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: $text-dim;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: -1px;
+  transition: color 0.14s, border-color 0.14s;
+
+  &--active { color: #38bdf8; border-bottom-color: #38bdf8; }
+  &:hover:not(&--active) { color: $text-mid; }
+
+  &__count {
+    font-size: 0.68rem;
+    font-weight: 700;
+    background: rgba(56,189,248,.12);
+    color: #38bdf8;
+    border-radius: 10px;
+    padding: 1px 6px;
+  }
+}
+
+.tab-content { display: flex; flex-direction: column; gap: 20px; }
+
+// ── Acciones ──────────────────────────────────────────────────────────────────
+.action-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: opacity 0.14s;
+  &:hover { opacity: 0.82; }
+
+  svg { width: 14px; height: 14px; }
+
+  &--ghost  { background: rgba(255,255,255,.05); color: $text-mid; border-color: rgba(51,65,85,.8); }
+  &--danger { background: rgba(239,68,68,.12);  color: #f87171;   border-color: rgba(239,68,68,.25); }
+}
+
+// ── Badges ────────────────────────────────────────────────────────────────────
+.badges-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.status-chip {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 4px;
+  background: rgba(100,116,139,.1);
+  border: 1px solid rgba(100,116,139,.2);
+  color: $text-mid;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+// ── Sección ───────────────────────────────────────────────────────────────────
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__title {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: $text-dim;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+}
+
+// ── Detail list ───────────────────────────────────────────────────────────────
+.detail-list { display: flex; flex-direction: column; margin: 0; }
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid $border;
+  &:last-child { border-bottom: none; }
+
+  dt { font-size: 0.78rem; color: $text-dim; flex-shrink: 0; }
+  dd { font-size: 0.82rem; color: $text-hi; text-align: right; margin: 0; }
+}
+
+.description {
+  font-size: 0.83rem;
+  color: $text-mid;
+  line-height: 1.6;
+  margin: 0;
+}
+
+// ── KPIs ──────────────────────────────────────────────────────────────────────
+.kpi-row {
+  display: flex;
+  gap: 16px;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid $border;
+  border-radius: 7px;
+  padding: 10px 16px;
+  flex: 1;
+  text-align: center;
+
+  &__value { font-size: 1.5rem; font-weight: 800; color: $text-hi; line-height: 1; }
+  &__label { font-size: 0.7rem; color: $text-dim; text-transform: uppercase; letter-spacing: 0.08em; }
+}
+
+// ── Elementos accordion ───────────────────────────────────────────────────────
+.element-list { display: flex; flex-direction: column; gap: 8px; }
+
+.element {
+  background: rgba(255,255,255,.02);
+  border: 1px solid $border;
+  border-radius: 8px;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    background: none;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.12s;
+    &:hover { background: rgba(255,255,255,.03); }
+  }
+
+  &__name {
+    flex: 1;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: $text-hi;
+  }
+
+  &__meta {
+    font-size: 0.72rem;
+    color: $text-dim;
+    flex-shrink: 0;
+  }
+
+  &__chevron {
+    width: 14px;
+    height: 14px;
+    color: $text-dim;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    &--open { transform: rotate(180deg); }
+  }
+}
+
+// ── Checks ────────────────────────────────────────────────────────────────────
+.check-list {
+  border-top: 1px solid $border;
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.check {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  &:last-child { border-bottom: none; padding-bottom: 0; }
+
+  &__name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: $text-hi;
+  }
+
+  &__cmd {
+    font-family: monospace;
+    font-size: 0.75rem;
+    background: rgba(0,0,0,.3);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #93c5fd;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  &__rationale {
+    font-size: 0.77rem;
+    color: $text-dim;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+.remediations {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+
+  &__label { font-size: 0.7rem; color: $text-dim; }
+}
+
+.rem-tag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(168,85,247,.1);
+  border: 1px solid rgba(168,85,247,.2);
+  color: #c084fc;
+}
+
+// ── Vacío ─────────────────────────────────────────────────────────────────────
+.empty-text { font-size: 0.82rem; color: $text-dim; text-align: center; padding: 24px 0; margin: 0; }
