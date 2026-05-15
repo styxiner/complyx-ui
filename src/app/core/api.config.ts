@@ -26,10 +26,13 @@ export const API = {
   },
 
   policies: {
-    base:        '/api/policies',
-    byId:        (id: string) => `/api/policies/${id}`,
-    assignAgent: (policyId: string, agentId: string) => `/api/policies/${policyId}/agents/${agentId}`,
-    assignGroup: (policyId: string, groupId: string) => `/api/policies/${policyId}/groups/${groupId}`,
+    base:           '/api/policies',
+    byId:           (id: string) => `/api/policies/${id}`,
+    byAgent:        (agentId: string) => `/api/policies/agent/${agentId}`,
+    assignAgent:    (policyId: string, agentId: string) => `/api/policies/${policyId}/agents/${agentId}`,
+    unassignAgent:  (policyId: string, agentId: string) => `/api/policies/${policyId}/agents/${agentId}`,
+    assignGroup:    (policyId: string, groupId: string) => `/api/policies/${policyId}/groups/${groupId}`,
+    unassignGroup:  (policyId: string, groupId: string) => `/api/policies/${policyId}/groups/${groupId}`,
   },
 
   risks: {
