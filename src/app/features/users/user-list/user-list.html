@@ -17,7 +17,8 @@
       <input 
         type="text" 
         placeholder="Buscar usuarios por coincidencia..." 
-        [(ngModel)]="searchTerm" 
+        [ngModel]="searchTerm" 
+        (ngModelChange)="searchTerm = $event"
         (keyup.enter)="onSearch()"
       />
     </div>
@@ -32,6 +33,12 @@
       <div class="complyx-loading-state">Sincronizando registros del sistema...</div>
     } @else {
       <table class="complyx-data-table">
+        <colgroup>
+          <col class="col-username" />
+          <col class="col-email" />
+          <col class="col-roles" />
+          <col class="col-actions" />
+        </colgroup>
         <thead>
           <tr>
             <th>Nombre de usuario</th>
@@ -43,40 +50,35 @@
         <tbody>
           @for (user of users(); track user.id) {
             <tr>
-              <td class="complyx-user-cell">
-                <span class="table-row-icon"></span>
-                <span class="username">{{ user.username }}</span>
+              <td>
+                <div class="complyx-user-cell">
+                  <span class="username">{{ user.username }}</span>
+                </div>
               </td>
               <td class="text-muted">{{ user.email }}</td>
               <td>
                 <div class="complyx-roles-matrix">
                   @for (role of availableRoles(); track role.id) {
                     <label class="role-checkbox-label">
-                            <input 
-                             type="checkbox" 
-                            [checked]="hasRole(user, role.rolename)"
-                            (change)="toggleRole(user, role, $event)"
-                            />
-                        <span class="role-text">{{ role.rolename }}</span>
+                      <input 
+                        type="checkbox" 
+                        [checked]="hasRole(user, role.rolename)"
+                        (change)="toggleRole(user, role, $event)"
+                      />
+                      <span class="role-text">{{ role.rolename }}</span>
                     </label>
-                 }
+                  }
                 </div>
               </td>
               <td class="complyx-actions-cell">
                 <div class="action-buttons-group">
                   <button class="action-btn view" title="Inspeccionar detalles">
-                    <span class="action-icon">
-                      </span>
                     <span class="action-label">Ver</span>
                   </button>
                   <button class="action-btn edit" (click)="openEditModal(user)" title="Actualizar credenciales">
-                    <span class="action-icon">
-                      </span>
                     <span class="action-label">Actualizar</span>
                   </button>
                   <button class="action-btn delete" (click)="deleteUser(user.id)" title="Eliminar usuario">
-                    <span class="action-icon">
-                      </span>
                     <span class="action-label">Eliminar</span>
                   </button>
                 </div>

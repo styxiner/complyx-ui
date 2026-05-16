@@ -1,14 +1,14 @@
+@use "sass:color";
 
-$complyx-bg-light: #f8fafc;     
-$complyx-bg-card: #ffffff;      
-$complyx-text-deep: #0f172a;    
-$complyx-text-slate: #334155;   
-$complyx-text-muted: #64748b;  
-$complyx-border: #e2e8f0;       
-$complyx-accent-blue: #3b82f6; 
-$complyx-hover-blue: #dbeafe;   
+$complyx-bg-light: #f8fafc;
+$complyx-bg-card: #ffffff;
+$complyx-text-deep: #0f172a;
+$complyx-text-slate: #334155;
+$complyx-text-muted: #64748b;
+$complyx-border: #e2e8f0;
+$complyx-accent-blue: #3b82f6;
+$complyx-hover-blue: #dbeafe;
 
-// Mixin para estilos de iconos SVG
 @mixin comfy-svg($size, $color) {
   width: $size;
   height: $size;
@@ -25,14 +25,12 @@ $complyx-hover-blue: #dbeafe;
   min-height: 100vh;
 }
 
-
 .complyx-view-container {
   padding: 3rem 2rem;
-  max-width: 1400px; // Evita que se estire demasiado en pantallas anchas
+  max-width: 1400px;
   margin: 0 auto;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
-
 
 .complyx-view-header {
   display: flex;
@@ -42,12 +40,11 @@ $complyx-hover-blue: #dbeafe;
 
   .header-titles {
     h1 { font-size: 1.75rem; color: $complyx-text-deep; margin: 0; font-weight: 700; }
-    p { font-size: 0.9rem; color: $complyx-text-muted; margin: 0.25rem 0 0 0; }
+    p  { font-size: 0.9rem; color: $complyx-text-muted; margin: 0.25rem 0 0 0; }
   }
 
- 
   .complyx-btn-primary {
-    background-color: #060e24; 
+    background-color: #060e24;
     color: white;
     border: none;
     padding: 0.7rem 1.4rem;
@@ -61,11 +58,8 @@ $complyx-hover-blue: #dbeafe;
     transition: opacity 0.2s;
 
     &:hover { opacity: 0.9; }
-
-    .icon-svg { @include comfy-svg(16px, white); }
   }
 }
-
 
 .complyx-search-container {
   background-color: $complyx-bg-card;
@@ -80,11 +74,6 @@ $complyx-hover-blue: #dbeafe;
     align-items: center;
     gap: 0.75rem;
 
-    .search-icon { 
-      // Si embebes un <svg> dentro de este span:
-      svg { @include comfy-svg(18px, $complyx-text-muted); } 
-    }
-    
     input {
       border: none;
       width: 100%;
@@ -98,7 +87,7 @@ $complyx-hover-blue: #dbeafe;
   }
 }
 
-// Estructura de la Tarjeta y Tabla
+// ── Tarjeta ──────────────────────────────────────────────────────────────────
 .complyx-table-card {
   background-color: $complyx-bg-card;
   border: 1px solid $complyx-border;
@@ -112,11 +101,20 @@ $complyx-hover-blue: #dbeafe;
   }
 }
 
-
+// ── Tabla ─────────────────────────────────────────────────────────────────────
 .complyx-data-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+
+  // Layout fijo: los anchos los controlan los <col>, no el contenido
+  table-layout: fixed;
+
+  // Anchos de columna via <colgroup>
+  .col-username { width: 18%; }
+  .col-email    { width: 26%; }
+  .col-roles    { width: 38%; }
+  .col-actions  { width: 18%; }
 
   th {
     padding: 0.9rem 1.5rem;
@@ -125,6 +123,10 @@ $complyx-hover-blue: #dbeafe;
     color: $complyx-text-deep;
     border-bottom: 1px solid $complyx-border;
     background-color: #fafbfc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     &.actions-header { text-align: center; }
   }
 
@@ -134,31 +136,46 @@ $complyx-hover-blue: #dbeafe;
     color: $complyx-text-slate;
     border-bottom: 1px solid $complyx-border;
     vertical-align: middle;
+    // Evita desbordamientos que rompen el layout
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // La celda de roles necesita wrap para los checkboxes
+  td:nth-child(3) {
+    white-space: normal;
+    overflow: visible;
   }
 
   tr:last-child td { border-bottom: none; }
 }
 
-
+// ── Celda de usuario ──────────────────────────────────────────────────────────
+// Usamos un <div> dentro del <td> para el flex, no el <td> directamente
 .complyx-user-cell {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   color: $complyx-text-deep;
-  
-  .table-row-icon { 
-    svg { @include comfy-svg(18px, $complyx-text-muted); } 
+  overflow: hidden;
+
+  .username {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
   }
-  strong { font-weight: 500; }
 }
 
 .text-muted { color: $complyx-text-muted; }
 
-
+// ── Roles ─────────────────────────────────────────────────────────────────────
 .complyx-roles-matrix {
   display: flex;
-  gap: 1rem;
-  
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+
   .role-checkbox-label {
     display: flex;
     align-items: center;
@@ -168,62 +185,82 @@ $complyx-hover-blue: #dbeafe;
     input[type="checkbox"] {
       accent-color: $complyx-accent-blue;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
-    .role-text { font-size: 0.8rem; color: $complyx-text-slate; }
+    .role-text {
+      font-size: 0.8rem;
+      color: $complyx-text-slate;
+      white-space: nowrap;
+    }
   }
 }
 
-
+// ── Acciones ──────────────────────────────────────────────────────────────────
 .complyx-actions-cell {
   text-align: center;
+  white-space: nowrap;
 
   .action-buttons-group {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    gap: 0.8rem;
+    gap: 0.5rem;
   }
 
   .action-btn {
     background: transparent;
-    border: none;
+    border: 1px solid $complyx-border;
     cursor: pointer;
-    display: flex;
-    flex-direction: column; // Icono arriba, texto abajo
+    display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0.3rem 0.6rem;
+    gap: 0.25rem;
+    padding: 0.3rem 0.65rem;
     border-radius: 4px;
     transition: all 0.2s ease;
     color: $complyx-text-muted;
 
-    &:hover { background-color: $complyx-bg-light; color: $complyx-text-deep; }
+    &:hover {
+      background-color: $complyx-bg-light;
+      color: $complyx-text-deep;
+      border-color: color.adjust($complyx-border, $lightness: -5%);
+    }
 
-    .action-icon {
-      svg { @include comfy-svg(18px, currentColor); stroke-width: 1.5; }
+    &.delete:hover {
+      color: #ef4444;
+      border-color: rgba(#ef4444, 0.3);
+      background-color: rgba(#ef4444, 0.05);
     }
 
     .action-label {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       font-weight: 500;
-      color: currentColor;
     }
   }
 }
 
 .text-center { text-align: center; }
-.complyx-loading-state, .complyx-empty-row { padding: 3rem; text-align: center; color: $complyx-text-muted; font-size: 0.85rem; }
 
+.complyx-loading-state,
+.complyx-empty-row {
+  padding: 3rem;
+  text-align: center;
+  color: $complyx-text-muted;
+  font-size: 0.85rem;
+}
+
+// ── Paginación ────────────────────────────────────────────────────────────────
 .complyx-table-pagination {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
   border-top: 1px solid $complyx-border;
-  background-color: transparent;
 
-  .pagination-info { font-size: 0.8rem; color: $complyx-text-muted; }
+  .pagination-info {
+    font-size: 0.8rem;
+    color: $complyx-text-muted;
+  }
 
   .pagination-buttons {
     display: flex;
@@ -241,8 +278,8 @@ $complyx-hover-blue: #dbeafe;
       transition: all 0.2s;
 
       &:disabled { opacity: 0.4; cursor: not-allowed; }
-      
-      &:not(:disabled):hover { 
+
+      &:not(:disabled):hover {
         background-color: $complyx-hover-blue;
         border-color: rgba($complyx-accent-blue, 0.3);
         color: $complyx-accent-blue;
@@ -251,11 +288,11 @@ $complyx-hover-blue: #dbeafe;
   }
 }
 
-
+// ── Modal ─────────────────────────────────────────────────────────────────────
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(15, 23, 42, 0.4); // Fondo azul marino corporativo semitransparente
+  background: rgba(15, 23, 42, 0.4);
   backdrop-filter: blur(3px);
   display: flex;
   justify-content: center;
