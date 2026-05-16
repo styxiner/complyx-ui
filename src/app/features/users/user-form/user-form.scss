@@ -1,0 +1,108 @@
+$blue-primary: #0f172a;
+$blue-brand: #2563eb;
+$blue-brand-hover: #1d4ed8;
+$border-color: #e2e8f0;
+
+.modal-window {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: modalFadeIn 0.25s ease-out;
+
+  h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.25rem;
+    color: $blue-primary;
+    font-weight: 700;
+    border-bottom: 1px solid $border-color;
+    padding-bottom: 0.75rem;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+
+      label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #475569;
+      }
+
+      input {
+        padding: 0.65rem 0.8rem;
+        border: 1px solid $border-color;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s;
+
+        &:focus:not(:disabled) {
+          border-color: $blue-brand;
+        }
+
+        &:disabled {
+          background-color: #f8fafc;
+          color: #94a3b8;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .modal-footer-btn {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1rem;
+
+      button {
+        padding: 0.65rem 1.25rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-cancel {
+        background: white;
+        border: 1px solid $border-color;
+        color: #64748b;
+
+        &:hover {
+          background-color: #f1f5f9;
+          color: $blue-primary;
+        }
+      }
+
+      .btn-save {
+        background-color: $blue-brand;
+        border: none;
+        color: white;
+
+        &:hover {
+          background-color: $blue-brand-hover;
+        }
+      }
+    }
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

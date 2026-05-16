@@ -1,1 +1,108 @@
-<p>user-list works!</p>
+<div class="complyx-view-container">
+  
+  <header class="complyx-view-header">
+    <div class="header-titles">
+      <h1>Usuarios</h1>
+      <p>Gestión de identidades del ecosistema y asignación de alcances normativos</p>
+    </div>
+    
+    <button class="complyx-btn-primary" (click)="openCreateModal()">
+      <span class="btn-text">Agregar nuevo usuario</span>
+    </button>
+  </header>
+
+  <div class="complyx-search-container">
+    <div class="search-box">
+      <span class="search-icon"></span>
+      <input 
+        type="text" 
+        placeholder="Buscar usuarios por coincidencia..." 
+        [(ngModel)]="searchTerm" 
+        (keyup.enter)="onSearch()"
+      />
+    </div>
+  </div>
+
+  <div class="complyx-table-card">
+    <div class="card-header">
+      <h2>Operadores Activos ({{ totalElements() }})</h2>
+    </div>
+
+    @if (loading()) {
+      <div class="complyx-loading-state">Sincronizando registros del sistema...</div>
+    } @else {
+      <table class="complyx-data-table">
+        <thead>
+          <tr>
+            <th>Nombre de usuario</th>
+            <th>Email</th>
+            <th>Roles asignados</th>
+            <th class="text-center actions-header">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.id) {
+            <tr>
+              <td class="complyx-user-cell">
+                <span class="table-row-icon"></span>
+                <span class="username">{{ user.username }}</span>
+              </td>
+              <td class="text-muted">{{ user.email }}</td>
+              <td>
+                <div class="complyx-roles-matrix">
+                  @for (role of availableRoles(); track role.id) {
+                    <label class="role-checkbox-label">
+                            <input 
+                             type="checkbox" 
+                            [checked]="hasRole(user, role.rolename)"
+                            (change)="toggleRole(user, role, $event)"
+                            />
+                        <span class="role-text">{{ role.rolename }}</span>
+                    </label>
+                 }
+                </div>
+              </td>
+              <td class="complyx-actions-cell">
+                <div class="action-buttons-group">
+                  <button class="action-btn view" title="Inspeccionar detalles">
+                    <span class="action-icon">
+                      </span>
+                    <span class="action-label">Ver</span>
+                  </button>
+                  <button class="action-btn edit" (click)="openEditModal(user)" title="Actualizar credenciales">
+                    <span class="action-icon">
+                      </span>
+                    <span class="action-label">Actualizar</span>
+                  </button>
+                  <button class="action-btn delete" (click)="deleteUser(user.id)" title="Eliminar usuario">
+                    <span class="action-icon">
+                      </span>
+                    <span class="action-label">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="complyx-empty-row">No hay usuarios registrados en el sistema.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <footer class="complyx-table-pagination">
+        <div class="pagination-info">Mostrando bloque {{ currentPage() + 1 }} de {{ totalPages() }}</div>
+        <div class="pagination-buttons">
+          <button class="complyx-page-btn" [disabled]="currentPage() === 0" (click)="changePage(-1)">Anterior</button>
+          <button class="complyx-page-btn" [disabled]="currentPage() >= totalPages() - 1" (click)="changePage(1)">Siguiente</button>
+        </div>
+      </footer>
+    }
+  </div>
+
+  @if (isModalOpen()) {
+    <div class="modal-overlay">
+      <app-user-form [user]="selectedUser()" (onCancel)="isModalOpen.set(false)" (onSubmit)="handleFormSubmit($event)"></app-user-form>
+    </div>
+  }
+</div>

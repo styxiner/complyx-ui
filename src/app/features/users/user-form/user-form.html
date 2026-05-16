@@ -1,1 +1,27 @@
-<p>user-form works!</p>
+<div class="modal-window">
+  <h3>{{ user ? 'Modificar Parámetros de Operador' : 'Alta de Nuevo Operador' }}</h3>
+  
+  <form (ngSubmit)="submit()">
+    <div class="input-group">
+      <label>Nombre del Usuario</label>
+      <input type="text" name="username" [(ngModel)]="form.username" [disabled]="!!user" required autocomplete="off" />
+    </div>
+
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" name="email" [(ngModel)]="form.email" required autocomplete="off" />
+    </div>
+
+    @if (!user) {
+      <div class="input-group">
+        <label>Clave de Acceso Provisional</label>
+        <input type="password" name="password" [(ngModel)]="form.password" required />
+      </div>
+    }
+
+    <div class="modal-footer-btn">
+      <button type="button" class="btn-cancel" (click)="cancel()">Abortar</button>
+      <button type="submit" class="btn-save">Autorizar e Inyectar</button>
+    </div>
+  </form>
+</div>

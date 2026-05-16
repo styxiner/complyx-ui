@@ -1,0 +1,264 @@
+
+$complyx-bg-light: #f8fafc;     
+$complyx-bg-card: #ffffff;      
+$complyx-text-deep: #0f172a;    
+$complyx-text-slate: #334155;   
+$complyx-text-muted: #64748b;  
+$complyx-border: #e2e8f0;       
+$complyx-accent-blue: #3b82f6; 
+$complyx-hover-blue: #dbeafe;   
+
+// Mixin para estilos de iconos SVG
+@mixin comfy-svg($size, $color) {
+  width: $size;
+  height: $size;
+  color: $color;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  display: block;
+}
+
+:host {
+  display: block;
+  background-color: $complyx-bg-light;
+  min-height: 100vh;
+}
+
+
+.complyx-view-container {
+  padding: 3rem 2rem;
+  max-width: 1400px; // Evita que se estire demasiado en pantallas anchas
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+
+.complyx-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+
+  .header-titles {
+    h1 { font-size: 1.75rem; color: $complyx-text-deep; margin: 0; font-weight: 700; }
+    p { font-size: 0.9rem; color: $complyx-text-muted; margin: 0.25rem 0 0 0; }
+  }
+
+ 
+  .complyx-btn-primary {
+    background-color: #060e24; 
+    color: white;
+    border: none;
+    padding: 0.7rem 1.4rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: opacity 0.2s;
+
+    &:hover { opacity: 0.9; }
+
+    .icon-svg { @include comfy-svg(16px, white); }
+  }
+}
+
+
+.complyx-search-container {
+  background-color: $complyx-bg-card;
+  border: 1px solid $complyx-border;
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .search-icon { 
+      // Si embebes un <svg> dentro de este span:
+      svg { @include comfy-svg(18px, $complyx-text-muted); } 
+    }
+    
+    input {
+      border: none;
+      width: 100%;
+      font-size: 0.875rem;
+      color: $complyx-text-slate;
+      outline: none;
+      background: transparent;
+      padding: 0;
+      &::placeholder { color: #cbd5e1; }
+    }
+  }
+}
+
+// Estructura de la Tarjeta y Tabla
+.complyx-table-card {
+  background-color: $complyx-bg-card;
+  border: 1px solid $complyx-border;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid $complyx-border;
+    h2 { font-size: 0.95rem; color: $complyx-text-deep; margin: 0; font-weight: 600; }
+  }
+}
+
+
+.complyx-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th {
+    padding: 0.9rem 1.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $complyx-text-deep;
+    border-bottom: 1px solid $complyx-border;
+    background-color: #fafbfc;
+    &.actions-header { text-align: center; }
+  }
+
+  td {
+    padding: 1rem 1.5rem;
+    font-size: 0.85rem;
+    color: $complyx-text-slate;
+    border-bottom: 1px solid $complyx-border;
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+}
+
+
+.complyx-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: $complyx-text-deep;
+  
+  .table-row-icon { 
+    svg { @include comfy-svg(18px, $complyx-text-muted); } 
+  }
+  strong { font-weight: 500; }
+}
+
+.text-muted { color: $complyx-text-muted; }
+
+
+.complyx-roles-matrix {
+  display: flex;
+  gap: 1rem;
+  
+  .role-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      accent-color: $complyx-accent-blue;
+      cursor: pointer;
+    }
+
+    .role-text { font-size: 0.8rem; color: $complyx-text-slate; }
+  }
+}
+
+
+.complyx-actions-cell {
+  text-align: center;
+
+  .action-buttons-group {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .action-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column; // Icono arriba, texto abajo
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    color: $complyx-text-muted;
+
+    &:hover { background-color: $complyx-bg-light; color: $complyx-text-deep; }
+
+    .action-icon {
+      svg { @include comfy-svg(18px, currentColor); stroke-width: 1.5; }
+    }
+
+    .action-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: currentColor;
+    }
+  }
+}
+
+.text-center { text-align: center; }
+.complyx-loading-state, .complyx-empty-row { padding: 3rem; text-align: center; color: $complyx-text-muted; font-size: 0.85rem; }
+
+.complyx-table-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid $complyx-border;
+  background-color: transparent;
+
+  .pagination-info { font-size: 0.8rem; color: $complyx-text-muted; }
+
+  .pagination-buttons {
+    display: flex;
+    gap: 0.5rem;
+
+    .complyx-page-btn {
+      background: white;
+      border: 1px solid $complyx-border;
+      color: $complyx-text-slate;
+      padding: 0.45rem 1rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:disabled { opacity: 0.4; cursor: not-allowed; }
+      
+      &:not(:disabled):hover { 
+        background-color: $complyx-hover-blue;
+        border-color: rgba($complyx-accent-blue, 0.3);
+        color: $complyx-accent-blue;
+      }
+    }
+  }
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(15, 23, 42, 0.4); // Fondo azul marino corporativo semitransparente
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
