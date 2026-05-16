@@ -1,1 +1,125 @@
-<p>policy-list works!</p>
+<div class="policy-view-container">
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <header class="policy-view-header">
+    <div class="header-titles">
+      <h1>Políticas</h1>
+      <p>Gestión de políticas de cumplimiento normativo y sus elementos de control</p>
+    </div>
+    <button class="btn btn--primary" routerLink="upload">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      Nueva política
+    </button>
+  </header>
+
+  <!-- ── Filtros ──────────────────────────────────────────────────────────── -->
+  <app-policy-filter-bar (filterChange)="onFilterChange($event)" />
+
+  <!-- ── Tabla ───────────────────────────────────────────────────────────── -->
+  <div class="policy-table-card">
+
+    <div class="card-header">
+      <h2>Políticas activas <span class="count-badge">{{ totalElements() }}</span></h2>
+    </div>
+
+    @if (loading()) {
+      <div class="policy-loading">
+        <div class="spinner"></div>
+        <span>Cargando políticas…</span>
+      </div>
+    } @else {
+
+      <div class="table-scroll">
+        <table class="policy-table">
+          <colgroup>
+            <col class="col-name" />
+            <col class="col-version" />
+            <col class="col-severity" />
+            <col class="col-elements" />
+            <col class="col-actions" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Versión</th>
+              <th>Severidad</th>
+              <th class="text-center">Elementos</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (policy of policies(); track policy.id) {
+              <tr class="policy-row" (click)="openDetail(policy)">
+                <td>
+                  <div class="policy-name-cell">
+                    <svg class="policy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                    </svg>
+                    <span class="policy-name">{{ policy.name }}</span>
+                  </div>
+                </td>
+                <td class="text-mono">{{ policy.version }}</td>
+                <td>
+                  <span class="severity-badge" [ngClass]="severityClass(policy.severity)">
+                    {{ severityLabel(policy.severity) }}
+                  </span>
+                </td>
+                <td class="text-center text-dim">—</td>
+                <td class="text-center" (click)="$event.stopPropagation()">
+                  <div class="action-group">
+                    <button class="action-btn" title="Ver detalle" (click)="openDetail(policy)">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      </svg>
+                      Ver
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="empty-row">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                  </svg>
+                  <p>No hay políticas que coincidan con los filtros aplicados.</p>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      <footer class="policy-pagination">
+        <span class="pagination-info">
+          Bloque {{ currentPage() + 1 }} de {{ totalPages() }}
+        </span>
+        <div class="pagination-buttons">
+          <button class="page-btn" [disabled]="currentPage() === 0" (click)="changePage(-1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+            Anterior
+          </button>
+          <button class="page-btn" [disabled]="currentPage() >= totalPages() - 1" (click)="changePage(1)">
+            Siguiente
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </footer>
+    }
+  </div>
+
+  <!-- ── Panel de detalle ─────────────────────────────────────────────────── -->
+  @if (selectedPolicyId()) {
+    <app-policy-detail-modal
+      [policyId]="selectedPolicyId()!"
+      [policyName]="selectedPolicyName()"
+      (closed)="closeDetail()"
+      (requestDelete)="onPolicyDeleted()"
+    />
+  }
+
+</div>
