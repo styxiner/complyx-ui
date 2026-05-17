@@ -74,6 +74,7 @@ export interface PolicyRemediationDTO {
   id: string;
   name: string;
   description: string;
+  remediationCommand?: string;
 }
 
 // ── Crear ─────────────────────────────────────────────────────────────────────

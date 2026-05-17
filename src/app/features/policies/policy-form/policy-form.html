@@ -1,0 +1,237 @@
+<div class="pf-page">
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <header class="pf-header">
+    <button class="pf-back" (click)="cancel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+      </svg>
+      Cancelar
+    </button>
+    <div class="pf-header__titles">
+      <h1>{{ title }}</h1>
+      <p>{{ subtitle }}</p>
+    </div>
+    <div class="pf-header__actions">
+      <button class="pf-btn pf-btn--primary" (click)="submit()" [disabled]="!isValid || submitting()">
+        @if (submitting()) {
+          <span class="pf-spinner"></span> Guardando…
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          {{ isEditMode ? 'Guardar cambios' : 'Crear política' }}
+        }
+      </button>
+    </div>
+  </header>
+
+  <div class="pf-body">
+
+    <!-- ── Sidebar: datos básicos ──────────────────────────────────────────── -->
+    <aside class="pf-sidebar">
+      <div class="pf-card">
+        <h2 class="pf-card__title">Información general</h2>
+
+        <div class="pf-field">
+          <label>Nombre <span class="pf-required">*</span></label>
+          <input type="text" [(ngModel)]="name" placeholder="ej. CIS Ubuntu 22.04 L1" />
+        </div>
+
+        <div class="pf-field">
+          <label>Versión <span class="pf-required">*</span></label>
+          <input type="text" [(ngModel)]="version" placeholder="ej. 1.0.0" />
+        </div>
+
+        <div class="pf-field">
+          <label>Descripción <span class="pf-required">*</span></label>
+          <textarea [(ngModel)]="description" rows="4" placeholder="Describe el propósito y alcance…"></textarea>
+        </div>
+
+        <div class="pf-field">
+          <label>Severidad <span class="pf-required">*</span></label>
+          <div class="pf-severity-grid">
+            @for (s of severities; track s) {
+              <button
+                type="button"
+                class="pf-sev-btn"
+                [class.pf-sev-btn--active]="severity === s"
+                [ngClass]="severity === s ? severityClass(s) : ''"
+                (click)="severity = s"
+              >{{ severityLabel(s) }}</button>
+            }
+          </div>
+        </div>
+
+        <div class="pf-field">
+          <label>Estado</label>
+          <select [(ngModel)]="status">
+            @for (st of statuses; track st.value) {
+              <option [value]="st.value">{{ st.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="pf-summary">
+          <div class="pf-summary__row">
+            <span>Elementos</span><strong>{{ totalElements }}</strong>
+          </div>
+          <div class="pf-summary__row">
+            <span>Checks totales</span><strong>{{ totalChecks }}</strong>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── Builder jerárquico ─────────────────────────────────────────────── -->
+    <main class="pf-builder">
+
+      @if (submitError()) {
+        <div class="pf-error-banner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9.303 3.376c.866 1.5-.217 3.374-1.948 3.374H4.645c-1.73 0-2.813-1.874-1.948-3.374L10.051 3.378c.866-1.5 3.032-1.5 3.898 0L21.303 16.126zM12 15.75h.007v.008H12v-.008z"/>
+          </svg>
+          {{ submitError() }}
+        </div>
+      }
+
+      <div class="pf-builder__header">
+        <h2>
+          Elementos
+          @if (elements.length > 0) { <span class="pf-count">{{ elements.length }}</span> }
+        </h2>
+        <button class="pf-btn pf-btn--add" (click)="addElement()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+          Añadir elemento
+        </button>
+      </div>
+
+      @if (elements.length === 0) {
+        <div class="pf-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/>
+          </svg>
+          <p>Añade al menos un elemento para estructurar los checks de esta política.</p>
+        </div>
+      }
+
+      <div class="pf-element-list">
+        @for (el of elements; track el._id) {
+          <div class="pf-element">
+
+            <div class="pf-element__header">
+              <button class="pf-element__toggle" (click)="toggleElement(el)">
+                <svg class="pf-chevron" [class.pf-chevron--open]="el.expanded"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </button>
+              <input class="pf-element__name-input" type="text" [(ngModel)]="el.name" placeholder="Nombre del elemento…" />
+              <span class="pf-element__meta">{{ el.checks.length }} checks</span>
+              <button class="pf-icon-btn pf-icon-btn--danger" (click)="removeElement(el._id)" title="Eliminar elemento">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
+                </svg>
+              </button>
+            </div>
+
+            @if (el.expanded) {
+              <div class="pf-element__body">
+
+                @if (el.checks.length === 0) {
+                  <p class="pf-checks-empty">Sin checks. Añade uno para comenzar.</p>
+                }
+
+                <div class="pf-check-list">
+                  @for (ck of el.checks; track ck._id) {
+                    <div class="pf-check">
+
+                      <div class="pf-check__header">
+                        <button class="pf-element__toggle" (click)="toggleCheck(el, ck)">
+                          <svg class="pf-chevron pf-chevron--sm" [class.pf-chevron--open]="ck.expanded"
+                               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m6 9 6 6 6-6"/>
+                          </svg>
+                        </button>
+                        <input class="pf-check__name-input" type="text" [(ngModel)]="ck.name" placeholder="Nombre del check…" />
+                        <span class="pf-check__meta">{{ ck.remediations.length }} rem.</span>
+                        <button class="pf-icon-btn pf-icon-btn--danger" (click)="removeCheck(el, ck._id)" title="Eliminar check">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                          </svg>
+                        </button>
+                      </div>
+
+                      @if (ck.expanded) {
+                        <div class="pf-check__body">
+                          <div class="pf-field pf-field--sm">
+                            <label>Comando de validación <span class="pf-required">*</span></label>
+                            <input type="text" [(ngModel)]="ck.checkCommand" placeholder="ej. stat /etc/ssh/sshd_config" class="pf-mono" />
+                          </div>
+                          <div class="pf-field pf-field--sm">
+                            <label>Justificación (rationale)</label>
+                            <textarea rows="2" [(ngModel)]="ck.rationale" placeholder="Por qué es necesario este check…"></textarea>
+                          </div>
+
+                          <div class="pf-rem-section">
+                            <div class="pf-rem-section__header">
+                              <span class="pf-rem-section__label">
+                                Remediaciones
+                                @if (ck.remediations.length > 0) {
+                                  <span class="pf-count pf-count--sm">{{ ck.remediations.length }}</span>
+                                }
+                              </span>
+                              <button class="pf-btn pf-btn--add-sm" (click)="addRemediation(el, ck)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                                </svg>
+                                Añadir remediación
+                              </button>
+                            </div>
+
+                            @for (r of ck.remediations; track r._id) {
+                              <div class="pf-rem">
+                                <div class="pf-rem__fields">
+                                  <div class="pf-field pf-field--sm">
+                                    <label>Nombre <span class="pf-required">*</span></label>
+                                    <input type="text" [(ngModel)]="r.name" placeholder="ej. Restringir permisos SSH" />
+                                  </div>
+                                  <div class="pf-field pf-field--sm">
+                                    <label>Descripción</label>
+                                    <input type="text" [(ngModel)]="r.description" placeholder="Descripción de la acción correctiva…" />
+                                  </div>
+                                  <div class="pf-field pf-field--sm">
+                                    <label>Comando de remediación <span class="pf-required">*</span></label>
+                                    <input type="text" [(ngModel)]="r.remediationCommand" placeholder="ej. ansible-playbook fix_ssh.yml" class="pf-mono" />
+                                  </div>
+                                </div>
+                                <button class="pf-icon-btn pf-icon-btn--danger pf-rem__del" (click)="removeRemediation(el, ck, r._id)">
+                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                  </svg>
+                                </button>
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <button class="pf-btn pf-btn--add-check" (click)="addCheck(el)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                  </svg>
+                  Añadir check
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </main>
+  </div>
+</div>
