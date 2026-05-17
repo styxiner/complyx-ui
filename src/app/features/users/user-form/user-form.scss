@@ -1,108 +1,117 @@
-$blue-primary: #0f172a;
-$blue-brand: #2563eb;
-$blue-brand-hover: #1d4ed8;
-$border-color: #e2e8f0;
-
+//  estructurar la tarjeta del formulario
 .modal-window {
-  background: white;
+  background-color: #c6e7f8;
   padding: 2rem;
-  border-radius: 8px;
+  border-radius: 12px;
   width: 100%;
-  max-width: 480px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  animation: modalFadeIn 0.25s ease-out;
+  max-width: 480px; // Ancho ideal de cuadro de diálogo
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04); // Sombreado pronunciado
+  border: 1px solid #9abce9;
+  box-sizing: border-box;
 
   h3 {
-    margin: 0 0 1.5rem 0;
-    font-size: 1.25rem;
-    color: $blue-primary;
-    font-weight: 700;
-    border-bottom: 1px solid $border-color;
-    padding-bottom: 0.75rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    color: #0f172a;
+    font-weight: 600;
+  }
+}
+
+.input-group {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #475569;
   }
 
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
+  input {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    font-size: 0.9rem;
+    border: 1px solid #afcef3;
+    border-radius: 6px;
+    color: #334155;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s;
 
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-
-      label {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #475569;
-      }
-
-      input {
-        padding: 0.65rem 0.8rem;
-        border: 1px solid $border-color;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        outline: none;
-        transition: border-color 0.2s;
-
-        &:focus:not(:disabled) {
-          border-color: $blue-brand;
-        }
-
-        &:disabled {
-          background-color: #f8fafc;
-          color: #94a3b8;
-          cursor: not-allowed;
-        }
-      }
+    &:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
-    .modal-footer-btn {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-      margin-top: 1rem;
-
-      button {
-        padding: 0.65rem 1.25rem;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-
-      .btn-cancel {
-        background: white;
-        border: 1px solid $border-color;
-        color: #64748b;
-
-        &:hover {
-          background-color: #f1f5f9;
-          color: $blue-primary;
-        }
-      }
-
-      .btn-save {
-        background-color: $blue-brand;
-        border: none;
-        color: white;
-
-        &:hover {
-          background-color: $blue-brand-hover;
-        }
-      }
+    &:disabled {
+      background-color: #f1f5f9;
+      color: #94a3b8;
+      cursor: not-allowed;
     }
   }
 }
 
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
+.complyx-roles-matrix-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0; 
+  border-radius: 6px;
+  margin-top: 0.25rem;
+
+  .role-checkbox-label-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      accent-color: #3b82f6; 
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .role-text {
+      font-size: 0.85rem;
+      color: #334155;
+      font-weight: 500;
+    }
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+}
+
+// Maquetación de la fila inferior de botones
+.modal-footer-btn {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+
+  button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .btn-cancel {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    &:hover { background: #e2e8f0; }
+  }
+
+  .btn-save {
+    background: #060e24;
+    border: none;
+    color: #ffffff;
+    &:hover { opacity: 0.9; }
   }
 }

@@ -1,5 +1,5 @@
 <div class="modal-window">
-  <h3>{{ user ? 'Modificar Parámetros de Operador' : 'Alta de Nuevo Operador' }}</h3>
+  <h3>{{ user ? 'Modificar Parámetros del Usuario' : 'Alta de Nuevo Usuario' }}</h3>
   
   <form (ngSubmit)="submit()">
     <div class="input-group">
@@ -19,9 +19,27 @@
       </div>
     }
 
+    <div class="input-group">
+      <label>Asignación de Roles y Permisos</label>
+      <div class="complyx-roles-matrix-form">
+        @for (role of availableRoles; track role.id) {
+          <label class="role-checkbox-label-form">
+            <input 
+              type="checkbox" 
+              [checked]="isRoleSelected(role.id)"
+              (change)="toggleRole(role.id)"
+            />
+            <span class="role-text">{{ role.roleName }}</span>
+          </label>
+        }
+      </div>
+    </div>
+
     <div class="modal-footer-btn">
-      <button type="button" class="btn-cancel" (click)="cancel()">Abortar</button>
-      <button type="submit" class="btn-save">Autorizar e Inyectar</button>
+      <button type="button" class="btn-cancel" (click)="cancel()">Cancelar</button>
+      <button type="submit" class="btn-save">
+        {{ user ? 'Actualizar' : 'Registrar Usuario' }}
+      </button>
     </div>
   </form>
 </div>

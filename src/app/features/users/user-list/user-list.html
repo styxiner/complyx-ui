@@ -1,11 +1,11 @@
 <div class="complyx-view-container">
-  
+
   <header class="complyx-view-header">
     <div class="header-titles">
       <h1>Usuarios</h1>
-      <p>Gestión de identidades del ecosistema y asignación de alcances normativos</p>
+      <p>Gestión de identidades del ecosistema</p>
     </div>
-    
+
     <button class="complyx-btn-primary" (click)="openCreateModal()">
       <span class="btn-text">Agregar nuevo usuario</span>
     </button>
@@ -14,19 +14,19 @@
   <div class="complyx-search-container">
     <div class="search-box">
       <span class="search-icon"></span>
+      <!-- 🛠️ MODIFICADO: Enlace directo al signal de búsqueda local -->
       <input 
         type="text" 
         placeholder="Buscar usuarios por coincidencia..." 
-        [ngModel]="searchTerm" 
-        (ngModelChange)="searchTerm = $event"
-        (keyup.enter)="onSearch()"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="onSearch($event)" 
       />
     </div>
   </div>
 
   <div class="complyx-table-card">
     <div class="card-header">
-      <h2>Operadores Activos ({{ totalElements() }})</h2>
+      <h2>Lista de Usuarios Activos ({{ totalElements() }})</h2>
     </div>
 
     @if (loading()) {
@@ -48,37 +48,43 @@
           </tr>
         </thead>
         <tbody>
-          @for (user of users(); track user.id) {
+          <!-- 🛠️ MODIFICADO: Iteramos sobre 'filteredUsers()' en vez de 'users()' -->
+          @for (user of filteredUsers(); track user.id) {
             <tr>
               <td>
                 <div class="complyx-user-cell">
-                  <span class="username">{{ user.username }}</span>
+                  <span class="username" [title]="user.username">{{ user.username }}</span>
                 </div>
               </td>
-              <td class="text-muted">{{ user.email }}</td>
+              <td class="text-muted" [title]="user.email">{{ user.email }}</td>
               <td>
                 <div class="complyx-roles-matrix">
                   @for (role of availableRoles(); track role.id) {
                     <label class="role-checkbox-label">
-                      <input 
-                        type="checkbox" 
-                        [checked]="hasRole(user, role.rolename)"
-                        (change)="toggleRole(user, role, $event)"
-                      />
-                      <span class="role-text">{{ role.rolename }}</span>
+                      <input type="checkbox" [checked]="hasRole(user, role.roleName)" disabled />
+                      <span class="role-text">{{ role.roleName }}</span>
                     </label>
                   }
                 </div>
               </td>
               <td class="complyx-actions-cell">
                 <div class="action-buttons-group">
-                  <button class="action-btn view" title="Inspeccionar detalles">
-                    <span class="action-label">Ver</span>
-                  </button>
-                  <button class="action-btn edit" (click)="openEditModal(user)" title="Actualizar credenciales">
-                    <span class="action-label">Actualizar</span>
+                  <button class="action-btn edit" (click)="openEditModal(user)" title="Editar operador">
+                    <span class="action-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path [attr.d]="actionIconPaths.edit" />
+                      </svg>
+                    </span>
+                    <span class="action-label">Editar</span>
                   </button>
                   <button class="action-btn delete" (click)="deleteUser(user.id)" title="Eliminar usuario">
+                    <span class="action-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path [attr.d]="actionIconPaths.delete" />
+                      </svg>
+                    </span>
                     <span class="action-label">Eliminar</span>
                   </button>
                 </div>
@@ -86,7 +92,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="4" class="complyx-empty-row">No hay usuarios registrados en el sistema.</td>
+              <td colspan="4" class="complyx-empty-row">No hay usuarios que coincidan con la búsqueda.</td>
             </tr>
           }
         </tbody>
@@ -96,7 +102,8 @@
         <div class="pagination-info">Mostrando bloque {{ currentPage() + 1 }} de {{ totalPages() }}</div>
         <div class="pagination-buttons">
           <button class="complyx-page-btn" [disabled]="currentPage() === 0" (click)="changePage(-1)">Anterior</button>
-          <button class="complyx-page-btn" [disabled]="currentPage() >= totalPages() - 1" (click)="changePage(1)">Siguiente</button>
+          <button class="complyx-page-btn" [disabled]="currentPage() >= totalPages() - 1"
+            (click)="changePage(1)">Siguiente</button>
         </div>
       </footer>
     }
@@ -104,7 +111,9 @@
 
   @if (isModalOpen()) {
     <div class="modal-overlay">
-      <app-user-form [user]="selectedUser()" (onCancel)="isModalOpen.set(false)" (onSubmit)="handleFormSubmit($event)"></app-user-form>
+      <app-user-form [user]="selectedUser()" [availableRoles]="availableRoles()" (onCancel)="isModalOpen.set(false)"
+        (onSubmit)="handleFormSubmit($event)">
+      </app-user-form>
     </div>
   }
 </div>
