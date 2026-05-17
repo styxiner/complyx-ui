@@ -25,7 +25,6 @@
     @if (activeTab === 'info') {
       <div class="tab-content">
 
-        <!-- Acciones (solo ADMIN y TECNICO) -->
         <div class="action-row">
           <button
             *appHasRole="['ADMIN', 'TECNICO']"
@@ -45,38 +44,25 @@
           </button>
         </div>
 
-        <!-- Estado + Severidad -->
         <div class="badges-row">
           <app-status-badge [status]="severityStatus(detail.severity)" [label]="detail.severity | severityLabel" />
           <span class="status-chip">{{ statusLabel(detail.status) }}</span>
         </div>
 
-        <!-- Datos básicos -->
         <section class="section">
           <h4 class="section__title">General</h4>
           <dl class="detail-list">
-            <div class="detail-item">
-              <dt>Nombre</dt>
-              <dd>{{ detail.name }}</dd>
-            </div>
-            <div class="detail-item">
-              <dt>Versión</dt>
-              <dd>{{ detail.version }}</dd>
-            </div>
-            <div class="detail-item">
-              <dt>Creada</dt>
-              <dd>{{ detail.createdAt | timeAgo }}</dd>
-            </div>
+            <div class="detail-item"><dt>Nombre</dt><dd>{{ detail.name }}</dd></div>
+            <div class="detail-item"><dt>Versión</dt><dd>{{ detail.version }}</dd></div>
+            <div class="detail-item"><dt>Creada</dt><dd>{{ detail.createdAt | timeAgo }}</dd></div>
           </dl>
         </section>
 
-        <!-- Descripción -->
         <section class="section">
           <h4 class="section__title">Descripción</h4>
           <p class="description">{{ detail.description }}</p>
         </section>
 
-        <!-- KPIs -->
         <section class="section">
           <h4 class="section__title">Resumen</h4>
           <div class="kpi-row">
@@ -118,19 +104,31 @@
                       <div class="check">
                         <div class="check__header">
                           <span class="check__name">{{ ck.name }}</span>
+                          <!-- Tag con el tipo de executor -->
+                          @if (ck.checkParams.type) {
+                            <span class="check__type-tag">{{ ck.checkParams.type }}</span>
+                          }
                         </div>
-                        @if (ck.checkCommand) {
-                          <code class="check__cmd">{{ ck.checkCommand }}</code>
-                        }
+
                         @if (ck.rationale) {
                           <p class="check__rationale">{{ ck.rationale }}</p>
                         }
-                        <!--@if (ck.remediations?.length) {-->
+
+                        <!-- Parámetros del check como JSON formateado -->
+                        @if (ck.checkParams) {
+                          <pre class="check__params">{{ ck.checkParams | json }}</pre>
+                        }
+
                         @if (ck.remediations.length) {
                           <div class="remediations">
                             <span class="remediations__label">Remediaciones:</span>
                             @for (r of ck.remediations; track r.id) {
-                              <span class="rem-tag">{{ r.name }}</span>
+                              <div class="rem-item">
+                                <span class="rem-tag">{{ r.name }}</span>
+                                @if (r.remediationParams.type) {
+                                  <span class="rem-type-tag">{{ r.remediationParams.type }}</span>
+                                }
+                              </div>
                             }
                           </div>
                         }

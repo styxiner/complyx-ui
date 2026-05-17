@@ -3,23 +3,17 @@
   <!-- ── Header ──────────────────────────────────────────────────────────── -->
   <header class="pf-header">
     <button class="pf-back" (click)="cancel()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
       Cancelar
     </button>
     <div class="pf-header__titles">
-      <h1>{{ title }}</h1>
-      <p>{{ subtitle }}</p>
+      <h1>{{ title }}</h1><p>{{ subtitle }}</p>
     </div>
     <div class="pf-header__actions">
       <button class="pf-btn pf-btn--primary" (click)="submit()" [disabled]="!isValid || submitting()">
-        @if (submitting()) {
-          <span class="pf-spinner"></span> Guardando…
-        } @else {
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
+        @if (submitting()) { <span class="pf-spinner"></span> Guardando… }
+        @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           {{ isEditMode ? 'Guardar cambios' : 'Crear política' }}
         }
       </button>
@@ -28,91 +22,55 @@
 
   <div class="pf-body">
 
-    <!-- ── Sidebar: datos básicos ──────────────────────────────────────────── -->
+    <!-- ── Sidebar ────────────────────────────────────────────────────────── -->
     <aside class="pf-sidebar">
       <div class="pf-card">
         <h2 class="pf-card__title">Información general</h2>
-
-        <div class="pf-field">
-          <label>Nombre <span class="pf-required">*</span></label>
-          <input type="text" [(ngModel)]="name" placeholder="ej. CIS Ubuntu 22.04 L1" />
-        </div>
-
-        <div class="pf-field">
-          <label>Versión <span class="pf-required">*</span></label>
-          <input type="text" [(ngModel)]="version" placeholder="ej. 1.0.0" />
-        </div>
-
-        <div class="pf-field">
-          <label>Descripción <span class="pf-required">*</span></label>
-          <textarea [(ngModel)]="description" rows="4" placeholder="Describe el propósito y alcance…"></textarea>
-        </div>
-
+        <div class="pf-field"><label>Nombre <span class="pf-required">*</span></label><input type="text" name="pol_name" [(ngModel)]="name" placeholder="ej. CIS Ubuntu 22.04 L1" /></div>
+        <div class="pf-field"><label>Versión <span class="pf-required">*</span></label><input type="text" name="pol_version" [(ngModel)]="version" placeholder="ej. 1.0.0" /></div>
+        <div class="pf-field"><label>Descripción <span class="pf-required">*</span></label><textarea name="pol_description" [(ngModel)]="description" rows="4" placeholder="Propósito y alcance…"></textarea></div>
         <div class="pf-field">
           <label>Severidad <span class="pf-required">*</span></label>
           <div class="pf-severity-grid">
             @for (s of severities; track s) {
-              <button
-                type="button"
-                class="pf-sev-btn"
-                [class.pf-sev-btn--active]="severity === s"
-                [ngClass]="severity === s ? severityClass(s) : ''"
-                (click)="severity = s"
-              >{{ severityLabel(s) }}</button>
+              <button type="button" class="pf-sev-btn" [class.pf-sev-btn--active]="severity === s" [ngClass]="severity === s ? severityClass(s) : ''" (click)="severity = s">{{ severityLabel(s) }}</button>
             }
           </div>
         </div>
-
         <div class="pf-field">
           <label>Estado</label>
-          <select [(ngModel)]="status">
-            @for (st of statuses; track st.value) {
-              <option [value]="st.value">{{ st.label }}</option>
-            }
+          <select name="pol_status" [(ngModel)]="status">
+            @for (st of statuses; track st.value) { <option [value]="st.value">{{ st.label }}</option> }
           </select>
         </div>
-
         <div class="pf-summary">
-          <div class="pf-summary__row">
-            <span>Elementos</span><strong>{{ totalElements }}</strong>
-          </div>
-          <div class="pf-summary__row">
-            <span>Checks totales</span><strong>{{ totalChecks }}</strong>
-          </div>
+          <div class="pf-summary__row"><span>Elementos</span><strong>{{ totalElements }}</strong></div>
+          <div class="pf-summary__row"><span>Checks totales</span><strong>{{ totalChecks }}</strong></div>
         </div>
       </div>
     </aside>
 
-    <!-- ── Builder jerárquico ─────────────────────────────────────────────── -->
+    <!-- ── Builder ────────────────────────────────────────────────────────── -->
     <main class="pf-builder">
 
       @if (submitError()) {
         <div class="pf-error-banner">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9.303 3.376c.866 1.5-.217 3.374-1.948 3.374H4.645c-1.73 0-2.813-1.874-1.948-3.374L10.051 3.378c.866-1.5 3.032-1.5 3.898 0L21.303 16.126zM12 15.75h.007v.008H12v-.008z"/>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9.303 3.376c.866 1.5-.217 3.374-1.948 3.374H4.645c-1.73 0-2.813-1.874-1.948-3.374L10.051 3.378c.866-1.5 3.032-1.5 3.898 0L21.303 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
           {{ submitError() }}
         </div>
       }
 
       <div class="pf-builder__header">
-        <h2>
-          Elementos
-          @if (elements.length > 0) { <span class="pf-count">{{ elements.length }}</span> }
-        </h2>
+        <h2>Elementos @if (elements.length > 0) { <span class="pf-count">{{ elements.length }}</span> }</h2>
         <button class="pf-btn pf-btn--add" (click)="addElement()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
           Añadir elemento
         </button>
       </div>
 
       @if (elements.length === 0) {
         <div class="pf-empty">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
           <p>Añade al menos un elemento para estructurar los checks de esta política.</p>
         </div>
       }
@@ -120,73 +78,159 @@
       <div class="pf-element-list">
         @for (el of elements; track el._id) {
           <div class="pf-element">
-
             <div class="pf-element__header">
               <button class="pf-element__toggle" (click)="toggleElement(el)">
-                <svg class="pf-chevron" [class.pf-chevron--open]="el.expanded"
-                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m6 9 6 6 6-6"/>
-                </svg>
+                <svg class="pf-chevron" [class.pf-chevron--open]="el.expanded" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
               </button>
-              <input class="pf-element__name-input" type="text" [(ngModel)]="el.name" placeholder="Nombre del elemento…" />
+              <input class="pf-element__name-input" type="text" [name]="'el_'+el._id" [(ngModel)]="el.name" placeholder="Nombre del elemento…" />
               <span class="pf-element__meta">{{ el.checks.length }} checks</span>
-              <button class="pf-icon-btn pf-icon-btn--danger" (click)="removeElement(el._id)" title="Eliminar elemento">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
-                </svg>
+              <button class="pf-icon-btn pf-icon-btn--danger" (click)="removeElement(el._id)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
               </button>
             </div>
 
             @if (el.expanded) {
               <div class="pf-element__body">
-
-                @if (el.checks.length === 0) {
-                  <p class="pf-checks-empty">Sin checks. Añade uno para comenzar.</p>
-                }
+                @if (el.checks.length === 0) { <p class="pf-checks-empty">Sin checks. Añade uno.</p> }
 
                 <div class="pf-check-list">
                   @for (ck of el.checks; track ck._id) {
                     <div class="pf-check">
-
                       <div class="pf-check__header">
                         <button class="pf-element__toggle" (click)="toggleCheck(el, ck)">
-                          <svg class="pf-chevron pf-chevron--sm" [class.pf-chevron--open]="ck.expanded"
-                               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="m6 9 6 6 6-6"/>
-                          </svg>
+                          <svg class="pf-chevron pf-chevron--sm" [class.pf-chevron--open]="ck.expanded" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
                         </button>
-                        <input class="pf-check__name-input" type="text" [(ngModel)]="ck.name" placeholder="Nombre del check…" />
+                        <input class="pf-check__name-input" type="text" [name]="'ck_'+ck._id" [(ngModel)]="ck.name" placeholder="Nombre del check…" />
+                        <span class="pf-check__type-tag">{{ labelForCheckType(ck.checkParams.type) }}</span>
                         <span class="pf-check__meta">{{ ck.remediations.length }} rem.</span>
-                        <button class="pf-icon-btn pf-icon-btn--danger" (click)="removeCheck(el, ck._id)" title="Eliminar check">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                          </svg>
+                        <button class="pf-icon-btn pf-icon-btn--danger" (click)="removeCheck(el, ck._id)">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                         </button>
                       </div>
 
                       @if (ck.expanded) {
                         <div class="pf-check__body">
+                          <div class="pf-field pf-field--sm"><label>Justificación</label><input type="text" [name]="'rat_'+ck._id" [(ngModel)]="ck.rationale" placeholder="Por qué es necesario…" /></div>
+
+                          <!-- Tipo de check -->
                           <div class="pf-field pf-field--sm">
-                            <label>Comando de validación <span class="pf-required">*</span></label>
-                            <input type="text" [(ngModel)]="ck.checkCommand" placeholder="ej. stat /etc/ssh/sshd_config" class="pf-mono" />
-                          </div>
-                          <div class="pf-field pf-field--sm">
-                            <label>Justificación (rationale)</label>
-                            <textarea rows="2" [(ngModel)]="ck.rationale" placeholder="Por qué es necesario este check…"></textarea>
+                            <label>Tipo de check <span class="pf-required">*</span></label>
+                            <select [name]="'cktype_'+ck._id" [ngModel]="ck.checkParams.type" (ngModelChange)="onCheckTypeChange(el, ck, $event)">
+                              @for (g of checkTypesByCategory; track g.label) {
+                                <optgroup [label]="g.label">@for (item of g.items; track item.type) { <option [value]="item.type">{{ item.label }}</option> }</optgroup>
+                              }
+                            </select>
                           </div>
 
+                          <!-- ── Params por tipo de check ───────────────── -->
+                          @if (ck.checkParams.type === 'file_exists') {
+                            <div class="pf-params-grid">
+                              <div class="pf-field pf-field--sm pf-span-2"><label>Path <span class="pf-required">*</span></label><input type="text" [name]="'pp_'+ck._id" [(ngModel)]="cp(ck).path" placeholder="/etc/ssh/sshd_config" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Tipo</label><select [name]="'pft_'+ck._id" [(ngModel)]="cp(ck).file_type"><option value="">— cualquiera —</option><option value="file">fichero</option><option value="dir">directorio</option><option value="symlink">symlink</option></select></div>
+                              <div class="pf-field pf-field--sm"><label>Modo (octal)</label><input type="text" [name]="'pm_'+ck._id" [(ngModel)]="cp(ck).mode" placeholder="0600" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Propietario</label><input type="text" [name]="'po_'+ck._id" [(ngModel)]="cp(ck).owner" placeholder="root" /></div>
+                              <div class="pf-field pf-field--sm"><label>Grupo</label><input type="text" [name]="'pg_'+ck._id" [(ngModel)]="cp(ck).group" placeholder="root" /></div>
+                            </div>
+                          }
+                          @if (ck.checkParams.type === 'file_absent') {
+                            <div class="pf-field pf-field--sm"><label>Path <span class="pf-required">*</span></label><input type="text" [name]="'pp_'+ck._id" [(ngModel)]="cp(ck).path" placeholder="/etc/telnet.conf" class="pf-mono" /></div>
+                          }
+                          @if (ck.checkParams.type === 'file_block') {
+                            <div class="pf-params-grid">
+                              <div class="pf-field pf-field--sm pf-span-2"><label>Path <span class="pf-required">*</span></label><input type="text" [name]="'pp_'+ck._id" [(ngModel)]="cp(ck).path" placeholder="/etc/pam.d/common-password" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Modo</label><select [name]="'pmm_'+ck._id" [(ngModel)]="cp(ck).match_mode"><option value="regex">Regex</option><option value="literal">Literal</option></select></div>
+                              <div class="pf-field pf-field--sm"><label>Case insensitive</label><select [name]="'pci_'+ck._id" [(ngModel)]="cp(ck).case_insensitive"><option [ngValue]="false">No</option><option [ngValue]="true">Sí</option></select></div>
+                            </div>
+                            <div class="pf-pattern-section"><div class="pf-pattern-header"><span class="pf-label-sm">Debe contener</span><button class="pf-btn pf-btn--add-sm" (click)="addPattern(ck,'must_contain')">+ Patrón</button></div>
+                              @for (pat of cp(ck).must_contain; track $index) { <div class="pf-pattern-row"><input type="text" [name]="'mc_'+ck._id+'_'+$index" [ngModel]="pat" (ngModelChange)="updatePattern(ck,'must_contain',$index,$event)" placeholder="patrón…" class="pf-mono"/><button class="pf-icon-btn pf-icon-btn--danger" (click)="removePattern(ck,'must_contain',$index)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg></button></div> }
+                            </div>
+                            <div class="pf-pattern-section"><div class="pf-pattern-header"><span class="pf-label-sm">No debe contener</span><button class="pf-btn pf-btn--add-sm" (click)="addPattern(ck,'must_not_contain')">+ Patrón</button></div>
+                              @for (pat of cp(ck).must_not_contain; track $index) { <div class="pf-pattern-row"><input type="text" [name]="'mnc_'+ck._id+'_'+$index" [ngModel]="pat" (ngModelChange)="updatePattern(ck,'must_not_contain',$index,$event)" placeholder="patrón prohibido…" class="pf-mono"/><button class="pf-icon-btn pf-icon-btn--danger" (click)="removePattern(ck,'must_not_contain',$index)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg></button></div> }
+                            </div>
+                          }
+                          @if (ck.checkParams.type === 'file_line') {
+                            <div class="pf-params-grid">
+                              <div class="pf-field pf-field--sm pf-span-2"><label>Path <span class="pf-required">*</span></label><input type="text" [name]="'pp_'+ck._id" [(ngModel)]="cp(ck).path" placeholder="/etc/login.defs" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Clave <span class="pf-required">*</span></label><input type="text" [name]="'pk_'+ck._id" [(ngModel)]="cp(ck).key" placeholder="PASS_MIN_LEN" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Operador</label><select [name]="'pop_'+ck._id" [(ngModel)]="cp(ck).operator">@for (op of operators; track op.value) { <option [value]="op.value">{{ op.label }}</option> }</select></div>
+                              <div class="pf-field pf-field--sm"><label>Valor <span class="pf-required">*</span></label><input type="text" [name]="'pv_'+ck._id" [(ngModel)]="cp(ck).value" placeholder="15" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Separador (regex)</label><input type="text" [name]="'ps_'+ck._id" [(ngModel)]="cp(ck).separator" placeholder="\s+ (defecto)" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Requerido</label><select [name]="'pr_'+ck._id" [(ngModel)]="cp(ck).required"><option [ngValue]="true">Sí</option><option [ngValue]="false">No</option></select></div>
+                            </div>
+                          }
+                          @if (ck.checkParams.type === 'ini_value') {
+                            <div class="pf-params-grid">
+                              <div class="pf-field pf-field--sm pf-span-2"><label>Path <span class="pf-required">*</span></label><input type="text" [name]="'pp_'+ck._id" [(ngModel)]="cp(ck).path" placeholder="/etc/security/pwquality.conf" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Sección (vacío = global)</label><input type="text" [name]="'psec_'+ck._id" [(ngModel)]="cp(ck).section" placeholder="global" /></div>
+                              <div class="pf-field pf-field--sm"><label>Clave <span class="pf-required">*</span></label><input type="text" [name]="'pk_'+ck._id" [(ngModel)]="cp(ck).key" placeholder="minlen" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Operador</label><select [name]="'pop_'+ck._id" [(ngModel)]="cp(ck).operator">@for (op of operators; track op.value) { <option [value]="op.value">{{ op.label }}</option> }</select></div>
+                              <div class="pf-field pf-field--sm"><label>Valor <span class="pf-required">*</span></label><input type="text" [name]="'pv_'+ck._id" [(ngModel)]="cp(ck).value" placeholder="15" class="pf-mono" /></div>
+                            </div>
+                          }
+                          @if (ck.checkParams.type === 'dir_contains') {
+                            <div class="pf-params-grid">
+                              <div class="pf-field pf-field--sm pf-span-2"><label>Path <span class="pf-required">*</span></label><input type="text" [name]="'pp_'+ck._id" [(ngModel)]="cp(ck).path" placeholder="/etc/cron.d" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Glob</label><input type="text" [name]="'pgl_'+ck._id" [(ngModel)]="cp(ck).glob" placeholder="*.conf" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Debe contener</label><select [name]="'pmc_'+ck._id" [(ngModel)]="cp(ck).must_contain"><option [ngValue]="true">Sí</option><option [ngValue]="false">No (ninguno)</option></select></div>
+                              <div class="pf-field pf-field--sm"><label>Mínimo</label><input type="number" [name]="'pmin_'+ck._id" [(ngModel)]="cp(ck).min_count" placeholder="1" /></div>
+                              <div class="pf-field pf-field--sm"><label>Máximo</label><input type="number" [name]="'pmax_'+ck._id" [(ngModel)]="cp(ck).max_count" /></div>
+                            </div>
+                          }
+                          @if (ck.checkParams.type === 'symlink') {
+                            <div class="pf-params-grid">
+                              <div class="pf-field pf-field--sm"><label>Path <span class="pf-required">*</span></label><input type="text" [name]="'pp_'+ck._id" [(ngModel)]="cp(ck).path" placeholder="/etc/localtime" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Target esperado</label><input type="text" [name]="'ptgt_'+ck._id" [(ngModel)]="cp(ck).target" placeholder="/usr/share/zoneinfo/UTC" class="pf-mono" /></div>
+                            </div>
+                          }
+                          @if (ck.checkParams.type === 'pkg_installed') {
+                            <div class="pf-params-grid">
+                              <div class="pf-field pf-field--sm"><label>Paquete <span class="pf-required">*</span></label><input type="text" [name]="'pn_'+ck._id" [(ngModel)]="cp(ck).name" placeholder="openssh-server" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Gestor</label><select [name]="'ppm_'+ck._id" [(ngModel)]="cp(ck).package_manager"><option value="auto">Auto</option><option value="dpkg">dpkg</option><option value="rpm">rpm</option><option value="pacman">pacman</option></select></div>
+                              <div class="pf-field pf-field--sm"><label>Versión</label><input type="text" [name]="'pver_'+ck._id" [(ngModel)]="cp(ck).version" placeholder="8.9" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Operador versión</label><select [name]="'pvop_'+ck._id" [(ngModel)]="cp(ck).operator">@for (op of operators; track op.value) { <option [value]="op.value">{{ op.label }}</option> }</select></div>
+                            </div>
+                          }
+                          @if (ck.checkParams.type === 'pkg_absent') {
+                            <div class="pf-params-grid">
+                              <div class="pf-field pf-field--sm"><label>Paquete <span class="pf-required">*</span></label><input type="text" [name]="'pn_'+ck._id" [(ngModel)]="cp(ck).name" placeholder="telnet" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Razón</label><input type="text" [name]="'preason_'+ck._id" [(ngModel)]="cp(ck).reason" placeholder="Protocolo inseguro" /></div>
+                            </div>
+                          }
+                          @if (ck.checkParams.type === 'service') {
+                            <div class="pf-params-grid">
+                              <div class="pf-field pf-field--sm"><label>Servicio <span class="pf-required">*</span></label><input type="text" [name]="'pn_'+ck._id" [(ngModel)]="cp(ck).name" placeholder="sshd" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Activo</label><select [name]="'pact_'+ck._id" [(ngModel)]="cp(ck).active"><option [ngValue]="true">Sí</option><option [ngValue]="false">No</option><option [ngValue]="null">— no verificar —</option></select></div>
+                              <div class="pf-field pf-field--sm"><label>Habilitado</label><select [name]="'pena_'+ck._id" [(ngModel)]="cp(ck).enabled"><option [ngValue]="true">Sí</option><option [ngValue]="false">No</option><option [ngValue]="null">— no verificar —</option></select></div>
+                            </div>
+                          }
+                          @if (ck.checkParams.type === 'sysctl') {
+                            <div class="pf-params-grid">
+                              <div class="pf-field pf-field--sm pf-span-2"><label>Parámetro <span class="pf-required">*</span></label><input type="text" [name]="'pk_'+ck._id" [(ngModel)]="cp(ck).key" placeholder="net.ipv4.ip_forward" class="pf-mono" /></div>
+                              <div class="pf-field pf-field--sm"><label>Operador</label><select [name]="'pop_'+ck._id" [(ngModel)]="cp(ck).operator">@for (op of operators; track op.value) { <option [value]="op.value">{{ op.label }}</option> }</select></div>
+                              <div class="pf-field pf-field--sm"><label>Valor <span class="pf-required">*</span></label><input type="text" [name]="'pv_'+ck._id" [(ngModel)]="cp(ck).value" placeholder="0" class="pf-mono" /></div>
+                            </div>
+                          }
+                          @if (ck.checkParams.type === 'user_attr') {
+                            <div class="pf-field pf-field--sm"><label>Usuario <span class="pf-required">*</span></label><input type="text" [name]="'puser_'+ck._id" [(ngModel)]="cp(ck).username" placeholder="root" /></div>
+                            <div class="pf-pattern-section">
+                              <div class="pf-pattern-header"><span class="pf-label-sm">Atributos a verificar</span><button class="pf-btn pf-btn--add-sm" (click)="addUserAttrCheck(ck)">+ Añadir</button></div>
+                              @for (ua of getUserAttrChecks(ck); track $index) {
+                                <div class="pf-ua-row">
+                                  <select [name]="'ua_attr_'+ck._id+'_'+$index" [(ngModel)]="ua.attr"><option value="shell">shell</option><option value="home">home</option><option value="uid">uid</option><option value="gid">gid</option><option value="groups">groups</option><option value="password_max_age">pwd_max_age</option><option value="password_min_age">pwd_min_age</option><option value="password_status">pwd_status</option></select>
+                                  <select [name]="'ua_op_'+ck._id+'_'+$index" [(ngModel)]="ua.operator">@for (op of operators; track op.value) { <option [value]="op.value">{{ op.value }}</option> }</select>
+                                  <input type="text" [name]="'ua_val_'+ck._id+'_'+$index" [(ngModel)]="ua.value" placeholder="valor" class="pf-mono" />
+                                  <button class="pf-icon-btn pf-icon-btn--danger" (click)="removeUserAttrCheck(ck,$index)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg></button>
+                                </div>
+                              }
+                            </div>
+                          }
+
+                          <!-- ── Remediaciones ──────────────────────────── -->
                           <div class="pf-rem-section">
                             <div class="pf-rem-section__header">
-                              <span class="pf-rem-section__label">
-                                Remediaciones
-                                @if (ck.remediations.length > 0) {
-                                  <span class="pf-count pf-count--sm">{{ ck.remediations.length }}</span>
-                                }
-                              </span>
+                              <span class="pf-rem-section__label">Remediaciones @if (ck.remediations.length > 0) { <span class="pf-count pf-count--sm">{{ ck.remediations.length }}</span> }</span>
                               <button class="pf-btn pf-btn--add-sm" (click)="addRemediation(el, ck)">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-                                </svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                                 Añadir remediación
                               </button>
                             </div>
@@ -194,23 +238,72 @@
                             @for (r of ck.remediations; track r._id) {
                               <div class="pf-rem">
                                 <div class="pf-rem__fields">
-                                  <div class="pf-field pf-field--sm">
-                                    <label>Nombre <span class="pf-required">*</span></label>
-                                    <input type="text" [(ngModel)]="r.name" placeholder="ej. Restringir permisos SSH" />
+                                  <div class="pf-params-grid">
+                                    <div class="pf-field pf-field--sm"><label>Nombre <span class="pf-required">*</span></label><input type="text" [name]="'rn_'+r._id" [(ngModel)]="r.name" placeholder="ej. Restringir permisos" /></div>
+                                    <div class="pf-field pf-field--sm"><label>Descripción</label><input type="text" [name]="'rd_'+r._id" [(ngModel)]="r.description" placeholder="Descripción…" /></div>
                                   </div>
+
+                                  <!-- Tipo de remediador -->
                                   <div class="pf-field pf-field--sm">
-                                    <label>Descripción</label>
-                                    <input type="text" [(ngModel)]="r.description" placeholder="Descripción de la acción correctiva…" />
+                                    <label>Tipo de remediación <span class="pf-required">*</span></label>
+                                    <select [name]="'rtype_'+r._id" [ngModel]="r.remediationParams.type" (ngModelChange)="onRemTypeChange(el, ck, r, $event)">
+                                      @for (g of remTypesByCategory; track g.label) {
+                                        <optgroup [label]="g.label">@for (item of g.items; track item.type) { <option [value]="item.type">{{ item.label }}</option> }</optgroup>
+                                      }
+                                    </select>
                                   </div>
-                                  <div class="pf-field pf-field--sm">
-                                    <label>Comando de remediación <span class="pf-required">*</span></label>
-                                    <input type="text" [(ngModel)]="r.remediationCommand" placeholder="ej. ansible-playbook fix_ssh.yml" class="pf-mono" />
-                                  </div>
+                                  <div class="pf-check__type-tag" style="display:inline-block;margin-bottom:0.4rem">{{ labelForRemType(r.remediationParams.type) }}</div>
+
+                                  <!-- ── Params por tipo de remediador ─── -->
+                                  @if (r.remediationParams.type === 'file_line_set') {
+                                    <div class="pf-params-grid">
+                                      <div class="pf-field pf-field--sm pf-span-2"><label>Path <span class="pf-required">*</span></label><input type="text" [name]="'rp_'+r._id" [(ngModel)]="rp(r).path" placeholder="/etc/login.defs" class="pf-mono"/></div>
+                                      <div class="pf-field pf-field--sm"><label>Clave <span class="pf-required">*</span></label><input type="text" [name]="'rk_'+r._id" [(ngModel)]="rp(r).key" placeholder="PASS_MIN_LEN" class="pf-mono"/></div>
+                                      <div class="pf-field pf-field--sm"><label>Valor <span class="pf-required">*</span></label><input type="text" [name]="'rv_'+r._id" [(ngModel)]="rp(r).value" placeholder="15" class="pf-mono"/></div>
+                                      <div class="pf-field pf-field--sm"><label>Separador</label><input type="text" [name]="'rs_'+r._id" [(ngModel)]="rp(r).separator" placeholder="espacio (defecto)" class="pf-mono"/></div>
+                                      <div class="pf-field pf-field--sm"><label>Crear si ausente</label><select [name]="'rcia_'+r._id" [(ngModel)]="rp(r).create_if_absent"><option [ngValue]="true">Sí</option><option [ngValue]="false">No</option></select></div>
+                                      <div class="pf-field pf-field--sm"><label>Backup</label><select [name]="'rbk_'+r._id" [(ngModel)]="rp(r).backup"><option [ngValue]="true">Sí</option><option [ngValue]="false">No</option></select></div>
+                                    </div>
+                                  }
+                                  @if (r.remediationParams.type === 'file_block_set') {
+                                    <div class="pf-params-grid">
+                                      <div class="pf-field pf-field--sm pf-span-2"><label>Path <span class="pf-required">*</span></label><input type="text" [name]="'rp_'+r._id" [(ngModel)]="rp(r).path" placeholder="/etc/pam.d/common-password" class="pf-mono"/></div>
+                                      <div class="pf-field pf-field--sm pf-span-2"><label>Bloque a insertar <span class="pf-required">*</span></label><textarea [name]="'rbl_'+r._id" [(ngModel)]="rp(r).block" rows="3" placeholder="password requisite pam_pwquality.so minlen=15" class="pf-mono"></textarea></div>
+                                      <div class="pf-field pf-field--sm"><label>Marker (idempotencia)</label><input type="text" [name]="'rmk_'+r._id" [(ngModel)]="rp(r).marker" placeholder="pam_pwquality" class="pf-mono"/></div>
+                                      <div class="pf-field pf-field--sm"><label>Insertar antes de</label><input type="text" [name]="'rib_'+r._id" [(ngModel)]="rp(r).insert_before" placeholder="# END MANAGED" class="pf-mono"/></div>
+                                      <div class="pf-field pf-field--sm"><label>Backup</label><select [name]="'rbk_'+r._id" [(ngModel)]="rp(r).backup"><option [ngValue]="true">Sí</option><option [ngValue]="false">No</option></select></div>
+                                    </div>
+                                  }
+                                  @if (r.remediationParams.type === 'pkg_install') {
+                                    <div class="pf-params-grid">
+                                      <div class="pf-field pf-field--sm"><label>Paquete <span class="pf-required">*</span></label><input type="text" [name]="'rn_pkg_'+r._id" [(ngModel)]="rp(r).name" placeholder="auditd" class="pf-mono"/></div>
+                                      <div class="pf-field pf-field--sm"><label>Gestor</label><select [name]="'rpm_'+r._id" [(ngModel)]="rp(r).package_manager"><option value="auto">Auto</option><option value="apt">apt</option><option value="dnf">dnf</option><option value="yum">yum</option><option value="pacman">pacman</option></select></div>
+                                      <div class="pf-field pf-field--sm"><label>Versión (opcional)</label><input type="text" [name]="'rver_'+r._id" [(ngModel)]="rp(r).version" placeholder="1.2.3" class="pf-mono"/></div>
+                                    </div>
+                                  }
+                                  @if (r.remediationParams.type === 'pkg_remove') {
+                                    <div class="pf-params-grid">
+                                      <div class="pf-field pf-field--sm"><label>Paquete <span class="pf-required">*</span></label><input type="text" [name]="'rn_pkg_'+r._id" [(ngModel)]="rp(r).name" placeholder="telnetd" class="pf-mono"/></div>
+                                      <div class="pf-field pf-field--sm"><label>Gestor</label><select [name]="'rpm_'+r._id" [(ngModel)]="rp(r).package_manager"><option value="auto">Auto</option><option value="apt">apt</option><option value="dnf">dnf</option><option value="yum">yum</option><option value="pacman">pacman</option></select></div>
+                                      <div class="pf-field pf-field--sm"><label>Purge (eliminar configs)</label><select [name]="'rpurge_'+r._id" [(ngModel)]="rp(r).purge"><option [ngValue]="false">No</option><option [ngValue]="true">Sí</option></select></div>
+                                    </div>
+                                  }
+                                  @if (r.remediationParams.type === 'service_set') {
+                                    <div class="pf-params-grid">
+                                      <div class="pf-field pf-field--sm"><label>Servicio <span class="pf-required">*</span></label><input type="text" [name]="'rsvc_'+r._id" [(ngModel)]="rp(r).name" placeholder="auditd" class="pf-mono"/></div>
+                                      <div class="pf-field pf-field--sm"><label>Activo</label><select [name]="'ract_'+r._id" [(ngModel)]="rp(r).active"><option [ngValue]="true">Sí (start)</option><option [ngValue]="false">No (stop)</option><option [ngValue]="null">— no cambiar —</option></select></div>
+                                      <div class="pf-field pf-field--sm"><label>Habilitado</label><select [name]="'rena_'+r._id" [(ngModel)]="rp(r).enabled"><option [ngValue]="true">Sí (enable)</option><option [ngValue]="false">No (disable)</option><option [ngValue]="null">— no cambiar —</option></select></div>
+                                    </div>
+                                  }
+                                  @if (r.remediationParams.type === 'sysctl_set') {
+                                    <div class="pf-params-grid">
+                                      <div class="pf-field pf-field--sm"><label>Parámetro <span class="pf-required">*</span></label><input type="text" [name]="'rk_'+r._id" [(ngModel)]="rp(r).key" placeholder="net.ipv4.ip_forward" class="pf-mono"/></div>
+                                      <div class="pf-field pf-field--sm"><label>Valor <span class="pf-required">*</span></label><input type="text" [name]="'rv_'+r._id" [(ngModel)]="rp(r).value" placeholder="0" class="pf-mono"/></div>
+                                    </div>
+                                  }
                                 </div>
                                 <button class="pf-icon-btn pf-icon-btn--danger pf-rem__del" (click)="removeRemediation(el, ck, r._id)">
-                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                                  </svg>
+                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                                 </button>
                               </div>
                             }
@@ -222,9 +315,7 @@
                 </div>
 
                 <button class="pf-btn pf-btn--add-check" (click)="addCheck(el)">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-                  </svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                   Añadir check
                 </button>
               </div>

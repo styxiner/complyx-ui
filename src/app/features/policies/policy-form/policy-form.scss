@@ -398,3 +398,77 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12); $low-border:      rgba(7
   border: 2px solid rgba(12,26,46,.4); border-top-color: #0c1a2e;
   border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
 }
+
+// ── Parámetros grid ───────────────────────────────────────────────────────────
+.pf-params-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+
+  .pf-span-2 { grid-column: span 2; }
+}
+
+// ── Tag de tipo de check ──────────────────────────────────────────────────────
+.pf-check__type-tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+}
+
+// ── Patrones (file_block) ─────────────────────────────────────────────────────
+.pf-pattern-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pf-pattern-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pf-pattern-row {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+
+  input { flex: 1; }
+}
+
+.pf-label-sm {
+  font-size: 0.67rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+// ── user_attr row ─────────────────────────────────────────────────────────────
+.pf-ua-row {
+  display: grid;
+  grid-template-columns: 1fr 0.6fr 1fr auto;
+  gap: 0.35rem;
+  align-items: center;
+
+  select, input {
+    background: #0c1a35;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 5px;
+    color: #e2e8f0;
+    font-size: 0.76rem;
+    padding: 0.35rem 0.5rem;
+    outline: none;
+    font-family: inherit;
+
+    &:focus { border-color: rgba(56,189,248,0.5); }
+    option { background: #0f172a; }
+  }
+}
