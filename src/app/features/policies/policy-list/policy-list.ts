@@ -4,11 +4,12 @@ import { PolicyService } from '../../../core/services/policy';
 import { PolicySummaryDTO, PolicyFilter } from '../../../core/models/policy.model';
 import { PolicyDetailModal } from '../policy-detail-modal/policy-detail-modal';
 import { PolicyFilterBar } from '../policy-filter-bar/policy-filter-bar';
+import { PolicyForm } from '../policy-form/policy-form';
 
 @Component({
   selector: 'app-policy-list',
   standalone: true,
-  imports: [CommonModule, PolicyDetailModal, PolicyFilterBar],
+  imports: [CommonModule, PolicyDetailModal, PolicyFilterBar, PolicyForm],
   templateUrl: './policy-list.html',
   styleUrl: './policy-list.scss',
 })
@@ -24,6 +25,9 @@ export class PolicyList implements OnInit {
   // Panel lateral de detalle
   selectedPolicyId   = signal<string | null>(null);
   selectedPolicyName = signal<string>('');
+
+  // Overlay de creación
+  isFormOpen = signal(false);
 
   // Filtros activos
   private activeFilter: PolicyFilter = {};
@@ -76,6 +80,11 @@ export class PolicyList implements OnInit {
     this.closeDetail();
     this.loadPolicies();
   }
+
+  // ── Formulario de creación ────────────────────────────────────────────────
+  openCreateForm(): void  { this.isFormOpen.set(true); }
+  closeCreateForm(): void { this.isFormOpen.set(false); }
+  onPolicyCreated(): void { this.isFormOpen.set(false); this.loadPolicies(); }
 
   severityClass(severity: string): string {
     const map: Record<string, string> = {

@@ -2,8 +2,32 @@
 // policy.model.ts — DTOs exactos del backend (diagrama de clases + OpenAPI)
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type Severity     = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+export interface RemediationDraft {
+  _id: string;
+  name: string;
+  description: string;
+  remediationCommand: string;
+}
+ 
+export interface CheckDraft {
+  _id: string;
+  name: string;
+  checkCommand: string;
+  rationale: string;
+  remediations: RemediationDraft[];
+}
+ 
+export interface ElementDraft {
+  _id: string;
+  name: string;
+  checks: CheckDraft[];
+}
+ 
+export type Severity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 export type PolicyStatus = 'DRAFT' | 'ACTIVE' | 'INACTIVE' | 'ARCHIVED';
+ 
+let _seq = 0;
+export const uid = () => `_${++_seq}`;
 
 // ── Listado ───────────────────────────────────────────────────────────────────
 
