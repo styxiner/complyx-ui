@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-agent-detail-modal',
+  selector: 'app-quick-reports',
   imports: [],
   templateUrl: './agent-detail-modal.html',
   styleUrl: './agent-detail-modal.scss',

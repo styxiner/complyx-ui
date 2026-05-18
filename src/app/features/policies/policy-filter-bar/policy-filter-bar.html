@@ -1,0 +1,12 @@
+<div class="filter-bar">
+  <app-search-bar
+    placeholder="Buscar política…"
+    (search)="onSearch($event)"
+    class="filter-bar__search"
+  />
+  <app-filter-dropdown
+    label="Severidad"
+    [options]="severityOptions"
+    (selectedChange)="onSeverityChange($event)"
+  />
+</div>

@@ -41,8 +41,18 @@ export const routes: Routes = [
       {
         path: 'policies',
         canActivate: [roleGuard('ADMIN', 'TECNICO')],
-        loadComponent: () =>
-          import('./features/policies/policy-list/policy-list').then((m) => m.PolicyList),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/policies/policy-list/policy-list').then((m) => m.PolicyList),
+          },
+          {
+            path: 'new',
+            loadComponent: () =>
+              import('./features/policies/policy-form/policy-form').then((m) => m.PolicyForm),
+          }
+        ]
       },
       {
         path: 'risks',

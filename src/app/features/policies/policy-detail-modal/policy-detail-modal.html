@@ -1,1 +1,147 @@
-<p>policy-detail-modal works!</p>
+<app-detail-panel
+  [title]="policyName"
+  subtitle="Detalle de política"
+  (closed)="closed.emit()"
+>
+
+  @if (loading) {
+    <app-loading-spinner mode="page" message="Cargando política…" />
+  } @else if (error) {
+    <app-error-banner message="No se pudo cargar la política." (retry)="load()" />
+  } @else if (detail) {
+
+    <!-- ── Tabs ─────────────────────────────────────────────────────────── -->
+    <div class="tabs">
+      <button class="tab" [class.tab--active]="activeTab === 'info'"     (click)="setTab('info')">
+        Información
+      </button>
+      <button class="tab" [class.tab--active]="activeTab === 'elements'" (click)="setTab('elements')">
+        Elementos
+        <span class="tab__count">{{ detail.elements.length }}</span>
+      </button>
+    </div>
+
+    <!-- ── Tab: Información ──────────────────────────────────────────────── -->
+    @if (activeTab === 'info') {
+      <div class="tab-content">
+
+        <div class="action-row">
+          <button
+            *appHasRole="['ADMIN', 'TECNICO']"
+            class="btn btn--ghost"
+            (click)="requestEdit.emit(detail)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931zm0 0L19.5 7.125"/></svg>
+            Editar
+          </button>
+          <button
+            *appHasRole="'ADMIN'"
+            class="btn btn--danger"
+            (click)="requestDelete.emit(detail)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/></svg>
+            Eliminar
+          </button>
+        </div>
+
+        <div class="badges-row">
+          <app-status-badge [status]="severityStatus(detail.severity)" [label]="detail.severity | severityLabel" />
+          <span class="status-chip">{{ statusLabel(detail.status) }}</span>
+        </div>
+
+        <section class="section">
+          <h4 class="section__title">General</h4>
+          <dl class="detail-list">
+            <div class="detail-item"><dt>Nombre</dt><dd>{{ detail.name }}</dd></div>
+            <div class="detail-item"><dt>Versión</dt><dd>{{ detail.version }}</dd></div>
+            <div class="detail-item"><dt>Creada</dt><dd>{{ detail.createdAt | timeAgo }}</dd></div>
+          </dl>
+        </section>
+
+        <section class="section">
+          <h4 class="section__title">Descripción</h4>
+          <p class="description">{{ detail.description }}</p>
+        </section>
+
+        <section class="section">
+          <h4 class="section__title">Resumen</h4>
+          <div class="kpi-row">
+            <div class="kpi">
+              <span class="kpi__value">{{ detail.elements.length }}</span>
+              <span class="kpi__label">Elementos</span>
+            </div>
+            <div class="kpi">
+              <span class="kpi__value">{{ totalChecks() }}</span>
+              <span class="kpi__label">Checks totales</span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    }
+
+    <!-- ── Tab: Elementos ────────────────────────────────────────────────── -->
+    @if (activeTab === 'elements') {
+      <div class="tab-content">
+        @if (detail.elements.length === 0) {
+          <p class="empty-text">Esta política no tiene elementos definidos.</p>
+        } @else {
+          <div class="element-list">
+            @for (el of detail.elements; track el.id) {
+              <div class="element">
+                <button class="element__header" (click)="toggleElement(el.id)">
+                  <span class="element__name">{{ el.name }}</span>
+                  <span class="element__meta">{{ el.checks.length }} checks</span>
+                  <svg class="element__chevron" [class.element__chevron--open]="isExpanded(el.id)"
+                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m6 9 6 6 6-6"/>
+                  </svg>
+                </button>
+
+                @if (isExpanded(el.id)) {
+                  <div class="check-list">
+                    @for (ck of el.checks; track ck.id) {
+                      <div class="check">
+                        <div class="check__header">
+                          <span class="check__name">{{ ck.name }}</span>
+                          <!-- Tag con el tipo de executor -->
+                          @if (ck.checkParams.type) {
+                            <span class="check__type-tag">{{ ck.checkParams.type }}</span>
+                          }
+                        </div>
+
+                        @if (ck.rationale) {
+                          <p class="check__rationale">{{ ck.rationale }}</p>
+                        }
+
+                        <!-- Parámetros del check como JSON formateado -->
+                        @if (ck.checkParams) {
+                          <pre class="check__params">{{ ck.checkParams | json }}</pre>
+                        }
+
+                        @if (ck.remediations.length) {
+                          <div class="remediations">
+                            <span class="remediations__label">Remediaciones:</span>
+                            @for (r of ck.remediations; track r.id) {
+                              <div class="rem-item">
+                                <span class="rem-tag">{{ r.name }}</span>
+                                @if (r.remediationParams.type) {
+                                  <span class="rem-type-tag">{{ r.remediationParams.type }}</span>
+                                }
+                              </div>
+                            }
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+  }
+</app-detail-panel>
