@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, inject, signal, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PolicyDetailDTO } from '../../../core/models/policy.model';
 import { PolicyService } from '../../../core/services/policy';
@@ -15,6 +15,7 @@ type Tab = 'info' | 'elements';
 @Component({
   selector: 'app-policy-detail-modal',
   standalone: true,
+  encapsulation: ViewEncapsulation.None,
   imports: [
     CommonModule,
     DetailPanel,
