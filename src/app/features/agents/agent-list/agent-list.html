@@ -1,1 +1,150 @@
-<p>agent-list works!</p>
+<div class="agent-list">
+
+  <!-- Cabecera ---------------------------------------------------------------->
+  <div class="agent-list__header">
+    <div class="agent-list__title-block">
+      <h1 class="agent-list__title">Agentes</h1>
+      @if (!loading() && !error()) {
+        <span class="agent-list__count">{{ totalElements }} registrados</span>
+      }
+    </div>
+  </div>
+
+  <!-- Barra de filtros -------------------------------------------------------->
+  <app-agent-filter-bar (filterChange)="onFilterChange($event)" />
+
+  <!-- Estado de carga --------------------------------------------------------->
+  @if (loading()) {
+    <app-loading-spinner mode="page" />
+  }
+
+  <!-- Error -------------------------------------------------------------------->
+  @else if (error()) {
+    <app-error-banner
+      message="No se pudieron cargar los agentes. Comprueba tu conexión o inténtalo de nuevo."
+      [dismissible]="false">
+    </app-error-banner>
+  }
+
+  <!-- Sin resultados ----------------------------------------------------------->
+  @else if (agents.length === 0) {
+    <app-empty-state
+      icon="server"
+      title="No hay agentes"
+      description="No se encontraron agentes con los filtros seleccionados.">
+    </app-empty-state>
+  }
+
+  <!-- Tabla -------------------------------------------------------------------->
+  @else {
+    <app-data-table
+      [rows]="agents"
+      [total]="totalElements"
+      [page]="page + 1"
+      [pageSize]="pageSize"
+      (rowClick)="openDetail($event)"
+      (pageChange)="onPageChange($event)">
+
+      <ng-template appColumn="hostname" header="Hostname" [sortable]="true" let-row>
+        <span class="agent-list__hostname">
+          <svg viewBox="0 0 20 20" fill="currentColor" class="agent-list__hostname-icon">
+            <path fill-rule="evenodd" d="M2 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5zm14 1H4v6h12V6zM6 14v1h8v-1H6z" clip-rule="evenodd"/>
+          </svg>
+          {{ row.hostname }}
+        </span>
+      </ng-template>
+
+      <ng-template appColumn="ip" header="IP" let-row>
+        <span class="agent-list__mono">{{ row.ip }}</span>
+      </ng-template>
+
+      <ng-template appColumn="osName" header="SO" let-row>
+        <span class="agent-list__os">
+          <span class="agent-list__os-name">{{ row.osName }}</span>
+          @if (row.osVersion) {
+            <span class="agent-list__os-version">{{ row.osVersion }}</span>
+          }
+        </span>
+      </ng-template>
+
+      <ng-template appColumn="agentVersion" header="Versión" let-row>
+        <span class="agent-list__mono">{{ row.agentVersion ?? '—' }}</span>
+      </ng-template>
+
+      <ng-template appColumn="lastSeen" header="Última conexión" let-row>
+        <span class="agent-list__date">
+          {{ row.lastSeen ? (row.lastSeen | date:'dd/MM/yy HH:mm') : '—' }}
+        </span>
+      </ng-template>
+
+      <ng-template appColumn="enabled" header="Estado" let-row>
+        <app-status-badge [status]="enabledStatus(row.enabled)" />
+      </ng-template>
+
+      <ng-template appColumn="_actions" header="" let-row>
+        <div class="agent-list__row-actions" (click)="$event.stopPropagation()">
+          <button
+            class="agent-list__action-btn"
+            [title]="row.enabled ? 'Desactivar' : 'Activar'"
+            [class.agent-list__action-btn--warning]="row.enabled"
+            [class.agent-list__action-btn--success]="!row.enabled"
+            (click)="requestToggle(row, $event)">
+            @if (row.enabled) {
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0zM7 8a1 1 0 0 1 2 0v4a1 1 0 1 1-2 0V8zm4-1a1 1 0 0 1 1 1v4a1 1 0 1 1-2 0V8a1 1 0 0 1 1-1z" clip-rule="evenodd"/>
+              </svg>
+            } @else {
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM9.555 7.168A1 1 0 0 0 8 8v4a1 1 0 0 0 1.555.832l3-2a1 1 0 0 0 0-1.664l-3-2z" clip-rule="evenodd"/>
+              </svg>
+            }
+          </button>
+          <button
+            class="agent-list__action-btn agent-list__action-btn--danger"
+            title="Eliminar agente"
+            (click)="requestDelete(row, $event)">
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M9 2a1 1 0 0 0-.894.553L7.382 4H4a1 1 0 0 0 0 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6a1 1 0 1 0 0-2h-3.382l-.724-1.447A1 1 0 0 0 11 2H9zM7 8a1 1 0 0 1 2 0v6a1 1 0 1 1-2 0V8zm4-1a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V8a1 1 0 0 1 1-1z" clip-rule="evenodd"/>
+            </svg>
+          </button>
+        </div>
+      </ng-template>
+
+    </app-data-table>
+  }
+
+</div>
+
+<!-- Panel de detalle ---------------------------------------------------------->
+<app-agent-detail-modal
+  [agentId]="selectedAgentId()"
+  (closed)="closeDetail()"
+  (toggleRequest)="agentToToggle.set($event)"
+  (deleteRequest)="agentToDelete.set($event)">
+</app-agent-detail-modal>
+
+<!-- Confirm: toggle ----------------------------------------------------------->
+@if (agentToToggle()) {
+  <app-confirm-dialog
+    [title]="agentToToggle()!.enabled ? 'Desactivar agente' : 'Activar agente'"
+    [message]="agentToToggle()!.enabled
+      ? '¿Desactivar ' + agentToToggle()!.hostname + '? Dejará de recibir políticas hasta que se reactive.'
+      : '¿Activar ' + agentToToggle()!.hostname + '? Comenzará a recibir y ejecutar políticas asignadas.'"
+    [confirmLabel]="agentToToggle()!.enabled ? 'Desactivar' : 'Activar'"
+    [danger]="agentToToggle()!.enabled"
+    (confirmed)="confirmToggle()"
+    (cancelled)="cancelToggle()">
+  </app-confirm-dialog>
+}
+
+<!-- Confirm: eliminar --------------------------------------------------------->
+@if (agentToDelete()) {
+  <app-confirm-dialog
+    title="Eliminar agente"
+    [message]="'¿Eliminar permanentemente ' + agentToDelete()!.hostname + '? Esta acción no se puede deshacer.'"
+    confirmLabel="Eliminar"
+    [danger]="true"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()">
+  </app-confirm-dialog>
+}

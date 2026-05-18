@@ -1,1 +1,119 @@
-<p>agent-detail-modal works!</p>
+@if (agentId) {
+  <app-modal
+    [title]="agent()?.hostname ?? 'Detalle del agente'"
+    (closed)="onClose()">
+
+    @if (loading()) {
+      <app-loading-spinner mode="page" />
+    } @else if (error()) {
+      <app-error-banner message="No se pudo cargar el agente." [dismissible]="false" />
+    } @else if (agent(); as a) {
+
+      <!-- Cabecera -->
+      <div class="agent-detail__header">
+        <div class="agent-detail__meta">
+          <span class="agent-detail__hostname">{{ a.hostname }}</span>
+          <app-status-badge [status]="enabledStatus(a.enabled)" />
+        </div>
+        <div class="agent-detail__actions">
+          <button
+            class="btn btn--sm"
+            [class.btn--warning]="a.enabled"
+            [class.btn--success]="!a.enabled"
+            (click)="onToggle()">
+            {{ a.enabled ? 'Desactivar' : 'Activar' }}
+          </button>
+          <button class="btn btn--sm btn--danger" (click)="onDelete()">
+            Eliminar
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="agent-detail__tabs">
+        <button class="agent-detail__tab" [class.agent-detail__tab--active]="activeTab() === 'info'"     (click)="setTab('info')">Información</button>
+        <button class="agent-detail__tab" [class.agent-detail__tab--active]="activeTab() === 'policies'" (click)="setTab('policies')">Políticas ({{ policies().length }})</button>
+        <button class="agent-detail__tab" [class.agent-detail__tab--active]="activeTab() === 'risks'"    (click)="setTab('risks')">Riesgos</button>
+      </div>
+
+      <!-- Tab: Información -->
+      @if (activeTab() === 'info') {
+        <app-detail-panel>
+          <div class="detail-grid">
+            <div class="detail-grid__item">
+              <span class="detail-grid__label">ID</span>
+              <span class="detail-grid__value detail-grid__value--mono">{{ a.id }}</span>
+            </div>
+            <div class="detail-grid__item">
+              <span class="detail-grid__label">IP</span>
+              <span class="detail-grid__value detail-grid__value--mono">{{ a.ip }}</span>
+            </div>
+            <div class="detail-grid__item">
+              <span class="detail-grid__label">Sistema operativo</span>
+              <span class="detail-grid__value">{{ a.osName }}</span>
+            </div>
+            <div class="detail-grid__item">
+              <span class="detail-grid__label">Versión OS</span>
+              <span class="detail-grid__value">{{ a.osVersion }}</span>
+            </div>
+            <div class="detail-grid__item">
+              <span class="detail-grid__label">Versión agente</span>
+              <span class="detail-grid__value detail-grid__value--mono">{{ a.agentVersion ?? '—' }}</span>
+            </div>
+            <div class="detail-grid__item">
+              <span class="detail-grid__label">Última conexión</span>
+              <span class="detail-grid__value">{{ (a.lastSeen | date:'dd/MM/yyyy HH:mm') ?? '—' }}</span>
+            </div>
+            <div class="detail-grid__item">
+              <span class="detail-grid__label">Registrado</span>
+              <span class="detail-grid__value">{{ (a.registeredDate | date:'dd/MM/yyyy') ?? '—' }}</span>
+            </div>
+            @if (a.groups.length) {
+              <div class="detail-grid__item detail-grid__item--full">
+                <span class="detail-grid__label">Grupos</span>
+                <div class="detail-grid__tags">
+                  @for (g of a.groups; track g) {
+                    <span class="tag">{{ g }}</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </app-detail-panel>
+      }
+
+      <!-- Tab: Políticas -->
+      @if (activeTab() === 'policies') {
+        @if (policies().length === 0) {
+          <app-empty-state
+            icon="shield"
+            title="Sin políticas asignadas"
+            description="Este agente no tiene ninguna política asignada directamente ni a través de un grupo.">
+          </app-empty-state>
+        } @else {
+          <div class="policies-list">
+            @for (p of policies(); track p.id) {
+              <div class="policies-list__item">
+                <div class="policies-list__name">{{ p.name }}</div>
+                <div class="policies-list__meta">
+                  <span class="policies-list__version">v{{ p.version }}</span>
+                  <app-status-badge [status]="severityStatus(p.severity)" />
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+
+      <!-- Tab: Riesgos -->
+      @if (activeTab() === 'risks') {
+        <div class="agent-detail__risks-link">
+          <a [routerLink]="['/risks']" [queryParams]="{ agentId: a.id }" class="btn btn--sm btn--secondary">
+            Ver riesgos asociados →
+          </a>
+        </div>
+      }
+
+    }
+  </app-modal>
+}

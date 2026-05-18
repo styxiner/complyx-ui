@@ -1,0 +1,150 @@
+$text-dim: rgba(255, 255, 255, 0.45);
+$text-sub: rgba(255, 255, 255, 0.65);
+
+.agent-list {
+  padding: 1.5rem 2rem;
+  min-height: 100%;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  &__title-block {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  &__title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  &__count {
+    font-size: 0.82rem;
+    color: $text-dim;
+  }
+
+  // ── Celdas especiales ──────────────────────────────────────────────────────
+  &__hostname {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 500;
+  }
+
+  &__hostname-icon {
+    width: 15px;
+    height: 15px;
+    color: $text-dim;
+    flex-shrink: 0;
+  }
+
+  &__mono {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: $text-sub;
+  }
+
+  &__os {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  &__os-name    { font-size: 0.875rem; }
+  &__os-version { font-size: 0.72rem; color: $text-dim; }
+
+  &__date { font-size: 0.82rem; color: $text-sub; }
+
+  // ── Acciones de fila ───────────────────────────────────────────────────────
+  &__row-actions {
+    display: flex;
+    gap: 0.35rem;
+    justify-content: flex-end;
+  }
+
+  &__action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    color: $text-dim;
+    transition: color 0.14s, background 0.14s, border-color 0.14s;
+
+    svg { width: 14px; height: 14px; }
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &--warning:hover {
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    &--success:hover {
+      color: #4ade80;
+      background: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    &--danger:hover {
+      color: #f87171;
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+  }
+
+  // ── Paginación ─────────────────────────────────────────────────────────────
+  &__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__page-btn {
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    color: $text-sub;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.14s, border-color 0.14s, color 0.14s;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    &--active {
+      background: rgba(96, 165, 250, 0.15);
+      border-color: rgba(96, 165, 250, 0.4);
+      color: #60a5fa;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+}

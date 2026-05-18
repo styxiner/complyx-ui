@@ -25,6 +25,11 @@ export const API = {
     policies:        (agentId: string) => `/api/agents/${agentId}/policies`,
   },
 
+  groups: {
+    base:  '/api/groups',
+    byId:  (id: string) => `/api/groups/${id}`,
+  },
+
   policies: {
     base:           '/api/policies',
     byId:           (id: string) => `/api/policies/${id}`,
