@@ -1,135 +1,345 @@
-$text-dim: rgba(255, 255, 255, 0.45);
+// Tokens del sistema de diseño oscuro del proyecto
+$bg-base:    #060e24;
+$bg-card:    #0f172a;
+$bg-row:     #111827;
+$bg-hover:   #1e293b;
+$border:     rgba(255, 255, 255, 0.06);
+$border-mid: rgba(255, 255, 255, 0.10);
+$text-hi:    #e2e8f0;
+$text-mid:   #94a3b8;
+$text-dim:   #475569;
+$accent:     #38bdf8;
+$accent-dim: rgba(56, 189, 248, 0.12);
+
+// Severidades
+$critical: #f87171; $critical-bg: rgba(239,68,68,.12);
+$high:     #fb923c; $high-bg:     rgba(251,146,60,.12);
+$medium:   #facc15; $medium-bg:   rgba(250,204,21,.12);
+$low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
+
+:host { display: block; }
 
 .agent-detail {
-  &__header {
+  padding: 1.75rem 2rem;
+  min-height: 100%;
+  max-width: 960px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  &__error {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  // ── Topbar ────────────────────────────────────────────────────────────────
+  &__topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 
-  &__meta {
+  &__breadcrumb {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.4rem;
+    font-size: 0.83rem;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: none;
+    border: none;
+    color: $accent;
+    font-size: 0.83rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.14s;
+
+    svg { width: 13px; height: 13px; }
+    &:hover { opacity: 0.7; }
+  }
+
+  &__sep     { color: $text-dim; }
+  &__current { color: $text-hi; font-weight: 500; }
+
+  &__actions { display: flex; gap: 0.5rem; }
+
+  // ── Cabecera ──────────────────────────────────────────────────────────────
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid $border;
+  }
+
+  &__title-block {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  &__icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: $accent-dim;
+    border: 1px solid rgba(56,189,248,0.2);
+    flex-shrink: 0;
+
+    svg { width: 22px; height: 22px; color: $accent; }
   }
 
   &__hostname {
-    font-size: 1.05rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.2rem;
+    line-height: 1.2;
   }
 
-  &__actions {
-    display: flex;
-    gap: 0.5rem;
+  &__ip {
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    color: #64748b;
   }
 
+  // ── Tabs ──────────────────────────────────────────────────────────────────
   &__tabs {
     display: flex;
-    gap: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    margin-bottom: 1.25rem;
+    border-bottom: 1px solid $border;
+    margin-bottom: 1.75rem;
   }
 
   &__tab {
-    padding: 0.5rem 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.6rem 1.1rem;
     background: none;
     border: none;
     border-bottom: 2px solid transparent;
     color: $text-dim;
     font-size: 0.85rem;
+    font-weight: 500;
     cursor: pointer;
+    margin-bottom: -1px;
     transition: color 0.14s, border-color 0.14s;
 
-    &:hover   { color: rgba(255, 255, 255, 0.75); }
+    &:hover:not(&--active) { color: $text-mid; }
 
     &--active {
-      color: #60a5fa;
-      border-bottom-color: #60a5fa;
+      color: $accent;
+      border-bottom-color: $accent;
     }
   }
 
-  &__risks-link {
-    padding: 1.5rem 0;
-    display: flex;
+  &__tab-count {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: $accent-dim;
+    color: $accent;
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  // ── Tab riesgos ───────────────────────────────────────────────────────────
+  &__risks {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+  }
+
+  &__risks-desc {
+    font-size: 0.875rem;
+    color: $text-mid;
+    margin: 0;
   }
 }
 
-// Cuadrícula de propiedades
+// ── Detail grid ───────────────────────────────────────────────────────────────
 .detail-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem 2.5rem;
 
-  &__item { display: flex; flex-direction: column; gap: 0.2rem; }
-
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
   &__item--full { grid-column: 1 / -1; }
 
   &__label {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: $text-dim;
+    letter-spacing: 0.07em;
+    color: #64748b;
+    font-weight: 600;
   }
 
   &__value {
-    font-size: 0.88rem;
+    font-size: 0.875rem;
+    color: #1e293b;
 
-    &--mono { font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.82rem; }
+    &--mono {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.8rem;
+      color: #334155;
+    }
   }
 
-  &__tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.2rem; }
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.15rem;
+  }
 }
 
-// Etiquetas de grupo
 .tag {
-  padding: 0.2rem 0.55rem;
+  padding: 0.2rem 0.6rem;
   border-radius: 999px;
-  background: rgba(96, 165, 250, 0.12);
-  border: 1px solid rgba(96, 165, 250, 0.25);
-  color: #93c5fd;
-  font-size: 0.78rem;
+  background: $accent-dim;
+  border: 1px solid rgba(56,189,248,0.2);
+  color: $accent;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
-// Lista de políticas
+// ── Tab Políticas ─────────────────────────────────────────────────────────────
+.policies-tab {
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  &__count {
+    font-size: 0.82rem;
+    color: $text-dim;
+  }
+}
+
 .policies-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
 
   &__item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.6rem 0.75rem;
+    padding: 0.75rem 0.9rem;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: $bg-row;
+    border: 1px solid $border;
+    transition: border-color 0.14s, background 0.14s;
+
+    &:hover {
+      background: $bg-hover;
+      border-color: $border-mid;
+    }
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-width: 0;
+  }
+
+  &__icon {
+    width: 16px;
+    height: 16px;
+    color: $text-dim;
+    flex-shrink: 0;
   }
 
   &__name {
+    display: block;
     font-size: 0.875rem;
     font-weight: 500;
-  }
-
-  &__meta {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
+    color: $text-hi;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__version {
-    font-size: 0.75rem;
+    display: block;
+    font-size: 0.72rem;
     color: $text-dim;
-    font-family: monospace;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-shrink: 0;
+  }
+
+  &__sev {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__unassign {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: none;
+    border: 1px solid $border;
+    color: $text-dim;
+    cursor: pointer;
+    transition: background 0.14s, color 0.14s, border-color 0.14s;
+
+    svg { width: 14px; height: 14px; }
+
+    &:hover {
+      background: rgba(239,68,68,.1);
+      border-color: rgba(239,68,68,.3);
+      color: #f87171;
+    }
   }
 }
 
-// Botones
+// Severidades
+.sev--critical { color: $critical; background: $critical-bg; }
+.sev--high     { color: $high;     background: $high-bg;     }
+.sev--medium   { color: $medium;   background: $medium-bg;   }
+.sev--low      { color: $low;      background: $low-bg;      }
+
+// ── Botones ───────────────────────────────────────────────────────────────────
 .btn {
   display: inline-flex;
   align-items: center;
@@ -140,51 +350,60 @@ $text-dim: rgba(255, 255, 255, 0.45);
   font-size: 0.825rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.14s, border-color 0.14s, color 0.14s;
+  text-decoration: none;
+  transition: background 0.14s, border-color 0.14s, color 0.14s, opacity 0.14s;
 
-  &--sm  { padding: 0.3rem 0.65rem; font-size: 0.78rem; }
+  svg { width: 14px; height: 14px; }
+
+  &[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+  &--sm { padding: 0.3rem 0.65rem; font-size: 0.78rem; }
+
+  &--primary {
+    background: $accent;
+    border-color: $accent;
+    color: #0f172a;
+    font-weight: 600;
+    &:hover:not([disabled]) { background: #7dd3fc; border-color: #7dd3fc; }
+  }
+
+  &--ghost {
+    background: rgba(255,255,255,.04);
+    border-color: $border-mid;
+    color: $text-mid;
+    &:hover { background: $bg-hover; color: $text-hi; }
+  }
 
   &--danger {
-    background: rgba(239, 68, 68, 0.1);
-    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(239,68,68,.1);
+    border-color: rgba(239,68,68,.3);
     color: #f87171;
-
-    &:hover {
-      background: rgba(239, 68, 68, 0.18);
-      border-color: rgba(239, 68, 68, 0.5);
-    }
+    &:hover { background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.5); }
   }
 
   &--warning {
-    background: rgba(245, 158, 11, 0.1);
-    border-color: rgba(245, 158, 11, 0.3);
+    background: rgba(245,158,11,.1);
+    border-color: rgba(245,158,11,.3);
     color: #fbbf24;
-
-    &:hover {
-      background: rgba(245, 158, 11, 0.18);
-      border-color: rgba(245, 158, 11, 0.5);
-    }
+    &:hover { background: rgba(245,158,11,.18); border-color: rgba(245,158,11,.5); }
   }
 
   &--success {
-    background: rgba(34, 197, 94, 0.1);
-    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34,197,94,.1);
+    border-color: rgba(34,197,94,.3);
     color: #4ade80;
-
-    &:hover {
-      background: rgba(34, 197, 94, 0.18);
-      border-color: rgba(34, 197, 94, 0.5);
-    }
-  }
-
-  &--secondary {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.75);
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
+    &:hover { background: rgba(34,197,94,.18); border-color: rgba(34,197,94,.5); }
   }
 }
+
+.btn-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(15,23,42,0.3);
+  border-top-color: #0f172a;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
