@@ -71,6 +71,12 @@ export const routes: Routes = [
           import('./features/risks/risk-matrix/risk-matrix').then((m) => m.RiskMatrix),
       },
       {
+        path: 'threats',
+        canActivate: [roleGuard('ADMIN', 'TECNICO')],
+        loadComponent: () =>
+          import('./features/threats/threat-list/threat-list').then((m) => m.ThreatList),
+      },
+      {
         path: 'regulations',
         canActivate: [roleGuard('ADMIN', 'TECNICO')],
         loadComponent: () =>
