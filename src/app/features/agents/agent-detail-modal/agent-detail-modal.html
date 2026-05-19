@@ -1,1 +1,240 @@
-<p>agent-detail-modal works!</p>
+<div class="agent-detail">
+
+  @if (loading()) {
+    <app-loading-spinner mode="page" />
+  }
+
+  @else if (error()) {
+    <div class="agent-detail__error">
+      <app-error-banner message="No se pudo cargar el agente." [dismissible]="false" />
+      <button class="btn btn--ghost btn--sm" (click)="goBack()">← Volver a agentes</button>
+    </div>
+  }
+
+  @else if (agent(); as a) {
+
+    <!-- Topbar ---------------------------------------------------------------->
+    <div class="agent-detail__topbar">
+      <nav class="agent-detail__breadcrumb">
+        <button class="agent-detail__back" (click)="goBack()">
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 0 1-1.414 0l-6-6a1 1 0 0 1 0-1.414l6-6a1 1 0 1 1 1.414 1.414L5.414 9H17a1 1 0 1 1 0 2H5.414l4.293 4.293a1 1 0 0 1 0 1.414z" clip-rule="evenodd"/>
+          </svg>
+          Agentes
+        </button>
+        <span class="agent-detail__sep">/</span>
+        <span class="agent-detail__current">{{ a.hostname }}</span>
+      </nav>
+
+      <div class="agent-detail__actions">
+        <button
+          class="btn btn--sm"
+          [class.btn--warning]="a.enabled"
+          [class.btn--success]="!a.enabled"
+          (click)="requestToggle()">
+          {{ a.enabled ? 'Desactivar' : 'Activar' }}
+        </button>
+        <button class="btn btn--sm btn--danger" (click)="requestDelete()">Eliminar</button>
+      </div>
+    </div>
+
+    <!-- Cabecera ------------------------------------------------------------>
+    <div class="agent-detail__header">
+      <div class="agent-detail__title-block">
+        <div class="agent-detail__icon-wrap">
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M2 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5zm14 1H4v6h12V6zM6 14v1h8v-1H6z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="agent-detail__hostname">{{ a.hostname }}</h1>
+          <span class="agent-detail__ip">{{ a.ip }}</span>
+        </div>
+      </div>
+      <app-status-badge [status]="enabledStatus(a.enabled)" />
+    </div>
+
+    <!-- Tabs ----------------------------------------------------------------->
+    <div class="agent-detail__tabs">
+      <button class="agent-detail__tab" [class.agent-detail__tab--active]="activeTab() === 'info'"
+        (click)="setTab('info')">Información</button>
+
+      <button class="agent-detail__tab" [class.agent-detail__tab--active]="activeTab() === 'policies'"
+        (click)="setTab('policies')">
+        Políticas
+        @if (!policiesLoading()) {
+          <span class="agent-detail__tab-count">{{ policies().length }}</span>
+        }
+      </button>
+
+      <button class="agent-detail__tab" [class.agent-detail__tab--active]="activeTab() === 'risks'"
+        (click)="setTab('risks')">Riesgos</button>
+    </div>
+
+    <!-- Tab: Información ---------------------------------------------------->
+    @if (activeTab() === 'info') {
+      <div class="detail-grid">
+        <div class="detail-grid__item">
+          <span class="detail-grid__label">ID</span>
+          <span class="detail-grid__value detail-grid__value--mono">{{ a.id }}</span>
+        </div>
+        <div class="detail-grid__item">
+          <span class="detail-grid__label">IP</span>
+          <span class="detail-grid__value detail-grid__value--mono">{{ a.ip }}</span>
+        </div>
+        <div class="detail-grid__item">
+          <span class="detail-grid__label">Sistema operativo</span>
+          <span class="detail-grid__value">{{ a.osName }}</span>
+        </div>
+        <div class="detail-grid__item">
+          <span class="detail-grid__label">Versión OS</span>
+          <span class="detail-grid__value">{{ a.osVersion }}</span>
+        </div>
+        <div class="detail-grid__item">
+          <span class="detail-grid__label">Versión agente</span>
+          <span class="detail-grid__value detail-grid__value--mono">{{ a.agentVersion ?? '—' }}</span>
+        </div>
+        <div class="detail-grid__item">
+          <span class="detail-grid__label">Última conexión</span>
+          <span class="detail-grid__value">{{ (a.lastSeen | date:'dd/MM/yyyy HH:mm') ?? '—' }}</span>
+        </div>
+        <div class="detail-grid__item">
+          <span class="detail-grid__label">Registrado</span>
+          <span class="detail-grid__value">{{ (a.registeredDate | date:'dd/MM/yyyy') ?? '—' }}</span>
+        </div>
+        @if (a.groups.length) {
+          <div class="detail-grid__item detail-grid__item--full">
+            <span class="detail-grid__label">Grupos</span>
+            <div class="detail-grid__tags">
+              @for (g of a.groups; track g) { <span class="tag">{{ g }}</span> }
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Tab: Políticas ------------------------------------------------------>
+    @if (activeTab() === 'policies') {
+      <div class="policies-tab">
+
+        <!-- Toolbar -->
+        <div class="policies-tab__toolbar">
+          <span class="policies-tab__count">
+            @if (policiesLoading()) { Cargando… }
+            @else { {{ policies().length }} {{ policies().length === 1 ? 'política asignada' : 'políticas asignadas' }} }
+          </span>
+          <button class="btn btn--primary btn--sm" (click)="openPicker()" [disabled]="assigning()">
+            @if (assigning()) {
+              <span class="btn-spinner"></span> Asignando…
+            } @else {
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5z"/>
+              </svg>
+              Asignar política
+            }
+          </button>
+        </div>
+
+        <!-- Lista -->
+        @if (policiesLoading()) {
+          <app-loading-spinner mode="inline" />
+        } @else if (policies().length === 0) {
+          <app-empty-state
+            icon="shield"
+            title="Sin políticas asignadas"
+            description="Este agente no tiene ninguna política asignada directamente ni a través de un grupo.">
+          </app-empty-state>
+        } @else {
+          <div class="policies-list">
+            @for (p of policies(); track p.id) {
+              <div class="policies-list__item">
+                <div class="policies-list__left">
+                  <svg class="policies-list__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                  </svg>
+                  <div>
+                    <span class="policies-list__name">{{ p.name }}</span>
+                    <span class="policies-list__version">v{{ p.version }}</span>
+                  </div>
+                </div>
+                <div class="policies-list__right">
+                  <span class="policies-list__sev" [class]="severityClass(p.severity)">
+                    {{ severityLabel(p.severity) }}
+                  </span>
+                  <button
+                    class="policies-list__unassign"
+                    title="Desasignar política"
+                    (click)="requestUnassign(p)">
+                    <svg viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Tab: Riesgos -------------------------------------------------------->
+    @if (activeTab() === 'risks') {
+      <div class="agent-detail__risks">
+        <p class="agent-detail__risks-desc">
+          Consulta los riesgos de cumplimiento asociados a este agente en la matriz de riesgos.
+        </p>
+        <a [routerLink]="['/risks']" [queryParams]="{ agentId: a.id }" class="btn btn--ghost btn--sm">
+          Ver riesgos asociados →
+        </a>
+      </div>
+    }
+
+  }
+</div>
+
+<!-- Picker de políticas ----------------------------------------------------->
+@if (showPicker()) {
+  <app-policy-picker-modal
+    [assignedIds]="assignedPolicyIds()"
+    (assign)="onPolicySelected($event)"
+    (closed)="closePicker()">
+  </app-policy-picker-modal>
+}
+
+<!-- Confirm: toggle --------------------------------------------------------->
+@if (showToggleConfirm()) {
+  <app-confirm-dialog
+    [title]="agent()!.enabled ? 'Desactivar agente' : 'Activar agente'"
+    [message]="agent()!.enabled
+      ? '¿Desactivar ' + agent()!.hostname + '? Dejará de recibir políticas hasta que se reactive.'
+      : '¿Activar ' + agent()!.hostname + '? Comenzará a recibir y ejecutar políticas asignadas.'"
+    [confirmLabel]="agent()!.enabled ? 'Desactivar' : 'Activar'"
+    [danger]="agent()!.enabled"
+    (confirmed)="confirmToggle()"
+    (cancelled)="cancelToggle()">
+  </app-confirm-dialog>
+}
+
+<!-- Confirm: eliminar agente ------------------------------------------------>
+@if (showDeleteConfirm()) {
+  <app-confirm-dialog
+    title="Eliminar agente"
+    [message]="'¿Eliminar permanentemente ' + agent()!.hostname + '? Esta acción no se puede deshacer.'"
+    confirmLabel="Eliminar"
+    [danger]="true"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()">
+  </app-confirm-dialog>
+}
+
+<!-- Confirm: desasignar política -------------------------------------------->
+@if (showUnassignConfirm()) {
+  <app-confirm-dialog
+    title="Desasignar política"
+    [message]="'¿Desasignar &quot;' + policyToUnassign()!.name + '&quot; de este agente?'"
+    confirmLabel="Desasignar"
+    [danger]="false"
+    (confirmed)="confirmUnassign()"
+    (cancelled)="cancelUnassign()">
+  </app-confirm-dialog>
+}

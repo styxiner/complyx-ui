@@ -1,1 +1,17 @@
-<p>agent-filter-bar works!</p>
+<div class="filter-bar">
+  <app-search-bar
+    placeholder="Buscar por hostname o IP…"
+    (search)="onSearch($event)"
+    class="filter-bar__search"
+  />
+  <app-filter-dropdown
+    label="Sistema operativo"
+    [options]="osOptions"
+    (selectedChange)="onOsChange($event)"
+  />
+  <app-filter-dropdown
+    label="Estado"
+    [options]="statusOptions"
+    (selectedChange)="onStatusChange($event)"
+  />
+</div>

@@ -35,8 +35,18 @@ export const routes: Routes = [
       {
         path: 'agents',
         canActivate: [roleGuard('ADMIN', 'TECNICO')],
-        loadComponent: () =>
-          import('./features/agents/agent-list/agent-list').then((m) => m.AgentList),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/agents/agent-list/agent-list').then((m) => m.AgentList),
+          },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./features/agents/agent-detail-modal/agent-detail-modal').then((m) => m.AgentDetailModal),
+          },
+        ],
       },
       {
         path: 'policies',
