@@ -107,12 +107,24 @@ export class RegulationList implements OnInit {
     this.loadRegulations();
   }
 
-  deleteRegulation(id: string, event: Event): void {
-    event.stopPropagation();
-    if (!confirm('¿Eliminar normativa?')) return;
-    this.regulationSvc.delete(id).subscribe(() => this.loadRegulations());
-  }
-
+deleteRegulation(id: string, event: Event): void {
+  console.log('deleteRegulation llamado con id:', id);
+  event.stopPropagation();
+  event.preventDefault();
+  
+  // Temporal: sin confirm para probar
+  console.log('procediendo a eliminar...');
+  this.regulationSvc.delete(id).subscribe({
+    next: () => {
+      console.log('eliminado correctamente');
+      this.loadRegulations();
+    },
+    error: (err) => {
+      console.error('error al eliminar:', err);
+      this.error.set(err?.error?.message ?? `Error ${err.status}`);
+    }
+  });
+}
   openDetail(id: string): void {
     this.selectedRegulationId.set(id);
     this.isModalOpen.set(true);

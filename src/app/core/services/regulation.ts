@@ -28,6 +28,10 @@ export class regulation {
     return this.http.get<RegulationDetailDTO>(API.regulations.byId(id));
   }
 
+  getPdf(id: string): Observable<Blob> {
+    return this.http.get(API.regulations.pdf(id), { responseType: 'blob' });
+  }
+
   create(dto: RegulationCreateDTO): Observable<RegulationDetailDTO> {
     return this.http.post<RegulationDetailDTO>(API.regulations.base, dto);
   }
@@ -47,6 +51,8 @@ export class regulation {
   uploadPdf(id: string, file: File): Observable<void> {
     const formData = new FormData();
     formData.append('pdf', file, file.name);
-    return this.http.post<void>(API.regulations.uploadPdf(id), formData);
+    return this.http.post<void>(API.regulations.uploadPdf(id), formData, {
+      responseType: 'text' as 'json'  // el backend devuelve body vacío
+    });
   }
 }

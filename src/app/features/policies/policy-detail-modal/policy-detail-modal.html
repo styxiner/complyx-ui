@@ -35,7 +35,7 @@
             Editar
           </button>
           <button
-            *appHasRole="'ADMIN'"
+          *appHasRole="['ADMIN', 'TECNICO']"
             class="btn btn--danger"
             (click)="requestDelete.emit(detail)"
           >
