@@ -46,6 +46,11 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/agents/agent-detail-modal/agent-detail-modal').then((m) => m.AgentDetailModal),
           },
+          {
+            path: ':id/policies/:policyId/results',
+            loadComponent: () =>
+              import('./features/agents/policy-compliance/policy-compliance').then((m) => m.PolicyCompliance),
+          }
         ],
       },
       {
