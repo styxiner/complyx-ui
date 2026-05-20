@@ -1,1 +1,25 @@
-<p>agents-card works!</p>
+<div class="dash-card">
+  <div class="dash-card__header">
+    <div class="dash-card__icon dash-card__icon--blue">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path stroke-linecap="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25A2.25 2.25 0 0 1 5.25 3h13.5A2.25 2.25 0 0 1 21 5.25z"/>
+      </svg>
+    </div>
+    <span class="dash-card__label">Agentes</span>
+    <a routerLink="/agents" class="dash-card__link">Ver todos →</a>
+  </div>
+
+  @if (loading()) {
+    <div class="dash-card__skeleton"></div>
+  } @else {
+    <div class="dash-card__value">{{ total() }}</div>
+    <div class="dash-card__stats">
+      <span class="dash-card__stat dash-card__stat--pass">
+        <span class="dash-card__dot"></span>{{ active() }} activos
+      </span>
+      <span class="dash-card__stat dash-card__stat--fail">
+        <span class="dash-card__dot"></span>{{ inactive() }} inactivos
+      </span>
+    </div>
+  }
+</div>

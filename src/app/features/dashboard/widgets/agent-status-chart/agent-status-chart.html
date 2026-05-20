@@ -1,1 +1,45 @@
-<p>agent-status-chart works!</p>
+<div class="chart-card">
+  <h3 class="chart-card__title">Estado de agentes</h3>
+
+  @if (loading()) {
+    <div class="chart-card__skeleton"></div>
+  } @else if (total === 0) {
+    <div class="chart-card__empty">Sin agentes registrados</div>
+  } @else {
+    <div class="donut-wrap">
+      <svg viewBox="0 0 100 100" class="donut">
+        <!-- Fondo -->
+        <circle cx="50" cy="50" r="40" fill="none"
+                stroke="rgba(0,0,0,0.06)" stroke-width="14"/>
+        <!-- Activos -->
+        <circle cx="50" cy="50" r="40" fill="none"
+                stroke="#4ade80" stroke-width="14"
+                [attr.stroke-dasharray]="activePct * 2.512 + ' ' + (100 - activePct) * 2.512"
+                stroke-dashoffset="62.8"
+                stroke-linecap="round"/>
+        <!-- Inactivos -->
+        <circle cx="50" cy="50" r="40" fill="none"
+                stroke="#f87171" stroke-width="14"
+                [attr.stroke-dasharray]="inactivePct * 2.512 + ' ' + (100 - inactivePct) * 2.512"
+                [attr.stroke-dashoffset]="62.8 - activePct * 2.512"
+                stroke-linecap="round"/>
+        <!-- Centro -->
+        <text x="50" y="47" text-anchor="middle" class="donut__center-val">{{ total }}</text>
+        <text x="50" y="58" text-anchor="middle" class="donut__center-lbl">total</text>
+      </svg>
+    </div>
+
+    <div class="chart-legend">
+      <div class="chart-legend__item">
+        <span class="chart-legend__dot chart-legend__dot--pass"></span>
+        <span class="chart-legend__label">Activos</span>
+        <span class="chart-legend__val">{{ active() }} <small>({{ activePct }}%)</small></span>
+      </div>
+      <div class="chart-legend__item">
+        <span class="chart-legend__dot chart-legend__dot--fail"></span>
+        <span class="chart-legend__label">Inactivos</span>
+        <span class="chart-legend__val">{{ inactive() }} <small>({{ inactivePct }}%)</small></span>
+      </div>
+    </div>
+  }
+</div>

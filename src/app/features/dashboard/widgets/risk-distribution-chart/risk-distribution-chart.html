@@ -1,1 +1,36 @@
-<p>risk-distribution-chart works!</p>
+<div class="chart-card">
+  <h3 class="chart-card__title">Distribución de riesgos</h3>
+
+  @if (loading()) {
+    <div class="chart-card__skeleton"></div>
+  } @else if (total() === 0) {
+    <div class="chart-card__empty">Sin riesgos registrados</div>
+  } @else {
+    <div class="donut-wrap">
+      <svg viewBox="0 0 100 100" class="donut">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="14"/>
+        @for (item of data(); track item.level; let i = $index) {
+          <circle cx="50" cy="50" r="40" fill="none"
+                  [attr.stroke]="item.color"
+                  stroke-width="14"
+                  [attr.stroke-dasharray]="item.pct * 2.512 + ' ' + (100 - item.pct) * 2.512"
+                  [attr.stroke-dashoffset]="dashOffset(i)"
+                  stroke-linecap="round"
+                  style="transition: stroke-dasharray 0.6s ease"/>
+        }
+        <text x="50" y="47" text-anchor="middle" class="donut__center-val">{{ total() }}</text>
+        <text x="50" y="58" text-anchor="middle" class="donut__center-lbl">riesgos</text>
+      </svg>
+    </div>
+
+    <div class="chart-legend">
+      @for (item of data(); track item.level) {
+        <div class="chart-legend__item">
+          <span class="chart-legend__dot" [style.background]="item.color"></span>
+          <span class="chart-legend__label">{{ item.label }}</span>
+          <span class="chart-legend__val">{{ item.count }} <small>({{ item.pct }}%)</small></span>
+        </div>
+      }
+    </div>
+  }
+</div>
