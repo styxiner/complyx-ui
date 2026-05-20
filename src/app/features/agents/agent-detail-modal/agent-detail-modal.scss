@@ -5,7 +5,7 @@ $bg-row:     #111827;
 $bg-hover:   #1e293b;
 $border:     rgba(255, 255, 255, 0.06);
 $border-mid: rgba(255, 255, 255, 0.10);
-$text-hi:    #e2e8f0;
+$text-hi:    #060e24;
 $text-mid:   #94a3b8;
 $text-dim:   #475569;
 $accent:     #38bdf8;
@@ -32,7 +32,6 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
     align-items: flex-start;
   }
 
-  // ── Topbar ────────────────────────────────────────────────────────────────
   &__topbar {
     display: flex;
     align-items: center;
@@ -68,10 +67,8 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
 
   &__sep     { color: $text-dim; }
   &__current { color: $text-hi; font-weight: 500; }
-
   &__actions { display: flex; gap: 0.5rem; }
 
-  // ── Cabecera ──────────────────────────────────────────────────────────────
   &__header {
     display: flex;
     align-items: flex-start;
@@ -106,7 +103,7 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
   &__hostname {
     font-size: 1.3rem;
     font-weight: 700;
-    color: #0f172a;
+    color: $text-hi;
     margin: 0 0 0.2rem;
     line-height: 1.2;
   }
@@ -114,10 +111,9 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
   &__ip {
     font-size: 0.78rem;
     font-family: 'JetBrains Mono', ui-monospace, monospace;
-    color: #64748b;
+    color: $text-dim;
   }
 
-  // ── Tabs ──────────────────────────────────────────────────────────────────
   &__tabs {
     display: flex;
     border-bottom: 1px solid $border;
@@ -140,11 +136,7 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
     transition: color 0.14s, border-color 0.14s;
 
     &:hover:not(&--active) { color: $text-mid; }
-
-    &--active {
-      color: $accent;
-      border-bottom-color: $accent;
-    }
+    &--active { color: $accent; border-bottom-color: $accent; }
   }
 
   &__tab-count {
@@ -161,7 +153,6 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
     font-weight: 700;
   }
 
-  // ── Tab riesgos ───────────────────────────────────────────────────────────
   &__risks {
     display: flex;
     flex-direction: column;
@@ -183,38 +174,29 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 1.5rem 2.5rem;
 
-  &__item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-  }
+  &__item { display: flex; flex-direction: column; gap: 0.3rem; }
   &__item--full { grid-column: 1 / -1; }
 
   &__label {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color: #64748b;
+    color: $text-dim;
     font-weight: 600;
   }
 
   &__value {
     font-size: 0.875rem;
-    color: #1e293b;
+    color: $text-hi;
 
     &--mono {
       font-family: 'JetBrains Mono', ui-monospace, monospace;
       font-size: 0.8rem;
-      color: #334155;
+      color: $text-mid;
     }
   }
 
-  &__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin-top: 0.15rem;
-  }
+  &__tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.15rem; }
 }
 
 .tag {
@@ -236,10 +218,7 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
     margin-bottom: 1rem;
   }
 
-  &__count {
-    font-size: 0.82rem;
-    color: $text-dim;
-  }
+  &__count { font-size: 0.82rem; color: $text-dim; }
 }
 
 .policies-list {
@@ -249,25 +228,29 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
 
   &__item {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 0.9rem;
+    align-items: stretch;
     border-radius: 8px;
     background: $bg-row;
     border: 1px solid $border;
-    transition: border-color 0.14s, background 0.14s;
+    overflow: hidden;
+    transition: border-color 0.14s;
 
-    &:hover {
-      background: $bg-hover;
-      border-color: $border-mid;
-    }
+    &:hover { border-color: $border-mid; }
   }
 
-  &__left {
+  // Zona clicable → navega a resultados
+  &__link {
     display: flex;
     align-items: center;
     gap: 0.65rem;
+    flex: 1;
     min-width: 0;
+    padding: 0.75rem 0.9rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.12s;
+
+    &:hover { background: $bg-hover; }
   }
 
   &__icon {
@@ -275,6 +258,15 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
     height: 16px;
     color: $text-dim;
     flex-shrink: 0;
+  }
+
+  // Nombre + versión apilados
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    flex: 1;
+    min-width: 0;
   }
 
   &__name {
@@ -294,13 +286,6 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
     font-family: 'JetBrains Mono', ui-monospace, monospace;
   }
 
-  &__right {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    flex-shrink: 0;
-  }
-
   &__sev {
     font-size: 0.68rem;
     font-weight: 600;
@@ -308,26 +293,34 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
     border-radius: 999px;
     text-transform: uppercase;
     letter-spacing: 0.04em;
+    flex-shrink: 0;
   }
 
+  &__arrow {
+    width: 14px;
+    height: 14px;
+    color: $text-dim;
+    flex-shrink: 0;
+  }
+
+  // Botón desasignar fuera del enlace
   &__unassign {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 26px;
-    height: 26px;
-    border-radius: 6px;
+    width: 36px;
     background: none;
-    border: 1px solid $border;
+    border: none;
+    border-left: 1px solid $border;
     color: $text-dim;
     cursor: pointer;
-    transition: background 0.14s, color 0.14s, border-color 0.14s;
+    flex-shrink: 0;
+    transition: background 0.14s, color 0.14s;
 
     svg { width: 14px; height: 14px; }
 
     &:hover {
       background: rgba(239,68,68,.1);
-      border-color: rgba(239,68,68,.3);
       color: #f87171;
     }
   }
@@ -354,51 +347,33 @@ $low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
   transition: background 0.14s, border-color 0.14s, color 0.14s, opacity 0.14s;
 
   svg { width: 14px; height: 14px; }
-
   &[disabled] { opacity: 0.5; cursor: not-allowed; }
-
   &--sm { padding: 0.3rem 0.65rem; font-size: 0.78rem; }
 
   &--primary {
-    background: $accent;
-    border-color: $accent;
-    color: #0f172a;
-    font-weight: 600;
+    background: $accent; border-color: $accent; color: #0f172a; font-weight: 600;
     &:hover:not([disabled]) { background: #7dd3fc; border-color: #7dd3fc; }
   }
-
   &--ghost {
-    background: rgba(255,255,255,.04);
-    border-color: $border-mid;
-    color: $text-mid;
+    background: rgba(255,255,255,.04); border-color: $border-mid; color: $text-mid;
     &:hover { background: $bg-hover; color: $text-hi; }
   }
-
   &--danger {
-    background: rgba(239,68,68,.1);
-    border-color: rgba(239,68,68,.3);
-    color: #f87171;
+    background: rgba(239,68,68,.1); border-color: rgba(239,68,68,.3); color: #f87171;
     &:hover { background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.5); }
   }
-
   &--warning {
-    background: rgba(245,158,11,.1);
-    border-color: rgba(245,158,11,.3);
-    color: #fbbf24;
+    background: rgba(245,158,11,.1); border-color: rgba(245,158,11,.3); color: #fbbf24;
     &:hover { background: rgba(245,158,11,.18); border-color: rgba(245,158,11,.5); }
   }
-
   &--success {
-    background: rgba(34,197,94,.1);
-    border-color: rgba(34,197,94,.3);
-    color: #4ade80;
+    background: rgba(34,197,94,.1); border-color: rgba(34,197,94,.3); color: #4ade80;
     &:hover { background: rgba(34,197,94,.18); border-color: rgba(34,197,94,.5); }
   }
 }
 
 .btn-spinner {
-  width: 12px;
-  height: 12px;
+  width: 12px; height: 12px;
   border: 2px solid rgba(15,23,42,0.3);
   border-top-color: #0f172a;
   border-radius: 50%;
