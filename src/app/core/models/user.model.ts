@@ -2,10 +2,9 @@ export interface UserDTO {
   id:       string;
   username: string;
   email:    string;
-  roles:    string[];  // ← era "role", el backend envía "roles"
+  roles:    string[]; 
 }
 
-// Modelos auxiliares que necesita AuthService
 export interface LoginDTO {
   username: string;
   password: string;

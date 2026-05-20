@@ -1,1 +1,45 @@
-<p>user-form works!</p>
+<div class="modal-window">
+  <h3>{{ user ? 'Modificar Parámetros del Usuario' : 'Alta de Nuevo Usuario' }}</h3>
+  
+  <form (ngSubmit)="submit()">
+    <div class="input-group">
+      <label>Nombre del Usuario</label>
+      <input type="text" name="username" [(ngModel)]="form.username" [disabled]="!!user" required autocomplete="off" />
+    </div>
+
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" name="email" [(ngModel)]="form.email" required autocomplete="off" />
+    </div>
+
+    @if (!user) {
+      <div class="input-group">
+        <label>Clave de Acceso Provisional</label>
+        <input type="password" name="password" [(ngModel)]="form.password" required />
+      </div>
+    }
+
+    <div class="input-group">
+      <label>Asignación de Roles y Permisos</label>
+      <div class="complyx-roles-matrix-form">
+        @for (role of availableRoles; track role.id) {
+          <label class="role-checkbox-label-form">
+            <input 
+              type="checkbox" 
+              [checked]="isRoleSelected(role.id)"
+              (change)="toggleRole(role.id)"
+            />
+            <span class="role-text">{{ role.roleName }}</span>
+          </label>
+        }
+      </div>
+    </div>
+
+    <div class="modal-footer-btn">
+      <button type="button" class="btn-cancel" (click)="cancel()">Cancelar</button>
+      <button type="submit" class="btn-save">
+        {{ user ? 'Actualizar' : 'Registrar Usuario' }}
+      </button>
+    </div>
+  </form>
+</div>

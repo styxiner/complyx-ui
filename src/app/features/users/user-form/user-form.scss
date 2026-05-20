@@ -1,0 +1,136 @@
+$bg-card:    #ffffff;
+$bg-input:   #f8fafc;
+$bg-roles:   #f8fafc;
+$border:     #e2e8f0;
+$border-mid: #cbd5e1;
+$text-hi:    #0f172a;
+$text-mid:   #334155;
+$text-dim:   #64748b;
+$accent:     #3b82f6;
+
+.modal-window {
+  background: $bg-card;
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-hi;
+    margin: 0 0 1.25rem;
+  }
+}
+
+// ── Campos ────────────────────────────────────────────────────────────────────
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+
+  label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: $text-dim;
+    font-weight: 600;
+  }
+
+  input {
+    padding: 0.45rem 0.7rem;
+    background: $bg-input;
+    border: 1px solid $border;
+    border-radius: 6px;
+    color: $text-hi;
+    font-size: 0.875rem;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.14s, box-shadow 0.14s;
+
+    &::placeholder { color: $text-dim; }
+
+    &:focus {
+      border-color: $accent;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+    }
+
+    &:disabled {
+      background: #f1f5f9;
+      color: $text-dim;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ── Roles ─────────────────────────────────────────────────────────────────────
+.complyx-roles-matrix-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+  padding: 0.75rem;
+  background: $bg-roles;
+  border: 1px solid $border;
+  border-radius: 7px;
+  margin-top: 0.15rem;
+
+  .role-checkbox-label-form {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      accent-color: $accent;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .role-text {
+      font-size: 0.82rem;
+      color: $text-mid;
+      font-weight: 500;
+    }
+  }
+}
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+.modal-footer-btn {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.83rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.14s, border-color 0.14s;
+  }
+
+  .btn-cancel {
+    background: #f1f5f9;
+    border: 1px solid $border;
+    color: $text-mid;
+    &:hover { background: #e2e8f0; border-color: $border-mid; }
+  }
+
+  .btn-save {
+    background: $accent;
+    border: 1px solid $accent;
+    color: #fff;
+    font-weight: 600;
+    &:hover { background: #2563eb; border-color: #2563eb; }
+  }
+}
