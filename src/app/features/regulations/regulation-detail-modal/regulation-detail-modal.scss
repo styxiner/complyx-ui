@@ -1,0 +1,296 @@
+// [PALETA CLARA]: Cambiar estos fondos si la app corre sobre un dashboard claro
+$bg-overlay:    rgba(15, 23, 42, 0.65);
+$bg-card:       #0f172a;       // Gris pizarra oscuro para la ventana
+$bg-header:     #111827;       // Cabecera ligeramente diferenciada
+$bg-item:       #060e24;       // Fondo interno de las filas de secciones
+$border:        rgba(255, 255, 255, 0.06);
+$border-mid:    rgba(255, 255, 255, 0.12);
+
+// Sistema de Textos
+$text-hi:       #f8fafc;       // Títulos de alto contraste
+$text-mid:      #cbd5e1;       // Textos descriptivos principales
+$text-dim:      #94a3b8;       // Placeholders, tags y subtítulos secundarios
+
+// Acentuaciones del Sistema
+$accent:        #38bdf8;       // Azul Eléctrico Técnico
+$accent-dim:    rgba(56, 189, 248, 0.1);
+$accent-text:   #0284c7;       
+
+// Estados y Alertas
+$error-color:   #f87171;
+$error-bg:      rgba(239, 68, 68, 0.08);
+$error-border:  rgba(239, 68, 68, 0.20);
+
+// ENVOLTORIO EXTERNO (OVERLAY FLOTANTE)
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: $bg-overlay;
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+// ESTRUCTURA DE LA VENTANA (WINDOW CARD)
+.modal-window-card {
+  width: 100%;
+  max-width: 650px;
+  max-height: 85vh;
+  background-color: $bg-card; // [PALETA CLARA]: Cambiar a #ffffff
+  border: 1px solid $border-mid;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+}
+
+// Cabecera del Modal
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid $border;
+  background-color: $bg-header; // [PALETA CLARA]: Usar gris muy suave #fafafa
+
+  .system-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    background-color: $accent-dim; // [PALETA CLARA]: Azul cielo claro #e0f2fe
+    color: $accent;               // [PALETA CLARA]: Texto azul oscuro #0369a1
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+}
+
+// Botón de Cierre Superior (X)
+.action-close-btn {
+  background: transparent;
+  border: none;
+  color: $text-dim;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+
+  svg { width: 18px; height: 18px; }
+  &:hover { color: $text-hi; background-color: rgba(255, 255, 255, 0.05); }
+}
+
+// Cuerpo con Scroll Controlado
+.modal-body-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.75rem 1.5rem;
+}
+
+// Pie de Página del Modal
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid $border;
+  background-color: $bg-header; // [PALETA CLARA]: Fondo #fafafa
+  display: flex;
+  justify-content: flex-end;
+}
+
+// COMPONENTES DE CONTENIDO INTERNO
+.detail-content-wrapper {
+  .regulation-main-title {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: $text-hi; // [PALETA CLARA]: Cambiar por tipografía oscura #0f172a
+    line-height: 1.3;
+  }
+
+  .sections-sidebar-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: $text-dim; // [PALETA CLARA]: Gris intermedio de metadato #64748b
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 0.85rem 0;
+  }
+}
+
+// Lista de Secciones en Formato Pila
+.sections-stack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.section-row-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  background-color: $bg-item; // [PALETA CLARA]: Cambiar a fondo neutro claro #f8fafc
+  border: 1px solid $border;  // [PALETA CLARA]: Borde suave #e2e8f0
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+
+  .section-law-symbol {
+    font-size: 0.75rem;
+    font-weight: 700;
+    background-color: rgba(255, 255, 255, 0.05); // [PALETA CLARA]: Fondo gris #cbd5e1
+    color: $text-dim;                           // [PALETA CLARA]: Texto #475569
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .section-title-text {
+    font-size: 0.88rem;
+    color: $text-mid; // [PALETA CLARA]: Texto oscuro #334155
+    font-weight: 500;
+    line-height: 1.4;
+  }
+}
+
+// ELEMENTOS COMUNES Y ESTADOS DE INTERFAZ
+.btn--secondary {
+  background-color: transparent;
+  color: $text-mid;
+  border: 1px solid $border-mid;
+  padding: 0.55rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    color: $text-hi;
+  }
+}
+
+.modal-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 0;
+  gap: 0.85rem;
+  color: $text-dim;
+  font-size: 0.88rem;
+
+  .loading-spinner {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid transparent;
+    border-top-color: $accent;
+    border-radius: 50%;
+    animation: modal-spin 0.6s linear infinite;
+  }
+}
+
+.modal-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: $error-bg;
+  border: 1px solid $error-border;
+  border-radius: 6px;
+  color: $error-color;
+  font-size: 0.85rem;
+
+  svg { width: 18px; height: 18px; flex-shrink: 0; }
+}
+
+.sections-empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: $text-dim;
+
+  svg { width: 36px; height: 36px; margin: 0 auto 0.75rem; display: block; opacity: 0.6; }
+  p { font-size: 0.85rem; margin: 0; }
+}
+
+@keyframes modal-spin { to { transform: rotate(360deg); } }
+// Botón de acción para abrir el Builder
+.btn-add-policy {
+  background-color: $accent-dim;
+  color: $accent;
+  border: 1px solid rgba($accent, 0.2);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba($accent, 0.2);
+  }
+}
+
+// Contenedor que envuelve al PolicyBuilder dentro del modal
+// Esto asegura que el formulario respete el padding y scroll de la ventana
+.policy-builder-wrapper {
+  animation: fadeIn 0.3s ease;
+  
+  // Si necesitas que el Builder se vea más compacto dentro del modal:
+  .pf-builder-container {
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+// =============================================================================
+// LABEL DE SECCIÓN (título de grupo)
+// =============================================================================
+.detail-section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: $text-dim;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.6rem 0;
+}
+
+// =============================================================================
+// FILA DE POLÍTICA (variante de section-row-card)
+// =============================================================================
+.policy-row-card {
+  align-items: center;
+  gap: 0.6rem;
+}
+
+// =============================================================================
+// CHIP DE SEVERIDAD
+// =============================================================================
+.severity-chip {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+
+  &--critical { background: rgba(239,68,68,0.15);  color: #f87171; }
+  &--high     { background: rgba(249,115,22,0.15); color: #fb923c; }
+  &--medium   { background: rgba(234,179,8,0.15);  color: #facc15; }
+  &--low      { background: rgba(34,197,94,0.15);  color: #4ade80; }
+}

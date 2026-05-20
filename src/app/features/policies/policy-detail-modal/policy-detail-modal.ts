@@ -84,4 +84,10 @@ export class PolicyDetailModal implements OnInit {
   totalChecks(): number {
     return this.detail?.elements.reduce((sum, el) => sum + el.checks.length, 0) ?? 0;
   }
+
+  onDeleteClick() {
+    console.log('click delete', this.detail);
+    this.requestDelete.emit(this.detail!);
+  }
+
 }

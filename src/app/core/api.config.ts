@@ -53,6 +53,7 @@ export const API = {
     byId:       (id: string) => `/api/regulations/${id}`,
     uploadPdf:  (id: string) => `/api/regulations/${id}/pdf`,
     addSection: (id: string) => `/api/regulations/${id}/sections`,
+    pdf:        (id: string) => `/api/regulations/${id}/pdf`,
   },
 
   events: {
