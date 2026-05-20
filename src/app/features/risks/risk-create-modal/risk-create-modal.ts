@@ -25,21 +25,21 @@ export class RiskCreateModal implements OnInit {
   private threatSvc = inject(ThreatService);
   private agentSvc  = inject(AgentService);
 
-  threats       = signal<ThreatDTO[]>([]);
-  agents        = signal<AgentDTO[]>([]);
-  loadingData   = signal(true);
-  loadError     = signal(false);
+  threats     = signal<ThreatDTO[]>([]);
+  agents      = signal<AgentDTO[]>([]);
+  loadingData = signal(true);
+  loadError   = signal(false);
 
-  // Form values
   selectedThreatId = '';
   selectedAgentId  = '';
-  impact           = 0.5;
-  probability      = 0.5;
+
+  // Escala 0–10 igual que la BD
+  impact      = 5;
+  probability = 5;
 
   submitting  = signal(false);
   submitError = signal('');
 
-  // Búsqueda en selectores
   threatSearch = '';
   agentSearch  = '';
 
@@ -55,22 +55,15 @@ export class RiskCreateModal implements OnInit {
     ) : this.agents();
   }
 
-  get selectedThreat(): ThreatDTO | null {
-    return this.threats().find(t => t.id === this.selectedThreatId) ?? null;
-  }
-
-  get selectedAgent(): AgentDTO | null {
-    return this.agents().find(a => a.id === this.selectedAgentId) ?? null;
-  }
-
+  // Score = impact × probability / 10 → valor representativo 0–10
   get score(): number {
-    return Math.round(this.impact * this.probability * 100) / 100;
+    return Math.round(this.impact * this.probability) / 10;
   }
 
   get isValid(): boolean {
     return !!this.selectedThreatId && !!this.selectedAgentId &&
-           this.impact > 0 && this.impact <= 1 &&
-           this.probability > 0 && this.probability <= 1;
+           this.impact >= 0 && this.impact <= 10 &&
+           this.probability >= 0 && this.probability <= 10;
   }
 
   ngOnInit() {

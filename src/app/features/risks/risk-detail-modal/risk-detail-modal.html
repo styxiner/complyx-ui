@@ -80,12 +80,12 @@
         } @else {
           <div class="edit-form">
             <div class="edit-form__field">
-              <label class="edit-form__label">Impacto (0–1)</label>
-              <input class="edit-form__input" type="number" min="0" max="1" step="0.1" [(ngModel)]="editImpact" />
+              <label class="edit-form__label">Impacto (0–10)</label>
+              <input class="edit-form__input" type="number" min="0" max="10" step="0.5" [(ngModel)]="editImpact" />
             </div>
             <div class="edit-form__field">
-              <label class="edit-form__label">Probabilidad (0–1)</label>
-              <input class="edit-form__input" type="number" min="0" max="1" step="0.1" [(ngModel)]="editProbability" />
+              <label class="edit-form__label">Probabilidad (0–10)</label>
+              <input class="edit-form__input" type="number" min="0" max="10" step="0.5" [(ngModel)]="editProbability" />
             </div>
             <div class="edit-form__actions">
               <button class="btn btn--ghost btn--xs" (click)="cancelEdit()">Cancelar</button>

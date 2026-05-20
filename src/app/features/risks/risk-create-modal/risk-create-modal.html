@@ -79,7 +79,7 @@
             <label class="rc-field__label">Impacto</label>
             <span class="rc-slider-field__value">{{ impact }}</span>
           </div>
-          <input type="range" min="0.1" max="1" step="0.1"
+          <input type="range" min="0" max="10" step="0.5"
                  [(ngModel)]="impact" class="rc-range" />
           <div class="rc-range-labels"><span>Bajo</span><span>Alto</span></div>
         </div>
@@ -89,7 +89,7 @@
             <label class="rc-field__label">Probabilidad</label>
             <span class="rc-slider-field__value">{{ probability }}</span>
           </div>
-          <input type="range" min="0.1" max="1" step="0.1"
+          <input type="range" min="0" max="10" step="0.5"
                  [(ngModel)]="probability" class="rc-range" />
           <div class="rc-range-labels"><span>Baja</span><span>Alta</span></div>
         </div>
@@ -98,7 +98,7 @@
       <!-- Score calculado -->
       <div class="rc-score">
         <span class="rc-score__label">Score de riesgo calculado</span>
-        <span class="rc-score__value" [class.rc-score__value--high]="score >= 0.5">{{ score }}</span>
+        <span class="rc-score__value" [class.rc-score__value--high]="score >= 5">{{ score }}</span>
       </div>
 
       @if (submitError()) {

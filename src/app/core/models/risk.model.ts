@@ -1,4 +1,5 @@
 // ── Enums ─────────────────────────────────────────────────────────────────────
+// El backend devuelve los valores en MAYÚSCULAS (conversión Spring @Enumerated)
 
 export type RiskLevel  = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 export type RiskStatus = 'OPEN' | 'ACCEPTED' | 'TRANSFERRED' | 'MITIGATED' | 'MONITORING' | 'CLOSED';
@@ -9,7 +10,7 @@ export interface RiskDTO {
   id:            string;
   threatName:    string;
   agentHostname: string;
-  impact:        number;
+  impact:        number;   // escala 0–10
   riskLevel:     RiskLevel;
   status:        RiskStatus;
 }
@@ -20,19 +21,19 @@ export interface ThreatDTO {
   id:            string;
   name:          string;
   category:      string;
-  severityScore: number;
+  severityScore: number;   // escala 0–10
 }
 
 export interface RiskDetailDTO {
-  id:              string;
-  threat:          ThreatDTO;
-  agent:           { id: string; hostname: string; ip: string; osName: string; osVersion: string; enabled: boolean; groups: string[] };
-  impact:          number;
-  probability:     number;
-  riskLevel:       RiskLevel;
-  riskStatus:      RiskStatus;
+  id:               string;
+  threat:           ThreatDTO;
+  agent:            { id: string; hostname: string; ip: string; osName: string; osVersion: string; enabled: boolean; groups: string[] };
+  impact:           number;   // escala 0–10
+  probability:      number;   // escala 0–10
+  riskLevel:        RiskLevel;
+  riskStatus:       RiskStatus;
   policySummaryDto: PolicySummaryRef[];
-  createdDate:     string;
+  createdDate:      string;
 }
 
 export interface PolicySummaryRef {
@@ -48,8 +49,8 @@ export interface PolicySummaryRef {
 export interface RiskCreateDTO {
   threatId:    string;
   agentId:     string;
-  impact:      number;
-  probability: number;
+  impact:      number;   // 0–10
+  probability: number;   // 0–10
 }
 
 export interface RiskUpdateDTO {
@@ -69,23 +70,23 @@ export interface RiskFilter {
 
 // ── Metadatos de presentación ─────────────────────────────────────────────────
 
-export const RISK_STATUS_META: Record<RiskStatus, { label: string; color: string }> = {
-  OPEN:        { label: 'Abierto',       color: 'status--open'        },
-  ACCEPTED:    { label: 'Aceptado',      color: 'status--accepted'    },
-  TRANSFERRED: { label: 'Transferido',   color: 'status--transferred' },
-  MITIGATED:   { label: 'Mitigado',      color: 'status--mitigated'   },
-  MONITORING:  { label: 'Monitorizado',  color: 'status--monitoring'  },
-  CLOSED:      { label: 'Cerrado',       color: 'status--closed'      },
+export const RISK_STATUS_META: Record<RiskStatus, { label: string }> = {
+  OPEN:        { label: 'Abierto'      },
+  ACCEPTED:    { label: 'Aceptado'     },
+  TRANSFERRED: { label: 'Transferido'  },
+  MITIGATED:   { label: 'Mitigado'     },
+  MONITORING:  { label: 'Monitorizado' },
+  CLOSED:      { label: 'Cerrado'      },
 };
 
-export const RISK_LEVEL_META: Record<RiskLevel, { label: string; color: string }> = {
-  LOW:      { label: 'Bajo',     color: 'level--low'      },
-  MEDIUM:   { label: 'Medio',    color: 'level--medium'   },
-  HIGH:     { label: 'Alto',     color: 'level--high'     },
-  CRITICAL: { label: 'Crítico',  color: 'level--critical' },
+export const RISK_LEVEL_META: Record<RiskLevel, { label: string }> = {
+  LOW:      { label: 'Bajo'    },
+  MEDIUM:   { label: 'Medio'   },
+  HIGH:     { label: 'Alto'    },
+  CRITICAL: { label: 'Crítico' },
 };
 
-// Transiciones válidas por estado
+// Transiciones válidas por estado (basadas en los endpoints reales del backend)
 export const RISK_TRANSITIONS: Record<RiskStatus, RiskStatus[]> = {
   OPEN:        ['ACCEPTED', 'TRANSFERRED', 'MONITORING'],
   ACCEPTED:    ['MONITORING', 'CLOSED'],

@@ -179,6 +179,7 @@ export class RiskDetailModal implements OnInit, OnChanges {
   }
 
   riskScore(impact: number, probability: number): number {
-    return Math.round(impact * probability * 100) / 100;
+    // impact y probability escala 0–10; score normalizado 0–10
+    return Math.round(impact * probability) / 10;
   }
 }

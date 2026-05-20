@@ -1,0 +1,283 @@
+$bg-card:    #0f172a;
+$bg-row:     #111827;
+$bg-hover:   #1e293b;
+$border:     rgba(255,255,255,0.06);
+$border-mid: rgba(255,255,255,0.10);
+$text-hi:    #111827;
+$text-mid:   #94a3b8;
+$text-dim:   #475569;
+$accent:     #38bdf8;
+
+:host { display: block; }
+
+// ── Cabecera ──────────────────────────────────────────────────────────────────
+.threat-list {
+  padding: 1.75rem 2rem;
+  max-width: 900px;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  &__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: $text-hi;
+    margin: 0 0 0.2rem;
+  }
+
+  &__subtitle {
+    font-size: 0.83rem;
+    color: $text-dim;
+    margin: 0;
+  }
+}
+
+// ── Formulario crear/editar ───────────────────────────────────────────────────
+.threat-form {
+  background: $bg-card;
+  border: 1px solid $border-mid;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &__title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $text-hi;
+    margin: 0;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  &__label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: $text-dim;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__value {
+    font-family: ui-monospace, monospace;
+    font-weight: 700;
+    font-size: 0.8rem;
+  }
+
+  &__input {
+    padding: 0.4rem 0.65rem;
+    background: rgba(255,255,255,.04);
+    border: 1px solid $border-mid;
+    border-radius: 6px;
+    color: $text-hi;
+    font-size: 0.875rem;
+    outline: none;
+
+    &::placeholder { color: $text-dim; }
+    &:focus        { border-color: $accent; }
+    &:disabled     { opacity: 0.5; cursor: not-allowed; }
+  }
+}
+
+// Slider
+.rc-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: $border-mid;
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: $accent;
+    border: 2px solid $bg-card;
+    cursor: pointer;
+  }
+}
+
+.rc-range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: $text-dim;
+}
+
+// ── Tabla ─────────────────────────────────────────────────────────────────────
+.threat-table-card {
+  background: $bg-card;
+  border: 1px solid $border;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.threat-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead tr { border-bottom: 1px solid $border; }
+
+  th {
+    padding: 0.65rem 1rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: $text-dim;
+    font-weight: 600;
+    text-align: left;
+
+    &.text-center { text-align: center; }
+  }
+
+  &__row {
+    border-bottom: 1px solid $border;
+    transition: background 0.12s;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: $bg-hover; }
+
+    td {
+      padding: 0.7rem 1rem;
+      font-size: 0.875rem;
+      color: $text-hi;
+      vertical-align: middle;
+
+      &.text-center { text-align: center; }
+    }
+  }
+
+  &__name     { font-weight: 500; }
+  &__category { color: $text-mid; font-size: 0.82rem; }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+  }
+}
+
+// ── Score badges ──────────────────────────────────────────────────────────────
+.score-badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: ui-monospace, monospace;
+}
+
+.score--critical { color: #f87171; background: rgba(239,68,68,.12); }
+.score--high     { color: #fb923c; background: rgba(251,146,60,.12); }
+.score--medium   { color: #facc15; background: rgba(250,204,21,.12); }
+.score--low      { color: #4ade80; background: rgba(74,222,128,.12); }
+
+// ── Botones de acción ─────────────────────────────────────────────────────────
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: none;
+  border: 1px solid $border;
+  color: $text-dim;
+  cursor: pointer;
+  transition: background 0.14s, color 0.14s, border-color 0.14s;
+
+  svg { width: 13px; height: 13px; }
+
+  &:hover { background: $bg-hover; color: $text-hi; border-color: $border-mid; }
+
+  &--danger:hover {
+    background: rgba(239,68,68,.1);
+    border-color: rgba(239,68,68,.3);
+    color: #f87171;
+  }
+}
+
+// ── Paginación ────────────────────────────────────────────────────────────────
+.threat-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid $border;
+
+  &__info    { font-size: 0.8rem; color: $text-dim; }
+  &__buttons { display: flex; gap: 0.5rem; }
+}
+
+// ── Botones globales ──────────────────────────────────────────────────────────
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 0.83rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.14s, border-color 0.14s, color 0.14s;
+
+  svg { width: 14px; height: 14px; }
+  &[disabled] { opacity: 0.45; cursor: not-allowed; }
+  &--sm { padding: 0.3rem 0.65rem; font-size: 0.78rem; }
+
+  &--primary {
+    background: $accent; border-color: $accent; color: #0f172a; font-weight: 600;
+    &:hover:not([disabled]) { background: #7dd3fc; }
+  }
+  &--ghost {
+    background: rgba(255,255,255,.04); border-color: $border-mid; color: $text-mid;
+    &:hover:not([disabled]) { background: $bg-hover; color: $text-hi; }
+  }
+  &--danger {
+    background: rgba(239,68,68,.1); border-color: rgba(239,68,68,.3); color: #f87171;
+    &:hover:not([disabled]) { background: rgba(239,68,68,.18); }
+  }
+}
+
+.btn-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(15,23,42,0.3);
+  border-top-color: #0f172a;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
