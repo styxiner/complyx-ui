@@ -63,8 +63,32 @@ export const routes: Routes = [
       {
         path: 'regulations',
         canActivate: [roleGuard('ADMIN', 'TECNICO')],
-        loadComponent: () =>
-          import('./features/regulations/regulation-list/regulation-list').then((m) => m.RegulationList),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/regulations/regulation-list/regulation-list').then((m) => m.RegulationList),
+          },
+          {
+            path: 'new',
+            canActivate: [roleGuard('ADMIN', 'TECNICO')],
+            loadComponent: () =>
+              import('./features/regulations/regulation-form/regulation-form').then((m) => m.RegulationForm),
+          },
+          {
+            path: 'edit/:id',
+            canActivate: [roleGuard('ADMIN', 'TECNICO')],
+            loadComponent: () =>
+              import('./features/regulations/regulation-form/regulation-form').then((m) => m.RegulationForm),
+          },
+          {
+            path: 'edit/:id/builder',
+            canActivate: [roleGuard('ADMIN', 'TECNICO')],
+            loadComponent: () =>
+              import('./features/regulations/policy-builder/policy-builder')
+                .then((m) => m.PolicyBuilder),
+          },
+        ]
       },
       {
         path: 'events',

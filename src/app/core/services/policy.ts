@@ -22,6 +22,7 @@ export class PolicyService {
     if (filter.severity) params = params.set('severity', filter.severity);
     if (filter.assignedToAgentId) params = params.set('assignedToAgentId', filter.assignedToAgentId);
     if (filter.assignedToGroupId) params = params.set('assignedToGroupId', filter.assignedToGroupId);
+    if (filter.regulationId)        params = params.set('regulationId', filter.regulationId);
     if (filter.includeUnassigned != null) params = params.set('includeUnassigned', String(filter.includeUnassigned));
     return this.http.get<Page<PolicySummaryDTO>>(API.policies.base, { params });
   }
