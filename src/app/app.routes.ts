@@ -35,14 +35,39 @@ export const routes: Routes = [
       {
         path: 'agents',
         canActivate: [roleGuard('ADMIN', 'TECNICO')],
-        loadComponent: () =>
-          import('./features/agents/agent-list/agent-list').then((m) => m.AgentList),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/agents/agent-list/agent-list').then((m) => m.AgentList),
+          },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./features/agents/agent-detail-modal/agent-detail-modal').then((m) => m.AgentDetailModal),
+          },
+          {
+            path: ':id/policies/:policyId/results',
+            loadComponent: () =>
+              import('./features/agents/policy-compliance/policy-compliance').then((m) => m.PolicyCompliance),
+          }
+        ],
       },
       {
         path: 'policies',
         canActivate: [roleGuard('ADMIN', 'TECNICO')],
-        loadComponent: () =>
-          import('./features/policies/policy-list/policy-list').then((m) => m.PolicyList),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/policies/policy-list/policy-list').then((m) => m.PolicyList),
+          },
+          {
+            path: 'new',
+            loadComponent: () =>
+              import('./features/policies/policy-form/policy-form').then((m) => m.PolicyForm),
+          }
+        ]
       },
       {
         path: 'risks',
@@ -51,10 +76,40 @@ export const routes: Routes = [
           import('./features/risks/risk-matrix/risk-matrix').then((m) => m.RiskMatrix),
       },
       {
-        path: 'regulations',
+        path: 'threats',
         canActivate: [roleGuard('ADMIN', 'TECNICO')],
         loadComponent: () =>
-          import('./features/regulations/regulation-list/regulation-list').then((m) => m.RegulationList),
+          import('./features/threats/threat-list/threat-list').then((m) => m.ThreatList),
+      },
+      {
+        path: 'regulations',
+        canActivate: [roleGuard('ADMIN', 'TECNICO')],
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/regulations/regulation-list/regulation-list').then((m) => m.RegulationList),
+          },
+          {
+            path: 'new',
+            canActivate: [roleGuard('ADMIN', 'TECNICO')],
+            loadComponent: () =>
+              import('./features/regulations/regulation-form/regulation-form').then((m) => m.RegulationForm),
+          },
+          {
+            path: 'edit/:id',
+            canActivate: [roleGuard('ADMIN', 'TECNICO')],
+            loadComponent: () =>
+              import('./features/regulations/regulation-form/regulation-form').then((m) => m.RegulationForm),
+          },
+          {
+            path: 'edit/:id/builder',
+            canActivate: [roleGuard('ADMIN', 'TECNICO')],
+            loadComponent: () =>
+              import('./features/regulations/policy-builder/policy-builder')
+                .then((m) => m.PolicyBuilder),
+          },
+        ]
       },
       {
         path: 'events',

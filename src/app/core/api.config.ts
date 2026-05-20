@@ -25,11 +25,19 @@ export const API = {
     policies:        (agentId: string) => `/api/agents/${agentId}/policies`,
   },
 
+  groups: {
+    base:  '/api/groups',
+    byId:  (id: string) => `/api/groups/${id}`,
+  },
+
   policies: {
-    base:        '/api/policies',
-    byId:        (id: string) => `/api/policies/${id}`,
-    assignAgent: (policyId: string, agentId: string) => `/api/policies/${policyId}/agents/${agentId}`,
-    assignGroup: (policyId: string, groupId: string) => `/api/policies/${policyId}/groups/${groupId}`,
+    base:           '/api/policies',
+    byId:           (id: string) => `/api/policies/${id}`,
+    byAgent:        (agentId: string) => `/api/policies/agent/${agentId}`,
+    assignAgent:    (policyId: string, agentId: string) => `/api/policies/${policyId}/agents/${agentId}`,
+    unassignAgent:  (policyId: string, agentId: string) => `/api/policies/${policyId}/agents/${agentId}`,
+    assignGroup:    (policyId: string, groupId: string) => `/api/policies/${policyId}/groups/${groupId}`,
+    unassignGroup:  (policyId: string, groupId: string) => `/api/policies/${policyId}/groups/${groupId}`,
   },
 
   risks: {
@@ -45,6 +53,7 @@ export const API = {
     byId:       (id: string) => `/api/regulations/${id}`,
     uploadPdf:  (id: string) => `/api/regulations/${id}/pdf`,
     addSection: (id: string) => `/api/regulations/${id}/sections`,
+    pdf:        (id: string) => `/api/regulations/${id}/pdf`,
   },
 
   events: {

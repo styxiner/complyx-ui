@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core'; // 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin, Observable, of } from 'rxjs';
-import { user as UserService } from '../../../core/services/user';
+import { User as UserService } from '../../../core/services/user';
 import { UserDTO } from '../../../core/models/user.model';
 import { UserForm } from '../user-form/user-form';
 

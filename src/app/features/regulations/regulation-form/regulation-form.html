@@ -1,0 +1,236 @@
+<div class="pf-page">
+  <header class="pf-header">
+    <div class="pf-header__titles">
+      <h1>{{ title }}</h1>
+      <p>Configura el marco normativo y sus secciones de control de cumplimiento.</p>
+    </div>
+    
+    <div class="pf-header__actions" style="display: flex; gap: 0.75rem;">
+      <button class="pf-btn" (click)="cancel()" [disabled]="submitting()">
+        Cancelar
+      </button>
+      <button class="pf-btn pf-btn--primary" (click)="submit()" [disabled]="!isValid || submitting()">
+        @if (submitting()) {
+          <span class="pf-spinner"></span>
+          <span>Guardando...</span>
+        } @else {
+          <span>Guardar Marco</span>
+        }
+      </button>
+    </div>
+  </header>
+
+  <main class="pf-body">
+
+    <!-- ── SIDEBAR ─────────────────────────────────────────────────────────── -->
+    <aside class="pf-sidebar">
+      <div class="pf-card">
+        <h3 class="pf-card__title">Información General</h3>
+
+        <div class="pf-field">
+          <label>Nombre del Marco <span class="pf-required">*</span></label>
+          <input
+            type="text"
+            [(ngModel)]="name"
+            placeholder="Ej. ISO 27001:2022 o ENS"
+            [disabled]="submitting()"
+          />
+        </div>
+
+        <div class="pf-field" style="margin-top: 1.5rem;">
+          <label>Documentación Oficial (PDF) (Opcional)</label>
+          <input
+            type="file"
+            accept="application/pdf"
+            (change)="onFileSelected($event)"
+            [disabled]="submitting()"
+            style="font-size: 0.85rem;"
+          />
+          @if (selectedFile) {
+            <p style="margin: 0.5rem 0 0 0; font-size: 0.8rem; color: #16a34a; font-weight: 500;">
+              ✓ {{ selectedFile.name }}
+            </p>
+          }
+        </div>
+
+        <div class="pf-summary">
+          <div class="pf-summary__row">
+            <span>Secciones añadidas:</span>
+            <strong>{{ sections.length }}</strong>
+          </div>
+          <div class="pf-summary__row">
+            <span>Estado:</span>
+            <strong>{{ isEditMode ? 'Modificación' : 'Nueva Alta' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      @if (submitError()) {
+        <div class="pf-error-banner" style="margin-top: 1rem;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <span>{{ submitError() }}</span>
+        </div>
+      }
+
+      <!-- ── POLÍTICAS VINCULADAS (sólo en edición) ──────────────────────── -->
+      @if (isEditMode) {
+        <div class="pf-card" style="margin-top: 1rem;">
+          <h3 class="pf-card__title" style="display: flex; align-items: center; justify-content: space-between;">
+            <span>Políticas asociadas</span>
+            @if (policiesLoading()) {
+              <span class="pf-spinner" style="width: 14px; height: 14px;"></span>
+            } @else {
+              <span style="font-size: 0.75rem; font-weight: 400; color: #64748b;">
+                {{ linkedPolicies().length }} políticas
+              </span>
+            }
+          </h3>
+
+          @if (policiesError()) {
+            <p style="font-size: 0.8rem; color: #f87171; margin: 0.5rem 0 0 0;">{{ policiesError() }}</p>
+          }
+
+          @if (!policiesLoading()) {
+            @if (linkedPolicies().length === 0) {
+              <p style="font-size: 0.8rem; color: #475569; margin: 0.75rem 0 0 0;">
+                No hay políticas que referencien este marco todavía.
+              </p>
+            } @else {
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.75rem;">
+                @for (state of linkedPolicies(); track state.policy.id; let pi = $index) {
+                  <div style="border: 1px solid rgba(255,255,255,0.07); border-radius: 6px; overflow: hidden;">
+                    
+                    <!-- Cabecera de la política -->
+                    <div
+                      style="display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.75rem; cursor: pointer; background: rgba(255,255,255,0.03);"
+                      (click)="togglePolicyExpand(pi)"
+                    >
+                      <span style="font-size: 0.82rem; font-weight: 500; color: #cbd5e1; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        {{ state.policy.name }}
+                      </span>
+                      <svg
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="width: 14px; height: 14px; color: #64748b; flex-shrink: 0; transition: transform 0.2s;"
+                        [style.transform]="state.expanded ? 'rotate(180deg)' : 'rotate(0deg)'"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                      </svg>
+                    </div>
+
+                    <!-- Panel de secciones (expandible) -->
+                    @if (state.expanded) {
+                      <div style="padding: 0.75rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                        <p style="font-size: 0.75rem; color: #64748b; margin: 0 0 0.5rem 0;">
+                          Selecciona las secciones que quieres vincular a esta política:
+                        </p>
+
+                        @if (sections.length === 0) {
+                          <p style="font-size: 0.75rem; color: #475569;">Sin secciones definidas en este marco.</p>
+                        } @else {
+                          <div style="display: flex; flex-direction: column; gap: 0.3rem; max-height: 160px; overflow-y: auto;">
+                            @for (sec of sections; track sec._id) {
+                              @if (sec.id) {
+                                <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: #94a3b8; cursor: pointer; padding: 0.25rem 0;">
+                                  <input
+                                    type="checkbox"
+                                    [checked]="isSectionSelected(pi, sec.id!)"
+                                    (change)="toggleSectionLink(pi, sec.id!)"
+                                    style="accent-color: #38bdf8;"
+                                  />
+                                  {{ sec.title }}
+                                </label>
+                              }
+                            }
+                          </div>
+                        }
+
+                        @if (state.error) {
+                          <p style="font-size: 0.75rem; color: #f87171; margin: 0.4rem 0 0 0;">{{ state.error }}</p>
+                        }
+
+                        <button
+                          class="pf-btn pf-btn--primary"
+                          style="margin-top: 0.6rem; width: 100%; font-size: 0.8rem; padding: 0.45rem;"
+                          (click)="saveSectionLinks(pi)"
+                          [disabled]="state.saving || state.selectedSectionIds.size === 0"
+                        >
+                          @if (state.saving) {
+                            <span class="pf-spinner" style="width: 12px; height: 12px;"></span>
+                            <span>Vinculando...</span>
+                          } @else {
+                            Vincular secciones seleccionadas
+                          }
+                        </button>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          }
+        </div>
+      }
+    </aside>
+
+    <!-- ── BUILDER DE SECCIONES ────────────────────────────────────────────── -->
+    <section class="pf-builder">
+      <div class="pf-builder__header">
+        <h2 style="font-size: 1.15rem; font-weight: 600; color: #334155;">Articulados y Secciones de Control</h2>
+        <span class="pf-count">{{ sections.length }} items</span>
+      </div>
+
+      <div class="pf-element-list">
+        @for (sec of sections; track sec._id) {
+          <div class="pf-element" style="border-left: 4px solid #64748b;">
+            <div class="pf-element__header" style="justify-content: space-between; padding: 0.75rem 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1;">
+                <span style="font-size: 0.85rem; font-weight: 700; color: #94a3b8; font-family: monospace;">
+                  #{{ $index + 1 }}
+                </span>
+                <input
+                  type="text"
+                  [(ngModel)]="sec.title"
+                  placeholder="Ej. Control A.5.1 - Políticas para la seguridad de la información"
+                  class="pf-element__name-input"
+                  [disabled]="submitting()"
+                />
+              </div>
+              <button
+                class="pf-icon-btn pf-icon-btn--danger"
+                (click)="removeSection(sec._id)"
+                [disabled]="submitting()"
+                title="Eliminar esta sección"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        } @empty {
+          <div class="pf-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p>No hay secciones ni requisitos definidos en este marco normativo.</p>
+            <p style="font-size: 0.8rem; margin-top: 0.25rem;">Debes añadir al menos una sección para poder guardar.</p>
+          </div>
+        }
+      </div>
+
+      <button
+        class="pf-btn pf-btn--add"
+        (click)="addSection()"
+        [disabled]="submitting()"
+        style="width: 100%; margin-top: 0.5rem;"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.1rem; height: 1.1rem;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+        </svg>
+        Añadir nueva sección o artículo
+      </button>
+    </section>
+  </main>
+</div>

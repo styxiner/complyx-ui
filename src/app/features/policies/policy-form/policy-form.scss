@@ -1,0 +1,474 @@
+// ── Tokens ────────────────────────────────────────────────────────────────────
+$bg-card:     #0f172a;
+$bg-elevated: #1e293b;
+$bg-input:    #0c1a35;
+$border:      rgba(255, 255, 255, 0.06);
+$border-mid:  rgba(255, 255, 255, 0.12);
+$border-focus: rgba(56, 189, 248, 0.5);
+
+$text-hi:    #e2e8f0;
+$text-mid:   #94a3b8;
+$text-dim:   #475569;
+
+$accent:      #38bdf8;
+$accent-dim:  rgba(56, 189, 248, 0.12);
+$accent-dark: rgba(56, 189, 248, 0.08);
+
+$critical: #f87171; $critical-bg: rgba(239,68,68,.12); $critical-border: rgba(239,68,68,.3);
+$high:     #fb923c; $high-bg:     rgba(251,146,60,.12); $high-border:     rgba(251,146,60,.3);
+$medium:   #facc15; $medium-bg:   rgba(250,204,21,.12); $medium-border:   rgba(250,204,21,.3);
+$low:      #4ade80; $low-bg:      rgba(74,222,128,.12); $low-border:      rgba(74,222,128,.3);
+
+// ── Host ──────────────────────────────────────────────────────────────────────
+:host {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+// ── Tarjeta modal ─────────────────────────────────────────────────────────────
+.pf-page {
+  background: $bg-card;
+  border: 1px solid $border-mid;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: pfFadeIn 0.2s ease-out;
+}
+
+@keyframes pfFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.pf-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.5rem;
+  border-bottom: 1px solid $border-mid;
+  background: rgba(255,255,255,.02);
+
+  &__titles {
+    flex: 1;
+    h1 { font-size: 1rem; font-weight: 700; color: $text-hi; margin: 0; }
+    p  { font-size: 0.75rem; color: $text-dim; margin: 0; }
+  }
+
+  &__actions { display: flex; gap: 0.5rem; }
+}
+
+.pf-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: $text-dim;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: 5px;
+  flex-shrink: 0;
+  transition: color 0.15s;
+  svg { width: 14px; height: 14px; }
+  &:hover { color: $text-mid; }
+}
+
+// ── Body (2 columnas) ─────────────────────────────────────────────────────────
+.pf-body {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────────────────
+.pf-sidebar {
+  padding: 1.25rem;
+  border-right: 1px solid $border;
+}
+
+.pf-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &__title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: $text-dim;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0;
+  }
+}
+
+// ── Campos ────────────────────────────────────────────────────────────────────
+.pf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: $text-dim;
+  }
+
+  input, textarea, select {
+    background: $bg-input;
+    border: 1px solid $border-mid;
+    border-radius: 6px;
+    color: $text-hi;
+    font-size: 0.82rem;
+    padding: 0.5rem 0.7rem;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+
+    &::placeholder { color: $text-dim; }
+    &:focus { border-color: $border-focus; }
+  }
+
+  select {
+    cursor: pointer;
+    option { background: $bg-card; }
+  }
+
+  &--sm {
+    label { font-size: 0.68rem; }
+    input, textarea { font-size: 0.78rem; padding: 0.4rem 0.6rem; }
+  }
+}
+
+.pf-mono { font-family: 'SFMono-Regular', Consolas, monospace !important; color: #93c5fd !important; }
+.pf-required { color: $critical; }
+
+// ── Severidad ─────────────────────────────────────────────────────────────────
+.pf-severity-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+}
+
+.pf-sev-btn {
+  padding: 0.4rem;
+  border-radius: 5px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 1px solid $border-mid;
+  background: transparent;
+  color: $text-dim;
+  cursor: pointer;
+  transition: all 0.15s;
+  &:hover { color: $text-mid; }
+
+  &--active {
+    &.sev--critical { background: $critical-bg; color: $critical; border-color: $critical-border; }
+    &.sev--high     { background: $high-bg;     color: $high;     border-color: $high-border; }
+    &.sev--medium   { background: $medium-bg;   color: $medium;   border-color: $medium-border; }
+    &.sev--low      { background: $low-bg;       color: $low;     border-color: $low-border; }
+  }
+}
+
+// ── Resumen ───────────────────────────────────────────────────────────────────
+.pf-summary {
+  border-top: 1px solid $border;
+  padding-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    span   { color: $text-dim; }
+    strong { color: $text-hi; font-weight: 700; }
+  }
+}
+
+// ── Builder ───────────────────────────────────────────────────────────────────
+.pf-builder {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h2 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: $text-hi;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+}
+
+// ── Error banner ──────────────────────────────────────────────────────────────
+.pf-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.9rem;
+  background: rgba(239,68,68,.1);
+  border: 1px solid rgba(239,68,68,.25);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: $critical;
+  svg { width: 15px; height: 15px; flex-shrink: 0; }
+}
+
+// ── Empty ─────────────────────────────────────────────────────────────────────
+.pf-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 2rem 1rem;
+  border: 1px dashed $border-mid;
+  border-radius: 8px;
+  text-align: center;
+  svg { width: 28px; height: 28px; color: $text-dim; }
+  p   { font-size: 0.8rem; color: $text-dim; margin: 0; }
+}
+
+// ── Elementos ─────────────────────────────────────────────────────────────────
+.pf-element-list { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.pf-element {
+  background: $bg-elevated;
+  border: 1px solid $border-mid;
+  border-radius: 8px;
+  overflow: hidden;
+  &:focus-within { border-color: rgba($accent, 0.25); }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem;
+    background: rgba(255,255,255,.02);
+    border-bottom: 1px solid $border;
+  }
+
+  &__name-input {
+    flex: 1;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid transparent !important;
+    border-radius: 0 !important;
+    padding: 0.15rem 0.25rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 600;
+    color: $text-hi !important;
+    box-sizing: border-box;
+    &:focus { border-bottom-color: $accent !important; outline: none; }
+    &::placeholder { color: $text-dim !important; font-weight: 400; }
+  }
+
+  &__meta { font-size: 0.68rem; color: $text-dim; flex-shrink: 0; }
+
+  &__toggle {
+    background: transparent; border: none; cursor: pointer;
+    padding: 2px; display: flex; align-items: center;
+    color: $text-dim; transition: color 0.15s;
+    &:hover { color: $text-mid; }
+  }
+
+  &__body { padding: 0.85rem; display: flex; flex-direction: column; gap: 0.6rem; }
+}
+
+// ── Chevron ───────────────────────────────────────────────────────────────────
+.pf-chevron {
+  width: 15px; height: 15px;
+  transition: transform 0.2s;
+  &--open { transform: rotate(180deg); }
+  &--sm { width: 12px; height: 12px; }
+}
+
+// ── Checks ────────────────────────────────────────────────────────────────────
+.pf-checks-empty { font-size: 0.75rem; color: $text-dim; font-style: italic; margin: 0; }
+.pf-check-list   { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.pf-check {
+  background: rgba(0,0,0,.2);
+  border: 1px solid $border;
+  border-radius: 7px;
+  overflow: hidden;
+
+  &__header {
+    display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.65rem;
+  }
+
+  &__name-input {
+    flex: 1;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid transparent !important;
+    border-radius: 0 !important;
+    padding: 0.12rem 0.2rem !important;
+    font-size: 0.8rem !important;
+    color: $text-hi !important;
+    box-sizing: border-box;
+    &:focus { border-bottom-color: $accent !important; outline: none; }
+    &::placeholder { color: $text-dim !important; }
+  }
+
+  &__meta { font-size: 0.65rem; color: $text-dim; flex-shrink: 0; }
+
+  &__body {
+    padding: 0.65rem 0.75rem;
+    border-top: 1px solid $border;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+}
+
+// ── Remediaciones ─────────────────────────────────────────────────────────────
+.pf-rem-section {
+  display: flex; flex-direction: column; gap: 0.4rem;
+
+  &__header { display: flex; align-items: center; justify-content: space-between; }
+
+  &__label {
+    font-size: 0.67rem; font-weight: 700; color: $text-dim;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    display: flex; align-items: center; gap: 0.35rem;
+  }
+}
+
+.pf-rem {
+  display: flex; gap: 0.4rem; align-items: flex-start;
+  background: rgba(0,0,0,.25); border: 1px solid $border;
+  border-radius: 5px; padding: 0.55rem 0.65rem;
+
+  &__fields { flex: 1; display: flex; flex-direction: column; gap: 0.35rem; }
+  &__del    { margin-top: 0.1rem; flex-shrink: 0; }
+}
+
+// ── Botones ───────────────────────────────────────────────────────────────────
+.pf-btn {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.5rem 1rem; border-radius: 6px;
+  font-size: 0.8rem; font-weight: 600;
+  border: 1px solid transparent; cursor: pointer; transition: all 0.15s;
+  svg { width: 13px; height: 13px; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  &--primary { background: $accent; color: #0c1a2e; border-color: $accent; &:not(:disabled):hover { opacity: 0.88; } }
+  &--ghost   { background: rgba(255,255,255,.05); color: $text-mid; border-color: $border-mid; &:not(:disabled):hover { color: $text-hi; } }
+  &--add     { background: $accent-dark; color: $accent; border-color: rgba($accent,.2); font-size: 0.77rem; padding: 0.38rem 0.75rem; &:hover { background: $accent-dim; } }
+  &--add-sm  { background: transparent; color: $text-dim; border-color: $border-mid; font-size: 0.68rem; padding: 0.25rem 0.55rem; svg { width: 10px; height: 10px; } &:hover { color: $accent; border-color: rgba($accent,.25); background: $accent-dark; } }
+  &--add-check { background: transparent; color: $text-dim; border: 1px dashed $border-mid; font-size: 0.75rem; padding: 0.35rem 0.7rem; width: 100%; justify-content: center; border-radius: 6px; &:hover { color: $accent; border-color: rgba($accent,.3); background: $accent-dark; } }
+}
+
+.pf-icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 4px;
+  border: 1px solid transparent; background: transparent;
+  cursor: pointer; transition: all 0.15s; flex-shrink: 0;
+  svg { width: 12px; height: 12px; }
+  &--danger { color: $text-dim; &:hover { color: $critical; background: rgba(239,68,68,.1); border-color: rgba(239,68,68,.2); } }
+}
+
+.pf-count {
+  font-size: 0.65rem; font-weight: 700;
+  background: $accent-dim; color: $accent; border-radius: 10px; padding: 1px 6px;
+  &--sm { padding: 1px 5px; font-size: 0.6rem; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.pf-spinner {
+  width: 12px; height: 12px;
+  border: 2px solid rgba(12,26,46,.4); border-top-color: #0c1a2e;
+  border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
+}
+
+// ── Parámetros grid ───────────────────────────────────────────────────────────
+.pf-params-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+
+  .pf-span-2 { grid-column: span 2; }
+}
+
+// ── Tag de tipo de check ──────────────────────────────────────────────────────
+.pf-check__type-tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+}
+
+// ── Patrones (file_block) ─────────────────────────────────────────────────────
+.pf-pattern-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pf-pattern-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pf-pattern-row {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+
+  input { flex: 1; }
+}
+
+.pf-label-sm {
+  font-size: 0.67rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+// ── user_attr row ─────────────────────────────────────────────────────────────
+.pf-ua-row {
+  display: grid;
+  grid-template-columns: 1fr 0.6fr 1fr auto;
+  gap: 0.35rem;
+  align-items: center;
+
+  select, input {
+    background: #0c1a35;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 5px;
+    color: #e2e8f0;
+    font-size: 0.76rem;
+    padding: 0.35rem 0.5rem;
+    outline: none;
+    font-family: inherit;
+
+    &:focus { border-color: rgba(56,189,248,0.5); }
+    option { background: #0f172a; }
+  }
+}

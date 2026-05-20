@@ -1,0 +1,153 @@
+// ── Tokens ────────────────────────────────────────
+$bg:            #07111f;
+$border:        rgba(255, 255, 255, 0.06);
+$accent:        #38bdf8;
+$accent-dim:    rgba(56, 189, 248, 0.12);
+$accent-border: rgba(56, 189, 248, 0.22);
+$text-dim:      #3d5068;
+$text-mid:      #64748b;
+$text-base:     #94a3b8;
+$text-hi:       #cbd5e1;
+$hover-bg:      rgba(255, 255, 255, 0.045);
+$ease:          cubic-bezier(0.4, 0, 0.2, 1);
+
+// ── Host Container ───────────────────────────────────────────────────────────
+:host {
+  display: block;
+  padding: 40px;
+  background: $bg;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.profile-layout {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+// ── Profile Card ─────────────────────────────────────────────────────────────
+.profile-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $border;
+  border-radius: 12px;
+  overflow: hidden;
+  animation: fadeIn 0.4s $ease;
+}
+
+// ── Header Section ───────────────────────────────────────────────────────────
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 32px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.02), transparent);
+  border-bottom: 1px solid $border;
+
+  .avatar {
+    width: 80px;
+    height: 80px;
+    background: $accent-dim;
+    border: 2px solid $accent-border;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: $accent;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
+  }
+
+  .info {
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $text-hi;
+      letter-spacing: -0.02em;
+    }
+  }
+}
+
+// ── Body Section ─────────────────────────────────────────────────────────────
+.profile-body {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: $text-dim;
+      font-weight: 700;
+    }
+
+    .value {
+      font-size: 1rem;
+      color: $text-base;
+      padding: 12px;
+      background: $hover-bg;
+      border: 1px solid $border;
+      border-radius: 8px;
+    }
+  }
+}
+
+// ── Tags para Roles ──────────────────────────────────────────────────────────
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .tag {
+    padding: 4px 12px;
+    background: $accent-dim;
+    border: 1px solid $accent-border;
+    color: $accent;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+}
+
+// ── States (Loading/Error) ───────────────────────────────────────────────────
+.loading-state {
+  text-align: center;
+  padding: 60px;
+  color: $text-mid;
+  font-style: italic;
+}
+
+.error-banner {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  button {
+    background: rgba(239, 68, 68, 0.2);
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover { background: rgba(239, 68, 68, 0.3); }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

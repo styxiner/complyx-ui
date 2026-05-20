@@ -1,1 +1,12 @@
-<p>risk-filter-bar works!</p>
+<div class="filter-bar">
+  <app-filter-dropdown
+    label="Estado"
+    [options]="statusOptions"
+    (selectedChange)="onStatusChange($event)"
+  />
+  <app-filter-dropdown
+    label="Nivel de riesgo"
+    [options]="levelOptions"
+    (selectedChange)="onLevelChange($event)"
+  />
+</div>

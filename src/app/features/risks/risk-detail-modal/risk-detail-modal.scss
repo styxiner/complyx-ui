@@ -1,0 +1,324 @@
+$bg-row:     #111827;
+$bg-hover:   #1e293b;
+$border:     rgba(255,255,255,0.06);
+$border-mid: rgba(255,255,255,0.10);
+$text-hi:    #e2e8f0;
+$text-mid:   #94a3b8;
+$text-dim:   #475569;
+$accent:     #38bdf8;
+$accent-dim: rgba(56,189,248,0.12);
+
+:host { display: flex; flex-direction: column; flex: 1; overflow-y: auto; }
+
+.risk-detail {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  flex: 1;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  &__title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  &__threat {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $text-hi;
+  }
+
+  &__agent {
+    font-size: 0.8rem;
+    color: $text-dim;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  &__badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+  // ── Transiciones ────────────────────────────────────────────────────────────
+  &__transitions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.6rem 0.75rem;
+    background: $bg-row;
+    border: 1px solid $border;
+    border-radius: 8px;
+  }
+
+  &__transitions-label {
+    font-size: 0.75rem;
+    color: $text-dim;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-right: 0.25rem;
+  }
+
+  // ── Tabs ────────────────────────────────────────────────────────────────────
+  &__tabs {
+    display: flex;
+    border-bottom: 1px solid $border;
+    margin-bottom: 0.25rem;
+  }
+
+  &__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: $text-dim;
+    font-size: 0.83rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: color 0.14s, border-color 0.14s;
+
+    &:hover:not(&--active) { color: $text-mid; }
+    &--active { color: $accent; border-bottom-color: $accent; }
+  }
+
+  &__tab-count {
+    min-width: 16px; height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: $accent-dim;
+    color: $accent;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// ── Detail grid ───────────────────────────────────────────────────────────────
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.1rem 1.5rem;
+
+  &__item { display: flex; flex-direction: column; gap: 0.25rem; }
+  &__item--action { justify-content: flex-end; align-items: flex-start; }
+
+  &__label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: $text-dim;
+    font-weight: 600;
+  }
+
+  &__value {
+    font-size: 0.875rem;
+    color: $text-hi;
+
+    &--score { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.875rem; }
+    &--big   { font-size: 1.25rem; font-weight: 700; color: $accent; }
+  }
+}
+
+// ── Edit form ─────────────────────────────────────────────────────────────────
+.edit-form {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: $bg-row;
+  border: 1px solid $border;
+  border-radius: 8px;
+
+  &__field { display: flex; flex-direction: column; gap: 0.25rem; }
+  &__label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: $text-dim; }
+  &__input {
+    width: 110px;
+    padding: 0.3rem 0.5rem;
+    background: rgba(255,255,255,.05);
+    border: 1px solid $border-mid;
+    border-radius: 5px;
+    color: $text-hi;
+    font-size: 0.85rem;
+    outline: none;
+
+    &:focus { border-color: $accent; }
+  }
+
+  &__actions { display: flex; gap: 0.5rem; }
+}
+
+// ── Tab Políticas ─────────────────────────────────────────────────────────────
+.policies-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__count { font-size: 0.8rem; color: $text-dim; }
+
+  &__empty {
+    font-size: 0.85rem;
+    color: $text-dim;
+    text-align: center;
+    padding: 2rem 0;
+  }
+}
+
+.policies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.75rem;
+    border-radius: 7px;
+    background: $bg-row;
+    border: 1px solid $border;
+    transition: border-color 0.14s;
+
+    &:hover { border-color: $border-mid; }
+  }
+
+  &__left  { display: flex; align-items: center; gap: 0.55rem; min-width: 0; }
+  &__icon  { width: 14px; height: 14px; color: $text-dim; flex-shrink: 0; }
+  &__name  { display: block; font-size: 0.83rem; font-weight: 500; color: $text-hi; }
+  &__version { display: block; font-size: 0.7rem; color: $text-dim; font-family: ui-monospace, monospace; }
+  &__right { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+
+  &__unlink {
+    display: flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px;
+    border-radius: 5px;
+    background: none; border: 1px solid $border;
+    color: $text-dim; cursor: pointer;
+    transition: background 0.14s, color 0.14s, border-color 0.14s;
+
+    svg { width: 12px; height: 12px; }
+    &:hover { background: rgba(239,68,68,.1); border-color: rgba(239,68,68,.3); color: #f87171; }
+  }
+}
+
+// ── Policy picker ─────────────────────────────────────────────────────────────
+.picker-backdrop {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(0,0,0,0.55); backdrop-filter: blur(2px);
+}
+
+.picker {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 601;
+  width: min(480px, calc(100vw - 2rem));
+  max-height: min(560px, calc(100vh - 4rem));
+  background: #0f172a;
+  border: 1px solid $border-mid;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid $border;
+    flex-shrink: 0;
+  }
+
+  &__title { font-size: 0.9rem; font-weight: 600; color: $text-hi; margin: 0; }
+
+  &__close {
+    display: flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 6px; background: none; border: 1px solid $border;
+    color: $text-dim; cursor: pointer;
+    svg { width: 13px; height: 13px; }
+    &:hover { background: $bg-hover; color: $text-hi; }
+  }
+
+  &__list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.35rem 0;
+  }
+
+  &__empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    font-size: 0.83rem;
+    color: $text-dim;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.65rem 1.1rem;
+    background: none; border: none;
+    cursor: pointer; text-align: left;
+    transition: background 0.1s;
+
+    &:hover { background: $bg-hover; }
+  }
+
+  &__item-name { font-size: 0.875rem; color: $text-hi; font-weight: 500; }
+}
+
+// ── Botones ───────────────────────────────────────────────────────────────────
+.btn {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px; border: 1px solid transparent;
+  font-size: 0.8rem; font-weight: 500;
+  cursor: pointer;
+  transition: background 0.14s, border-color 0.14s, color 0.14s;
+  svg { width: 13px; height: 13px; }
+  &[disabled] { opacity: 0.45; cursor: not-allowed; }
+
+  &--xs { padding: 0.2rem 0.5rem; font-size: 0.73rem; }
+
+  &--primary {
+    background: $accent; border-color: $accent; color: #0f172a; font-weight: 600;
+    &:hover:not([disabled]) { background: #7dd3fc; }
+  }
+  &--ghost {
+    background: rgba(255,255,255,.04); border-color: $border-mid; color: $text-mid;
+    &:hover:not([disabled]) { background: $bg-hover; color: $text-hi; }
+  }
+}
+
+.btn-spinner {
+  width: 10px; height: 10px;
+  border: 2px solid rgba(15,23,42,0.3);
+  border-top-color: #0f172a;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

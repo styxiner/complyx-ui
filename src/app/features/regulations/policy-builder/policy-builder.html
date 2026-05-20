@@ -1,0 +1,135 @@
+<div class="pf-builder-container">
+  <form [formGroup]="policyForm">
+    <h3>Configuración de Política</h3>
+
+    @if (serverError()) {
+      <div style="background-color: rgba(239,68,68,0.12); color: #f87171; padding: 1rem; border-radius: 6px; border: 1px solid rgba(239,68,68,0.25); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; flex-shrink: 0;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+        <span>{{ serverError() }}</span>
+      </div>
+    }
+
+    <!-- Nombre -->
+    <div class="pf-field">
+      <label>Nombre de la Política <span style="color: #f87171;">*</span></label>
+      <input formControlName="name" placeholder="Ej. Política de Contraseñas Seguras" />
+    </div>
+
+    <!-- Descripción -->
+    <div class="pf-field">
+      <label>Descripción <span style="color: #f87171;">*</span></label>
+      <input formControlName="description" placeholder="Ej. Garantiza que los sistemas usen contraseñas robustas" />
+    </div>
+
+    <!-- Versión + Severidad -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="pf-field">
+        <label>Versión</label>
+        <input formControlName="version" placeholder="1.0.0" />
+      </div>
+      <div class="pf-field">
+        <label>Severidad</label>
+        <select formControlName="severity">
+          <option value="LOW">Baja</option>
+          <option value="MEDIUM">Media</option>
+          <option value="HIGH">Alta</option>
+          <option value="CRITICAL">Crítica</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Elementos -->
+    <div formArrayName="elements">
+      @for (el of elements.controls; track $index; let i = $index) {
+        <div [formGroupName]="i" class="pf-section-box">
+
+          <!-- Cabecera del elemento -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <input formControlName="name"
+              placeholder="Nombre del elemento (ej. Servidores Linux)"
+              class="pf-section-title"/>
+            <button type="button" (click)="removeElement(i)"
+              style="color: #f87171; border: none; padding: 0.25rem 0.5rem; margin-top: 0; margin-left: 1rem;"
+              title="Eliminar elemento">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Aviso: elemento sin checks -->
+          @if (elementHasNoChecks(i)) {
+            <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.2); border-radius: 6px; padding: 0.6rem 0.85rem; margin: 0.5rem 0; font-size: 0.78rem; color: #facc15;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;flex-shrink:0;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+              </svg>
+              Este elemento necesita al menos un check para poder guardar.
+            </div>
+          }
+
+          <!-- Checks -->
+          <div formArrayName="checks">
+            @for (ch of getChecks(i).controls; track $index; let j = $index) {
+              <div [formGroupName]="j" class="pf-check-box" style="position: relative;">
+
+                <button type="button" (click)="removeCheck(i, j)"
+                  style="position: absolute; top: 0.5rem; right: 0.5rem; color: #f87171; border: none; padding: 0.2rem;"
+                  title="Eliminar check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+
+                <label style="font-size: 0.75rem; color: #94a3b8; margin-bottom: -0.5rem;">Nombre del Check</label>
+                <input formControlName="name" placeholder="Ej. Verificar puerto 22 cerrado" />
+
+                <div formGroupName="checkParams">
+                  <label style="font-size: 0.75rem; color: #94a3b8; margin-bottom: -0.5rem;">Tipo de Executor</label>
+                  <select formControlName="type">
+                    @for (t of checkTypes; track t.type) {
+                      <option [value]="t.type">{{ t.label }}</option>
+                    }
+                  </select>
+                </div>
+
+                @if (sections.length > 0) {
+                  <label style="font-size: 0.75rem; color: #94a3b8; margin-bottom: -0.5rem;">
+                    Vincular a Secciones de la Normativa
+                  </label>
+                  <select formControlName="regulationSectionIds" multiple>
+                    @for (sec of sections; track sec.id) {
+                      <option [value]="sec.id">{{ sec.title }}</option>
+                    }
+                  </select>
+                  <p style="font-size: 0.7rem; color: #475569; margin-top: -0.5rem;">
+                    Mantén Ctrl (o Cmd) para seleccionar varias.
+                  </p>
+                }
+              </div>
+            }
+          </div>
+
+          <button type="button" (click)="addCheck(i)" style="width: 100%;">
+            + Añadir Check a este elemento
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (elements.length === 0) {
+      <p style="font-size: 0.8rem; color: #64748b; text-align: center; padding: 0.5rem 0;">
+        Añade al menos un elemento con un check para poder guardar la política.
+      </p>
+    }
+
+    <button type="button" (click)="addElement()" style="width: 100%; border-style: dashed;">
+      + Añadir Elemento
+    </button>
+
+    <button type="button" (click)="save()" [disabled]="isSubmitting()">
+      {{ isSubmitting() ? 'Guardando...' : 'Guardar Política' }}
+    </button>
+  </form>
+</div>

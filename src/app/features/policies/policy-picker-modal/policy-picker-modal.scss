@@ -1,0 +1,219 @@
+// Tokens del sistema de diseño oscuro del proyecto
+$bg-card:    #0f172a;
+$bg-row:     #111827;
+$bg-hover:   #1e293b;
+$border:     rgba(255, 255, 255, 0.06);
+$border-mid: rgba(255, 255, 255, 0.10);
+$text-hi:    #e2e8f0;
+$text-mid:   #94a3b8;
+$text-dim:   #475569;
+$accent:     #38bdf8;
+
+// Severidades
+$critical: #f87171; $critical-bg: rgba(239,68,68,.12);
+$high:     #fb923c; $high-bg:     rgba(251,146,60,.12);
+$medium:   #facc15; $medium-bg:   rgba(250,204,21,.12);
+$low:      #4ade80; $low-bg:      rgba(74,222,128,.12);
+
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.picker-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(2px);
+}
+
+.picker {
+  position: relative;
+  z-index: 1;
+  width: min(520px, calc(100vw - 2rem));
+  max-height: min(640px, calc(100vh - 4rem));
+  background: $bg-card;
+  border: 1px solid $border-mid;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+
+  // ── Header ────────────────────────────────────────────────────────────────
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.25rem 1rem;
+    border-bottom: 1px solid $border;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-hi;
+    margin: 0 0 0.2rem;
+  }
+
+  &__subtitle {
+    font-size: 0.78rem;
+    color: $text-dim;
+    margin: 0;
+  }
+
+  &__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: none;
+    border: 1px solid $border;
+    color: $text-dim;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.14s, color 0.14s;
+
+    svg { width: 14px; height: 14px; }
+    &:hover { background: $bg-hover; color: $text-hi; }
+  }
+
+  // ── Search ────────────────────────────────────────────────────────────────
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid $border;
+    flex-shrink: 0;
+  }
+
+  &__search-icon {
+    width: 15px;
+    height: 15px;
+    color: $text-dim;
+    flex-shrink: 0;
+  }
+
+  &__search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 0.875rem;
+    color: $text-hi;
+
+    &::placeholder { color: $text-dim; }
+  }
+
+  // ── Lista ─────────────────────────────────────────────────────────────────
+  &__list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.4rem 0;
+
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb { background: $border-mid; border-radius: 4px; }
+  }
+
+  &__state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2.5rem 1rem;
+    color: $text-dim;
+    font-size: 0.85rem;
+    text-align: center;
+
+    strong { color: $text-mid; }
+
+    &--error { color: #f87171; }
+  }
+
+  &__spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid $border-mid;
+    border-top-color: $accent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+
+  // ── Item ──────────────────────────────────────────────────────────────────
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.7rem 1.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    gap: 0.75rem;
+    transition: background 0.1s;
+    text-align: left;
+
+    &:hover { background: $bg-hover; }
+  }
+
+  &__item-left {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-width: 0;
+  }
+
+  &__item-icon {
+    width: 16px;
+    height: 16px;
+    color: $text-dim;
+    flex-shrink: 0;
+  }
+
+  &__item-name {
+    display: block;
+    font-size: 0.875rem;
+    color: $text-hi;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__item-version {
+    display: block;
+    font-size: 0.72rem;
+    color: $text-dim;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    margin-top: 0.1rem;
+  }
+
+  // ── Severidad badge ───────────────────────────────────────────────────────
+  &__sev {
+    flex-shrink: 0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}
+
+.sev--critical { color: $critical; background: $critical-bg; }
+.sev--high     { color: $high;     background: $high-bg;     }
+.sev--medium   { color: $medium;   background: $medium-bg;   }
+.sev--low      { color: $low;      background: $low-bg;      }
+
+@keyframes spin { to { transform: rotate(360deg); } }
