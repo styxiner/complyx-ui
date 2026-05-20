@@ -1,1 +1,27 @@
-<p>compliance-chart works!</p>
+<div class="chart-card chart-card--tall">
+  <h3 class="chart-card__title">Cumplimiento por agente</h3>
+  <p class="chart-card__subtitle">Política activa más reciente</p>
+
+  @if (loading()) {
+    <div class="chart-card__skeleton"></div>
+  } @else if (bars().length === 0) {
+    <div class="chart-card__empty">Sin datos de cumplimiento disponibles</div>
+  } @else {
+    <div class="bar-chart">
+      @for (bar of bars(); track bar.agentId) {
+        <div class="bar-chart__row">
+          <span class="bar-chart__label" [title]="bar.label">{{ bar.label }}</span>
+          <div class="bar-chart__track">
+            <div class="bar-chart__fill"
+                 [style.width.%]="bar.score"
+                 [style.background]="scoreColor(bar.score)">
+            </div>
+          </div>
+          <span class="bar-chart__val" [style.color]="scoreColor(bar.score)">
+            {{ bar.score | number:'1.0-1' }}%
+          </span>
+        </div>
+      }
+    </div>
+  }
+</div>

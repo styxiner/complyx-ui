@@ -1,0 +1,307 @@
+// Tokens
+$bg:      #ffffff;
+$border:  #e2e8f0;
+$text-hi: #0f172a;
+$text-mid:#334155;
+$text-dim:#64748b;
+
+// ── Dash card (KPI) ───────────────────────────────────────────────────────────
+.dash-card {
+  background: $bg;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: box-shadow 0.14s;
+
+  &:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+  &--alert { border-color: rgba(239,68,68,0.3); }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.85rem;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    svg { width: 16px; height: 16px; }
+
+    &--blue  { background: rgba(59,130,246,.10); color: #3b82f6; }
+    &--green { background: rgba(34,197,94,.10);  color: #22c55e; }
+    &--red   { background: rgba(239,68,68,.10);  color: #ef4444; }
+    &--cyan  { background: rgba(6,182,212,.10);  color: #06b6d4; }
+  }
+
+  &__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $text-dim;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex: 1;
+  }
+
+  &__link {
+    font-size: 0.72rem;
+    color: #3b82f6;
+    text-decoration: none;
+    white-space: nowrap;
+    &:hover { text-decoration: underline; }
+  }
+
+  &__value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: $text-hi;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+
+    &--dim { color: $text-dim; }
+
+    &.score--pass { color: #16a34a; }
+    &.score--warn { color: #ca8a04; }
+    &.score--fail { color: #dc2626; }
+  }
+
+  &__stats {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    color: $text-dim;
+
+    &--pass .dash-card__dot { background: #4ade80; }
+    &--fail .dash-card__dot { background: #f87171; }
+    &--warn .dash-card__dot { background: #facc15; }
+    &--crit .dash-card__dot { background: #f87171; }
+  }
+
+  &__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &__skeleton {
+    height: 48px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+  }
+}
+
+// ── Chart card ────────────────────────────────────────────────────────────────
+.chart-card {
+  background: $bg;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 1.1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+
+  &--tall { min-height: 240px; }
+
+  &__title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $text-hi;
+    margin: 0 0 0.1rem;
+  }
+
+  &__subtitle {
+    font-size: 0.72rem;
+    color: $text-dim;
+    margin: 0 0 1rem;
+  }
+
+  &__skeleton {
+    height: 160px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    margin-top: 1rem;
+  }
+
+  &__empty {
+    padding: 2rem;
+    text-align: center;
+    color: $text-dim;
+    font-size: 0.83rem;
+  }
+}
+
+// ── Donut SVG ─────────────────────────────────────────────────────────────────
+.donut-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+
+.donut {
+  width: 120px;
+  height: 120px;
+
+  &__center-val {
+    font-size: 18px;
+    font-weight: 800;
+    fill: $text-hi;
+    font-family: -apple-system, sans-serif;
+  }
+
+  &__center-lbl {
+    font-size: 8px;
+    fill: $text-dim;
+    font-family: -apple-system, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+// ── Legend ────────────────────────────────────────────────────────────────────
+.chart-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &--pass { background: #4ade80; }
+    &--fail { background: #f87171; }
+  }
+
+  &__label {
+    font-size: 0.78rem;
+    color: $text-mid;
+    flex: 1;
+  }
+
+  &__val {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $text-hi;
+    small { font-weight: 400; color: $text-dim; }
+  }
+}
+
+// ── Bar chart (compliance-chart) ──────────────────────────────────────────────
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    color: $text-mid;
+    width: 90px;
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__track {
+    flex: 1;
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  &__fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    min-width: 2px;
+  }
+
+  &__val {
+    font-size: 0.72rem;
+    font-weight: 700;
+    width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+}
+
+// ── Column chart (risk-evolution-chart) ───────────────────────────────────────
+.col-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 120px;
+  margin-top: 0.5rem;
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+  }
+
+  &__bar-wrap {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  &__bar {
+    width: 100%;
+    background: #3b82f6;
+    border-radius: 2px 2px 0 0;
+    min-height: 2px;
+    transition: height 0.4s ease;
+
+    &--empty { background: #e2e8f0; }
+  }
+
+  &__label {
+    font-size: 0.55rem;
+    color: $text-dim;
+    margin-top: 3px;
+    text-align: center;
+
+    &--hidden { visibility: hidden; }
+  }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

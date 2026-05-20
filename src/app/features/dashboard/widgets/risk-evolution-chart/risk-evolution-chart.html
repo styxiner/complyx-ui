@@ -1,1 +1,27 @@
-<p>risk-evolution-chart works!</p>
+<div class="chart-card chart-card--tall">
+  <h3 class="chart-card__title">Evolución de riesgos</h3>
+  <p class="chart-card__subtitle">Últimos 14 días</p>
+
+  @if (loading()) {
+    <div class="chart-card__skeleton"></div>
+  } @else {
+    <div class="col-chart">
+      @for (b of buckets(); track b.label; let i = $index) {
+        <div class="col-chart__col">
+          <div class="col-chart__bar-wrap">
+            <div class="col-chart__bar"
+                 [style.height.%]="barHeight(b.count)"
+                 [class.col-chart__bar--empty]="b.count === 0"
+                 [title]="b.label + ': ' + b.count + ' riesgos'">
+            </div>
+          </div>
+          @if (showLabel(b.label, i)) {
+            <span class="col-chart__label">{{ b.label }}</span>
+          } @else {
+            <span class="col-chart__label col-chart__label--hidden">{{ b.label }}</span>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
