@@ -72,13 +72,10 @@ export class PolicyList implements OnInit {
 
   // ── Eliminar (desde el modal de detalle) ──────────────────────────────────
   onRequestDelete(policy: PolicyDetailDTO): void {
-    if (!confirm(`¿Eliminar permanentemente la política "${policy.name}"?`)) return;
+    console.log('calling delete with id', policy.id);
     this.policySvc.delete(policy.id).subscribe({
-      next: () => {
-        this.closeDetail();
-        this.loadPolicies();
-      },
-      error: () => alert('No se pudo eliminar la política.'),
+      next: () => { console.log('deleted ok'); this.closeDetail(); this.loadPolicies(); },
+      error: (e) => { console.error('delete error', e); },
     });
   }
 

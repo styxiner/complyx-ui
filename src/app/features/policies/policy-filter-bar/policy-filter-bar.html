@@ -9,4 +9,9 @@
     [options]="severityOptions"
     (selectedChange)="onSeverityChange($event)"
   />
+  <app-filter-dropdown
+    label="Estado"
+    [options]="statusOptions"
+    (selectedChange)="onStatusChange($event)"
+  />
 </div>

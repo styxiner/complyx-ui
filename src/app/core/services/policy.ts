@@ -20,6 +20,7 @@ export class PolicyService {
     if (sort) params = params.set('sort', sort);
     if (filter.name) params = params.set('name', filter.name);
     if (filter.severity) params = params.set('severity', filter.severity);
+    if (filter.status) params = params.set('status', filter.status);
     if (filter.assignedToAgentId) params = params.set('assignedToAgentId', filter.assignedToAgentId);
     if (filter.assignedToGroupId) params = params.set('assignedToGroupId', filter.assignedToGroupId);
     if (filter.regulationId)        params = params.set('regulationId', filter.regulationId);

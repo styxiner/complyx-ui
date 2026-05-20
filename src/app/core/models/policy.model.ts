@@ -181,7 +181,11 @@ export interface PolicyRemediationUpdateDTO {
 // ── Filtro ────────────────────────────────────────────────────────────────────
 
 export interface PolicyFilter {
-  name?: string; severity?: Severity;
-  assignedToAgentId?: string; assignedToGroupId?: string; includeUnassigned?: boolean;
+  name?: string; 
+  severity?: Severity;
+  status?: PolicyStatus;
+  assignedToAgentId?: string; 
+  assignedToGroupId?: string; 
+  includeUnassigned?: boolean;
   regulationId?: string;
 }
