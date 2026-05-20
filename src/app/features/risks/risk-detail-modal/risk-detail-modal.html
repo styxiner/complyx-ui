@@ -1,1 +1,193 @@
-<p>risk-detail-modal works!</p>
+<div class="risk-detail">
+
+  @if (loading()) {
+    <app-loading-spinner mode="page" />
+  } @else if (error()) {
+    <app-error-banner message="No se pudo cargar el riesgo." [dismissible]="false" />
+  } @else if (detail(); as d) {
+
+    <!-- Header -->
+    <div class="risk-detail__header">
+      <div class="risk-detail__title-block">
+        <span class="risk-detail__threat">{{ d.threat.name }}</span>
+        <span class="risk-detail__agent">{{ d.agent.hostname }}</span>
+      </div>
+      <div class="risk-detail__badges">
+        <app-status-badge [status]="levelVariant(d.riskLevel)"  [label]="levelMeta[d.riskLevel].label" />
+        <app-status-badge [status]="statusVariant(d.riskStatus)" [label]="statusMeta[d.riskStatus].label" />
+      </div>
+    </div>
+
+    <!-- Transiciones disponibles -->
+    @if (availableTransitions().length > 0) {
+      <div class="risk-detail__transitions">
+        <span class="risk-detail__transitions-label">Cambiar estado:</span>
+        @for (t of availableTransitions(); track t) {
+          <button class="btn btn--ghost btn--xs" (click)="requestTransition(t)">
+            → {{ transitionLabel(t) }}
+          </button>
+        }
+      </div>
+    }
+
+    <!-- Tabs -->
+    <div class="risk-detail__tabs">
+      <button class="risk-detail__tab" [class.risk-detail__tab--active]="activeTab() === 'info'"     (click)="setTab('info')">Información</button>
+      <button class="risk-detail__tab" [class.risk-detail__tab--active]="activeTab() === 'policies'" (click)="setTab('policies')">
+        Políticas mitigadoras
+        <span class="risk-detail__tab-count">{{ d.policySummaryDto.length }}</span>
+      </button>
+    </div>
+
+    <!-- Tab: Información -->
+    @if (activeTab() === 'info') {
+      <div class="detail-grid">
+        <div class="detail-grid__item">
+          <span class="detail-grid__label">Amenaza</span>
+          <span class="detail-grid__value">{{ d.threat.name }}</span>
+        </div>
+        <div class="detail-grid__item">
+          <span class="detail-grid__label">Categoría</span>
+          <span class="detail-grid__value">{{ d.threat.category }}</span>
+        </div>
+        <div class="detail-grid__item">
+          <span class="detail-grid__label">Agente</span>
+          <span class="detail-grid__value">{{ d.agent.hostname }}</span>
+        </div>
+        <div class="detail-grid__item">
+          <span class="detail-grid__label">Creado</span>
+          <span class="detail-grid__value">{{ d.createdDate | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+
+        @if (!editing()) {
+          <div class="detail-grid__item">
+            <span class="detail-grid__label">Impacto</span>
+            <span class="detail-grid__value detail-grid__value--score">{{ d.impact }}</span>
+          </div>
+          <div class="detail-grid__item">
+            <span class="detail-grid__label">Probabilidad</span>
+            <span class="detail-grid__value detail-grid__value--score">{{ d.probability }}</span>
+          </div>
+          <div class="detail-grid__item">
+            <span class="detail-grid__label">Score de riesgo</span>
+            <span class="detail-grid__value detail-grid__value--score detail-grid__value--big">
+              {{ riskScore(d.impact, d.probability) }}
+            </span>
+          </div>
+          <div class="detail-grid__item detail-grid__item--action">
+            <button class="btn btn--ghost btn--xs" (click)="startEdit()">Editar valores</button>
+          </div>
+        } @else {
+          <div class="edit-form">
+            <div class="edit-form__field">
+              <label class="edit-form__label">Impacto (0–10)</label>
+              <input class="edit-form__input" type="number" min="0" max="10" step="0.5" [(ngModel)]="editImpact" />
+            </div>
+            <div class="edit-form__field">
+              <label class="edit-form__label">Probabilidad (0–10)</label>
+              <input class="edit-form__input" type="number" min="0" max="10" step="0.5" [(ngModel)]="editProbability" />
+            </div>
+            <div class="edit-form__actions">
+              <button class="btn btn--ghost btn--xs" (click)="cancelEdit()">Cancelar</button>
+              <button class="btn btn--primary btn--xs" [disabled]="saving()" (click)="saveEdit()">
+                @if (saving()) { Guardando… } @else { Guardar }
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Tab: Políticas mitigadoras -->
+    @if (activeTab() === 'policies') {
+      <div class="policies-tab">
+        <div class="policies-tab__toolbar">
+          <span class="policies-tab__count">{{ d.policySummaryDto.length }} {{ d.policySummaryDto.length === 1 ? 'política vinculada' : 'políticas vinculadas' }}</span>
+          <button class="btn btn--primary btn--xs" (click)="openPolicyPicker()" [disabled]="linkingPolicy()">
+            @if (linkingPolicy()) { <span class="btn-spinner"></span> } @else {
+              <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5z"/></svg>
+            }
+            Vincular política
+          </button>
+        </div>
+
+        @if (d.policySummaryDto.length === 0) {
+          <div class="policies-tab__empty">No hay políticas mitigadoras vinculadas a este riesgo.</div>
+        } @else {
+          <div class="policies-list">
+            @for (p of d.policySummaryDto; track p.id) {
+              <div class="policies-list__item">
+                <div class="policies-list__left">
+                  <svg class="policies-list__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                  </svg>
+                  <div>
+                    <span class="policies-list__name">{{ p.name }}</span>
+                    <span class="policies-list__version">v{{ p.version }}</span>
+                  </div>
+                </div>
+                <div class="policies-list__right">
+                  <app-status-badge [status]="severityVariant(p.severity)" [label]="p.severity" />
+                  <button class="policies-list__unlink" title="Desvincular" (click)="requestUnlink(p)">
+                    <svg viewBox="0 0 20 20" fill="currentColor"><path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22z"/></svg>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+</div>
+
+<!-- Policy picker -->
+@if (showPolicyPicker()) {
+  <div class="picker-backdrop" (click)="closePolicyPicker()"></div>
+  <div class="picker">
+    <div class="picker__header">
+      <h3 class="picker__title">Vincular política mitigadora</h3>
+      <button class="picker__close" (click)="closePolicyPicker()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M6 18 18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="picker__list">
+      @if (policiesLoading()) {
+        <app-loading-spinner mode="inline" />
+      } @else if (availablePolicies().length === 0) {
+        <div class="picker__empty">No hay políticas disponibles para vincular.</div>
+      } @else {
+        @for (p of availablePolicies(); track p.id) {
+          <button class="picker__item" (click)="linkPolicy(p)">
+            <span class="picker__item-name">{{ p.name }}</span>
+            <app-status-badge [status]="severityVariant(p.severity)" [label]="p.severity" />
+          </button>
+        }
+      }
+    </div>
+  </div>
+}
+
+<!-- Confirm: transición de estado -->
+@if (showTransitionConfirm()) {
+  <app-confirm-dialog
+    [title]="'Cambiar estado a ' + transitionLabel(pendingTransition()!)"
+    [message]="'¿Confirmas el cambio de estado del riesgo a ' + transitionLabel(pendingTransition()!) + '?'"
+    [confirmLabel]="transitionLabel(pendingTransition()!)"
+    [danger]="pendingTransition() === 'CLOSED'"
+    (confirmed)="confirmTransition()"
+    (cancelled)="cancelTransition()">
+  </app-confirm-dialog>
+}
+
+<!-- Confirm: desvincular política -->
+@if (showUnlinkConfirm()) {
+  <app-confirm-dialog
+    title="Desvincular política"
+    [message]="'¿Desvincular &quot;' + policyToUnlink()!.name + '&quot; de este riesgo?'"
+    confirmLabel="Desvincular"
+    [danger]="false"
+    (confirmed)="confirmUnlink()"
+    (cancelled)="cancelUnlink()">
+  </app-confirm-dialog>
+}

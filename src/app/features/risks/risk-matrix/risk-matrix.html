@@ -1,1 +1,117 @@
-<p>risk-matrix works!</p>
+<div class="risk-matrix">
+
+  <!-- Cabecera -->
+  <div class="risk-matrix__header">
+    <div>
+      <h1 class="risk-matrix__title">Riesgos</h1>
+      <p class="risk-matrix__subtitle">Inventario de riesgos detectados por agente y amenaza</p>
+    </div>
+    <button class="btn btn--primary" (click)="openCreate()">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5z"/></svg>
+      Nuevo riesgo
+    </button>
+  </div>
+
+  <!-- KPI cards -->
+  <div class="risk-kpis">
+    @for (level of levels; track level) {
+      <div class="risk-kpi" [class]="'risk-kpi--' + level.toLowerCase()">
+        <span class="risk-kpi__value">{{ kpis()[level] }}</span>
+        <span class="risk-kpi__label">{{ levelMeta[level].label }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- Filtros -->
+  <app-risk-filter-bar (filterChange)="onFilterChange($event)" />
+
+  <!-- Estados -->
+  @if (loading()) {
+    <app-loading-spinner mode="page" />
+  } @else if (error()) {
+    <app-error-banner message="No se pudieron cargar los riesgos." [dismissible]="false" />
+  } @else if (risks().length === 0) {
+    <app-empty-state icon="shield" title="Sin riesgos" description="No se encontraron riesgos con los filtros aplicados." />
+  } @else {
+
+    <!-- Tabla -->
+    <div class="risk-table-card">
+      <table class="risk-table">
+        <thead>
+          <tr>
+            <th>Amenaza</th>
+            <th>Agente</th>
+            <th class="text-center">Impacto</th>
+            <th class="text-center">Nivel</th>
+            <th class="text-center">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of risks(); track r.id) {
+            <tr class="risk-table__row" (click)="openDetail(r.id)">
+              <td class="risk-table__threat">{{ r.threatName }}</td>
+              <td class="risk-table__agent">{{ r.agentHostname }}</td>
+              <td class="text-center">
+                <span class="risk-table__score">{{ r.impact }}</span>
+              </td>
+              <td class="text-center">
+                <app-status-badge [status]="levelVariant(r.riskLevel)" [label]="levelMeta[r.riskLevel].label" />
+              </td>
+              <td class="text-center">
+                <app-status-badge [status]="statusVariant(r.status)" [label]="statusMeta[r.status].label" />
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- Paginación -->
+      <footer class="risk-pagination">
+        <span class="risk-pagination__info">
+          Página {{ page + 1 }} de {{ totalPages() }} · {{ totalElements() }} riesgos
+        </span>
+        <div class="risk-pagination__buttons">
+          <button class="btn btn--ghost btn--sm" [disabled]="page === 0" (click)="onPageChange(-1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+            Anterior
+          </button>
+          <button class="btn btn--ghost btn--sm" [disabled]="page >= totalPages() - 1" (click)="onPageChange(1)">
+            Siguiente
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </footer>
+    </div>
+  }
+
+</div>
+
+<!-- Panel de detalle -->
+@if (selectedRiskId(); as riskId) {
+  <div class="risk-detail-overlay">
+    <div class="risk-detail-backdrop" (click)="closeDetail()"></div>
+    <div class="risk-detail-panel">
+      <div class="risk-detail-panel__header">
+        <h2 class="risk-detail-panel__title">Detalle del riesgo</h2>
+        <button class="risk-detail-panel__close" (click)="closeDetail()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" d="M6 18 18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <app-risk-detail-modal
+        [riskId]="riskId"
+        (closed)="closeDetail()"
+        (stateChanged)="onStateChanged()">
+      </app-risk-detail-modal>
+    </div>
+  </div>
+}
+
+<!-- Modal crear riesgo -->
+@if (showCreateModal()) {
+  <app-risk-create-modal
+    (created)="onCreated()"
+    (closed)="closeCreate()">
+  </app-risk-create-modal>
+}
