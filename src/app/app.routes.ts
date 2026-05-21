@@ -111,11 +111,13 @@ export const routes: Routes = [
           },
         ]
       },
-      {
-        path: 'events',
-        loadComponent: () =>
-          import('./features/events/event-list/event-list').then((m) => m.EventList),
-      },
+      // No da tiempo a implementar esto. No me apetece añadir un endpoint que recopile los logs de los distintos componentes del servidor la vdd.
+      // Para una versión futura
+      // {
+      //   path: 'events',
+      //   loadComponent: () =>
+      //     import('./features/events/event-list/event-list').then((m) => m.EventList),
+      // },
       {
         path: 'reports',
         loadComponent: () =>

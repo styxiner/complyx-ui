@@ -60,11 +60,12 @@ export class SidebarComponent {
       roles: ['ADMIN', 'TECNICO'],
       svgPath: 'M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286zm0 13.036h.008v.008H12v-.008z',
     },
-    {
-      label: 'Eventos',
-      route: '/events',
-      svgPath: 'M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z',
-    },
+    // No da tiempo a implementar esto. No me apetece añadir un endpoint que recopile los logs de los distintos componentes del servidor la vdd.
+    // {
+    //   label: 'Eventos',
+    //   route: '/events',
+    //   svgPath: 'M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z',
+    // },
     {
       label: 'Reportes',
       route: '/reports',
