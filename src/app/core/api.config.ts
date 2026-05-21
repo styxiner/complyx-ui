@@ -51,7 +51,8 @@ export const API = {
     base:    `${BASE}/api/regulations`,
     byId:    (id: string) => `${BASE}/api/regulations/${id}`,
     pdf:     (id: string) => `${BASE}/api/regulations/${id}/pdf`,
-    section: (id: string) => `${BASE}/api/regulations/${id}/sections`,
+    section:    (id: string) => `${BASE}/api/regulations/${id}/sections`,
+    uploadPdf: (id: string) => `${BASE}/api/regulations/${id}/pdf`,
   },
   roles: {
     base: `${BASE}/api/roles`,
