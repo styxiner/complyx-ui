@@ -1,63 +1,64 @@
-// src/app/core/api.config.ts
+// Las rutas son relativas — en dev el proxy de ng serve redirige /api → localhost:8080
+// En producción nginx redirige /api → BACKEND_URL (definido en docker-compose)
+const BASE = '';   // sin host ni puerto
 
 export const API = {
-  auth: {
-    login:   '/api/auth/login',
-    refresh: '/api/auth/refresh',
-    logout:  '/api/auth/logout',
-  },
-
-  users: {
-    base:       '/api/users',
-    me:         '/api/users/me',
-    byId:       (id: string) => `/api/users/${id}`,
-    assignRole: (userId: string, roleId: string) => `/api/users/${userId}/roles/${roleId}`,
-    removeRole: (userId: string, roleId: string) => `/api/users/${userId}/roles/${roleId}`,
-  },
-
   agents: {
-    base:            '/api/agents',
-    byId:            (id: string) => `/api/agents/${id}`,
-    enable:          (id: string) => `/api/agents/${id}/enable`,
-    disable:         (id: string) => `/api/agents/${id}/disable`,
-    addToGroup:      (agentId: string, groupId: string) => `/api/agents/${agentId}/groups/${groupId}`,
-    removeFromGroup: (agentId: string, groupId: string) => `/api/agents/${agentId}/groups/${groupId}`,
-    policies:        (agentId: string) => `/api/agents/${agentId}/policies`,
+    base:          `${BASE}/api/agents`,
+    byId:          (id: string)              => `${BASE}/api/agents/${id}`,
+    enable:        (id: string)              => `${BASE}/api/agents/${id}/enable`,
+    disable:       (id: string)              => `${BASE}/api/agents/${id}/disable`,
+    addToGroup:    (aId: string, gId: string)=> `${BASE}/api/agents/${aId}/groups/${gId}`,
+    removeFromGroup:(aId: string, gId: string)=>`${BASE}/api/agents/${aId}/groups/${gId}`,
+    policies:      (id: string)              => `${BASE}/api/policies/agent/${id}`,
+    results:       (aId: string, pId: string)=> `${BASE}/api/agents/${aId}/policies/${pId}/results`,
   },
-
   groups: {
-    base:  '/api/groups',
-    byId:  (id: string) => `/api/groups/${id}`,
+    base:  `${BASE}/api/groups`,
+    byId:  (id: string) => `${BASE}/api/groups/${id}`,
   },
-
   policies: {
-    base:           '/api/policies',
-    byId:           (id: string) => `/api/policies/${id}`,
-    byAgent:        (agentId: string) => `/api/policies/agent/${agentId}`,
-    assignAgent:    (policyId: string, agentId: string) => `/api/policies/${policyId}/agents/${agentId}`,
-    unassignAgent:  (policyId: string, agentId: string) => `/api/policies/${policyId}/agents/${agentId}`,
-    assignGroup:    (policyId: string, groupId: string) => `/api/policies/${policyId}/groups/${groupId}`,
-    unassignGroup:  (policyId: string, groupId: string) => `/api/policies/${policyId}/groups/${groupId}`,
+    base:          `${BASE}/api/policies`,
+    byId:          (id: string)              => `${BASE}/api/policies/${id}`,
+    assignAgent:   (pId: string, aId: string)=> `${BASE}/api/policies/${pId}/agents/${aId}`,
+    unassignAgent: (pId: string, aId: string)=> `${BASE}/api/policies/${pId}/agents/${aId}`,
+    assignGroup:   (pId: string, gId: string)=> `${BASE}/api/policies/${pId}/groups/${gId}`,
+    unassignGroup: (pId: string, gId: string)=> `${BASE}/api/policies/${pId}/groups/${gId}`,
+    byAgent:       (id: string)              => `${BASE}/api/policies/agent/${id}`,
   },
-
   risks: {
-    base:     '/api/risks',
-    byId:     (id: string) => `/api/risks/${id}`,
-    accept:   (id: string) => `/api/risks/${id}/accept`,
-    transfer: (id: string) => `/api/risks/${id}/transfer`,
-    close:    (id: string) => `/api/risks/${id}/close`,
+    base:         `${BASE}/api/risks`,
+    byId:         (id: string)              => `${BASE}/api/risks/${id}`,
+    accept:       (id: string)              => `${BASE}/api/risks/${id}/accept`,
+    transfer:     (id: string)              => `${BASE}/api/risks/${id}/transfer`,
+    monitor:      (id: string)              => `${BASE}/api/risks/${id}/monitor`,
+    close:        (id: string)              => `${BASE}/api/risks/${id}/close`,
+    linkPolicy:   (rId: string, pId: string)=> `${BASE}/api/risks/${rId}/policies/${pId}`,
+    unlinkPolicy: (rId: string, pId: string)=> `${BASE}/api/risks/${rId}/policies/${pId}`,
   },
-
+  threats: {
+    base: `${BASE}/api/threats`,
+    byId: (id: string) => `${BASE}/api/threats/${id}`,
+  },
+  users: {
+    base:        `${BASE}/api/users`,
+    byId:        (id: string)              => `${BASE}/api/users/${id}`,
+    assignRole:  (uId: string, rId: string)=> `${BASE}/api/users/${uId}/roles/${rId}`,
+    removeRole:  (uId: string, rId: string)=> `${BASE}/api/users/${uId}/roles/${rId}`,
+    me:          `${BASE}/api/users/me`,
+  },
   regulations: {
-    base:       '/api/regulations',
-    byId:       (id: string) => `/api/regulations/${id}`,
-    uploadPdf:  (id: string) => `/api/regulations/${id}/pdf`,
-    addSection: (id: string) => `/api/regulations/${id}/sections`,
-    pdf:        (id: string) => `/api/regulations/${id}/pdf`,
+    base:    `${BASE}/api/regulations`,
+    byId:    (id: string) => `${BASE}/api/regulations/${id}`,
+    pdf:     (id: string) => `${BASE}/api/regulations/${id}/pdf`,
+    section: (id: string) => `${BASE}/api/regulations/${id}/sections`,
   },
-
-  events: {
-    base: '/api/events',
-    byId: (id: string) => `/api/events/${id}`,
+  roles: {
+    base: `${BASE}/api/roles`,
   },
-} as const;
+  auth: {
+    login:   `${BASE}/api/auth/login`,
+    refresh: `${BASE}/api/auth/refresh`,
+    logout:  `${BASE}/api/auth/logout`,
+  },
+};
