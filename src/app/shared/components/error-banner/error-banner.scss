@@ -1,0 +1,51 @@
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+  color: #fca5a5;
+  font-size: 0.85rem;
+
+  &__icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    color: #f87171;
+  }
+
+  &__msg {
+    flex: 1;
+    line-height: 1.4;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  &__btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.15s;
+
+    &--retry {
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      &:hover { background: rgba(239, 68, 68, 0.12); }
+    }
+
+    &--close {
+      color: #94a3b8;
+      &:hover { background: rgba(255,255,255,0.06); color: #cbd5e1; }
+    }
+  }
+}

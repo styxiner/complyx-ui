@@ -1,1 +1,55 @@
-<p>profile works!</p>
+<div class="profile-layout">
+  <!-- Estado de Carga -->
+  @if (loading()) {
+    <div class="loading-state">
+      <p>Cargando perfil...</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="error-banner">
+      {{ error() }}
+      <button (click)="loadProfile()">Reintentar</button>
+    </div>
+  }
+
+  <!-- Perfil -->
+  @if (user(); as u) {
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="avatar">
+          {{ u.username.charAt(0).toUpperCase() }}
+        </div>
+        <div class="info">
+          <h1>{{ u.username }}</h1>
+          
+          <!--
+               Usamos [status] que es el @Input de tu componente.
+          -->
+          <app-status-badge [status]="'active'" [label]="'Usuario Activo'"></app-status-badge>
+        </div>
+      </div>
+
+      <div class="profile-body">
+        <div class="field">
+          <span class="label">Email</span>
+          <span class="value">{{ u.email }}</span>
+        </div>
+
+        <div class="field">
+          <span class="label">Roles</span>
+          <div class="tags">
+            <!-- 
+              Si 'roles' es un array de strings en tu UserDTO, usamos 'track role'.
+              Si son objetos, usa 'track role.id'
+            -->
+            @for (role of u.roles; track role) {
+              <span class="tag">{{ role }}</span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,1 +1,24 @@
-<p>filter-dropdown works!</p>
+<div class="filter-dropdown" [class.filter-dropdown--active]="selected !== null">
+  <button class="filter-dropdown__trigger" (click)="open = !open" type="button">
+    <span>{{ selectedLabel }}</span>
+    <svg class="filter-dropdown__chevron" [class.filter-dropdown__chevron--up]="open"
+         width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="m6 9 6 6 6-6"/>
+    </svg>
+  </button>
+
+  @if (open) {
+    <ul class="filter-dropdown__menu" role="listbox">
+      <li class="filter-dropdown__item" [class.filter-dropdown__item--selected]="selected === null"
+          (click)="select(null)" role="option">
+        Todos
+      </li>
+      @for (opt of options; track opt.value) {
+        <li class="filter-dropdown__item" [class.filter-dropdown__item--selected]="selected === opt.value"
+            (click)="select(opt.value)" role="option">
+          {{ opt.label }}
+        </li>
+      }
+    </ul>
+  }
+</div>

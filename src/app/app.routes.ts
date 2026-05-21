@@ -1,19 +1,141 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/auth/auth-guard';
+import { roleGuard } from './core/auth/role-guard';
+import { AuthLayout } from './layout/auth-layout/auth-layout';
+import { MainLayoutComponent } from './layout/main-layout/main-layout';
 
-export const routes: Routes = [];
+export const routes: Routes = [
 
+  // ── Rutas públicas (sin sidebar) ─────────────────────────────────────────
+  {
+    path: '',
+    component: AuthLayout,
+    children: [
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./features/auth/login/login').then((m) => m.Login),
+      },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+    ],
+  },
 
-// export const routes: Routes = [
-//   { path: 'login', component: AuthLayoutComponent,
-//     children: [{ path: '', loadComponent: () => import('./features/auth/login/login.component') }]
-//   },
-//   { path: '', component: MainLayoutComponent, canActivate: [authGuard],
-//     children: [
-//       { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard/dashboard.component') },
-//       { path: 'agents',    canActivate: [roleGuard('TECNICO')], loadComponent: ... },
-//       { path: 'users',     canActivate: [roleGuard('ADMIN')],   loadComponent: ... },
-//       // ...
-//     ]
-//   },
-//   { path: '**', redirectTo: 'dashboard' }
-// ];
+  // ── Rutas protegidas (con sidebar) ────────────────────────────────────────
+  {
+    path: '',
+    component: MainLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'dashboard',
+        canActivate: [roleGuard('ADMIN', 'TECNICO')],
+        loadComponent: () =>
+          import('./features/dashboard/dashboard/dashboard').then((m) => m.Dashboard),
+      },
+      {
+        path: 'agents',
+        canActivate: [roleGuard('ADMIN', 'TECNICO')],
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/agents/agent-list/agent-list').then((m) => m.AgentList),
+          },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./features/agents/agent-detail-modal/agent-detail-modal').then((m) => m.AgentDetailModal),
+          },
+          {
+            path: ':id/policies/:policyId/results',
+            loadComponent: () =>
+              import('./features/agents/policy-compliance/policy-compliance').then((m) => m.PolicyCompliance),
+          }
+        ],
+      },
+      {
+        path: 'policies',
+        canActivate: [roleGuard('ADMIN', 'TECNICO')],
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/policies/policy-list/policy-list').then((m) => m.PolicyList),
+          },
+          {
+            path: 'new',
+            loadComponent: () =>
+              import('./features/policies/policy-form/policy-form').then((m) => m.PolicyForm),
+          }
+        ]
+      },
+      {
+        path: 'risks',
+        canActivate: [roleGuard('ADMIN', 'TECNICO')],
+        loadComponent: () =>
+          import('./features/risks/risk-matrix/risk-matrix').then((m) => m.RiskMatrix),
+      },
+      {
+        path: 'threats',
+        canActivate: [roleGuard('ADMIN', 'TECNICO')],
+        loadComponent: () =>
+          import('./features/threats/threat-list/threat-list').then((m) => m.ThreatList),
+      },
+      {
+        path: 'regulations',
+        canActivate: [roleGuard('ADMIN', 'TECNICO')],
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/regulations/regulation-list/regulation-list').then((m) => m.RegulationList),
+          },
+          {
+            path: 'new',
+            canActivate: [roleGuard('ADMIN', 'TECNICO')],
+            loadComponent: () =>
+              import('./features/regulations/regulation-form/regulation-form').then((m) => m.RegulationForm),
+          },
+          {
+            path: 'edit/:id',
+            canActivate: [roleGuard('ADMIN', 'TECNICO')],
+            loadComponent: () =>
+              import('./features/regulations/regulation-form/regulation-form').then((m) => m.RegulationForm),
+          },
+          {
+            path: 'edit/:id/builder',
+            canActivate: [roleGuard('ADMIN', 'TECNICO')],
+            loadComponent: () =>
+              import('./features/regulations/policy-builder/policy-builder')
+                .then((m) => m.PolicyBuilder),
+          },
+        ]
+      },
+      // No da tiempo a implementar esto. No me apetece añadir un endpoint que recopile los logs de los distintos componentes del servidor la vdd.
+      // Para una versión futura
+      // {
+      //   path: 'events',
+      //   loadComponent: () =>
+      //     import('./features/events/event-list/event-list').then((m) => m.EventList),
+      // },
+      {
+        path: 'reports',
+        loadComponent: () =>
+          import('./features/reports/report-builder/report-builder').then((m) => m.ReportBuilder),
+      },
+      {
+        path: 'users',
+        canActivate: [roleGuard('ADMIN')],
+        loadComponent: () =>
+          import('./features/users/user-list/user-list').then((m) => m.UserList),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/profile/profile').then((m) => m.Profile),
+      },
+    ],
+  },
+
+  { path: '**', redirectTo: 'dashboard' },
+];

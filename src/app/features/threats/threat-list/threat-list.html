@@ -1,0 +1,133 @@
+<div class="threat-list">
+
+  <!-- Cabecera -->
+  <div class="threat-list__header">
+    <div>
+      <h1 class="threat-list__title">Amenazas</h1>
+      <p class="threat-list__subtitle">Catálogo de amenazas para modelado de riesgos</p>
+    </div>
+    @if (mode() === 'list') {
+      <button class="btn btn--primary" (click)="openCreate()">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5z"/></svg>
+        Nueva amenaza
+      </button>
+    }
+  </div>
+
+  <!-- Formulario crear/editar -->
+  @if (mode() === 'create' || mode() === 'edit') {
+    <div class="threat-form">
+      <h2 class="threat-form__title">{{ mode() === 'create' ? 'Nueva amenaza' : 'Editar amenaza' }}</h2>
+
+      <div class="threat-form__grid">
+        <div class="form-field">
+          <label class="form-field__label">Nombre *</label>
+          <input class="form-field__input" type="text" placeholder="Nombre de la amenaza"
+                 [(ngModel)]="formName" [disabled]="mode() === 'edit'" />
+        </div>
+        <div class="form-field">
+          <label class="form-field__label">Categoría *</label>
+          <input class="form-field__input" type="text" placeholder="Ej: Malware, Phishing…"
+                 [(ngModel)]="formCategory" />
+        </div>
+        <div class="form-field">
+          <label class="form-field__label">Descripción</label>
+          <input class="form-field__input" type="text" placeholder="Descripción opcional"
+                 [(ngModel)]="formDescription" />
+        </div>
+        <div class="form-field">
+          <label class="form-field__label">
+            Severidad score (0–10)
+            <span class="form-field__value" [class]="scoreColor(formSeverityScore)">{{ formSeverityScore }}</span>
+          </label>
+          <input type="range" min="0.1" max="10" step="0.1"
+                 [(ngModel)]="formSeverityScore" class="rc-range" />
+          <div class="rc-range-labels"><span>Mínima</span><span>Máxima</span></div>
+        </div>
+      </div>
+
+      @if (formError()) {
+        <app-error-banner [message]="formError()" [dismissible]="false" />
+      }
+
+      <div class="threat-form__actions">
+        <button class="btn btn--ghost" (click)="cancelForm()">Cancelar</button>
+        <button class="btn btn--primary" [disabled]="!isValid || formSaving()" (click)="submitForm()">
+          @if (formSaving()) { <span class="btn-spinner"></span> Guardando… }
+          @else { {{ mode() === 'create' ? 'Crear amenaza' : 'Guardar cambios' }} }
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Lista -->
+  @if (mode() === 'list') {
+    @if (loading()) {
+      <app-loading-spinner mode="page" />
+    } @else if (error()) {
+      <app-error-banner message="No se pudieron cargar las amenazas." [dismissible]="false" />
+    } @else if (threats().length === 0) {
+      <app-empty-state icon="shield" title="Sin amenazas" description="El catálogo de amenazas está vacío. Crea la primera." />
+    } @else {
+      <div class="threat-table-card">
+        <table class="threat-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th class="text-center">Severidad</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of threats(); track t.id) {
+              <tr class="threat-table__row">
+                <td class="threat-table__name">{{ t.name }}</td>
+                <td class="threat-table__category">{{ t.category }}</td>
+                <td class="text-center">
+                  <span class="score-badge" [class]="scoreColor(t.severityScore)">{{ t.severityScore }}</span>
+                </td>
+                <td class="text-center" (click)="$event.stopPropagation()">
+                  <div class="threat-table__actions">
+                    <button class="action-btn" title="Editar" (click)="openEdit(t)">
+                      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2.695 14.763l-1.262 3.154a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.885L17.5 5.5a2.121 2.121 0 0 0-3-3L3.58 13.42a4 4 0 0 0-.885 1.343z"/></svg>
+                    </button>
+                    <button class="action-btn action-btn--danger" title="Eliminar" (click)="requestDelete(t)">
+                      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 0 0-.894.553L7.382 4H4a1 1 0 0 0 0 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6a1 1 0 1 0 0-2h-3.382l-.724-1.447A1 1 0 0 0 11 2H9z" clip-rule="evenodd"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <footer class="threat-pagination">
+          <span class="threat-pagination__info">Página {{ page + 1 }} de {{ totalPages() }} · {{ totalElements() }} amenazas</span>
+          <div class="threat-pagination__buttons">
+            <button class="btn btn--ghost btn--sm" [disabled]="page === 0" (click)="onPageChange(-1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              Anterior
+            </button>
+            <button class="btn btn--ghost btn--sm" [disabled]="page >= totalPages() - 1" (click)="onPageChange(1)">
+              Siguiente
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </div>
+        </footer>
+      </div>
+    }
+  }
+</div>
+
+<!-- Confirm eliminar -->
+@if (showDeleteConfirm()) {
+  <app-confirm-dialog
+    title="Eliminar amenaza"
+    [message]="'¿Eliminar &quot;' + threatToDelete()!.name + '&quot;? Si tiene riesgos asociados la operación fallará.'"
+    confirmLabel="Eliminar"
+    [danger]="true"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()">
+  </app-confirm-dialog>
+}

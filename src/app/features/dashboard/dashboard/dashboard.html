@@ -1,1 +1,25 @@
-<p>dashboard works!</p>
+<div class="dashboard">
+
+  <!-- Cabecera -->
+  <div class="dashboard__header">
+    <h1 class="dashboard__title">Dashboard</h1>
+    <p class="dashboard__subtitle">Resumen del estado del sistema</p>
+  </div>
+
+  <!-- KPI cards -->
+  <div class="dashboard__kpis">
+    <app-agents-card />
+    <app-policies-card />
+    <app-risks-card />
+    <app-compliance-card />
+  </div>
+
+  <!-- Charts row -->
+  <div class="dashboard__charts">
+    <app-agent-status-chart />
+    <app-risk-distribution-chart />
+    <app-compliance-chart />
+    <app-risk-evolution-chart />
+  </div>
+
+</div>

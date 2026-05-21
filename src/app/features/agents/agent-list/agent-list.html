@@ -1,1 +1,87 @@
-<p>agent-list works!</p>
+<div class="agent-list">
+
+  <!-- Cabecera ---------------------------------------------------------------->
+  <div class="agent-list__header">
+    <div class="agent-list__title-block">
+      <h1 class="agent-list__title">Agentes</h1>
+      @if (!loading() && !error()) {
+        <span class="agent-list__count">{{ totalElements }} registrados</span>
+      }
+    </div>
+  </div>
+
+  <!-- Barra de filtros -------------------------------------------------------->
+  <app-agent-filter-bar (filterChange)="onFilterChange($event)" />
+
+  <!-- Estado de carga --------------------------------------------------------->
+  @if (loading()) {
+    <app-loading-spinner mode="page" />
+  }
+
+  <!-- Error -------------------------------------------------------------------->
+  @else if (error()) {
+    <app-error-banner
+      message="No se pudieron cargar los agentes. Comprueba tu conexión o inténtalo de nuevo."
+      [dismissible]="false">
+    </app-error-banner>
+  }
+
+  <!-- Sin resultados ----------------------------------------------------------->
+  @else if (agents.length === 0) {
+    <app-empty-state
+      icon="server"
+      title="No hay agentes"
+      description="No se encontraron agentes con los filtros seleccionados.">
+    </app-empty-state>
+  }
+
+  <!-- Tabla -------------------------------------------------------------------->
+  @else {
+    <app-data-table
+      [rows]="agents"
+      [total]="totalElements"
+      [page]="page + 1"
+      [pageSize]="pageSize"
+      (rowClick)="openDetail($event)"
+      (pageChange)="onPageChange($event)">
+
+      <ng-template appColumn="hostname" header="Hostname" [sortable]="true" let-row>
+        <span class="agent-list__hostname">
+          <svg viewBox="0 0 20 20" fill="currentColor" class="agent-list__hostname-icon">
+            <path fill-rule="evenodd" d="M2 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5zm14 1H4v6h12V6zM6 14v1h8v-1H6z" clip-rule="evenodd"/>
+          </svg>
+          {{ row.hostname }}
+        </span>
+      </ng-template>
+
+      <ng-template appColumn="ip" header="IP" let-row>
+        <span class="agent-list__mono">{{ row.ip }}</span>
+      </ng-template>
+
+      <ng-template appColumn="osName" header="SO" let-row>
+        <span class="agent-list__os">
+          <span class="agent-list__os-name">{{ row.osName }}</span>
+          @if (row.osVersion) {
+            <span class="agent-list__os-version">{{ row.osVersion }}</span>
+          }
+        </span>
+      </ng-template>
+
+      <ng-template appColumn="agentVersion" header="Versión" let-row>
+        <span class="agent-list__mono">{{ row.agentVersion ?? '—' }}</span>
+      </ng-template>
+
+      <ng-template appColumn="lastSeen" header="Última conexión" let-row>
+        <span class="agent-list__date">
+          {{ row.lastSeen ? (row.lastSeen | date:'dd/MM/yy HH:mm') : '—' }}
+        </span>
+      </ng-template>
+
+      <ng-template appColumn="enabled" header="Estado" let-row>
+        <app-status-badge [status]="enabledStatus(row.enabled)" />
+      </ng-template>
+
+    </app-data-table>
+  }
+
+</div>

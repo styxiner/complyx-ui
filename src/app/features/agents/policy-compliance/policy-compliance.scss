@@ -1,0 +1,246 @@
+$bg-card:    #0f172a;
+$bg-row:     #111827;
+$bg-hover:   #1e293b;
+$border:     rgba(255,255,255,0.06);
+$border-mid: rgba(255,255,255,0.10);
+$text-hi:    #38bdf8;
+$text-mid:   #94a3b8;
+$text-dim:   #475569;
+$accent:     #38bdf8;
+
+$pass-color:    #4ade80; $pass-bg:    rgba(74,222,128,.10); $pass-border:    rgba(74,222,128,.25);
+$fail-color:    #f87171; $fail-bg:    rgba(239,68,68,.10);  $fail-border:    rgba(239,68,68,.25);
+$pending-color: #94a3b8; $pending-bg: rgba(148,163,184,.08); $pending-border: rgba(148,163,184,.2);
+$warn-color:    #facc15; $warn-bg:    rgba(250,204,21,.10);
+
+:host { display: block; }
+
+.pc {
+  padding: 1.75rem 2rem;
+  max-width: 900px;
+
+  &__error {
+    display: flex; flex-direction: column; gap: 1rem; align-items: flex-start;
+  }
+
+  // ── Topbar ────────────────────────────────────────────────────────────────
+  &__topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;
+  }
+
+  &__breadcrumb {
+    display: flex; align-items: center; gap: 0.4rem; font-size: 0.83rem;
+  }
+
+  &__back {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    background: none; border: none; color: $accent;
+    font-size: 0.83rem; font-weight: 500; cursor: pointer; padding: 0;
+    svg { width: 13px; height: 13px; }
+    &:hover { opacity: 0.7; }
+  }
+
+  &__sep     { color: $text-dim; }
+  &__current { color: $text-hi; font-weight: 500; }
+
+  // ── Cabecera ──────────────────────────────────────────────────────────────
+  &__header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; flex-wrap: wrap; gap: 1.25rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid $border;
+  }
+
+  &__title-block {
+    display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;
+  }
+
+  &__title {
+    font-size: 1.3rem; font-weight: 700; color: $text-hi; margin: 0;
+  }
+
+  &__version {
+    font-size: 0.75rem; color: $text-dim;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  // ── Score card ────────────────────────────────────────────────────────────
+  &__score-card {
+    display: flex; flex-direction: column; align-items: flex-end;
+    gap: 0.1rem; padding: 0.75rem 1.1rem;
+    border-radius: 10px; border: 1px solid $border;
+    background: $bg-row; min-width: 160px;
+    text-align: right;
+
+    &.score--pass { border-color: $pass-border; background: $pass-bg; }
+    &.score--warn { border-color: rgba(250,204,21,.25); background: $warn-bg; }
+    &.score--fail { border-color: $fail-border; background: $fail-bg; }
+  }
+
+  &__score-value {
+    font-size: 2rem; font-weight: 800; line-height: 1;
+    .score--pass & { color: $pass-color; }
+    .score--warn & { color: $warn-color; }
+    .score--fail & { color: $fail-color; }
+  }
+
+  &__score-label {
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: $text-dim;
+  }
+
+  &__score-sub { font-size: 0.75rem; color: $text-mid; }
+
+  // ── Barra de progreso ─────────────────────────────────────────────────────
+  &__progress-bar {
+    height: 4px; border-radius: 2px; background: $border-mid;
+    margin-bottom: 1.75rem; overflow: hidden;
+  }
+
+  &__progress-fill {
+    height: 100%; border-radius: 2px; transition: width 0.4s ease;
+    &.score--pass { background: $pass-color; }
+    &.score--warn { background: $warn-color; }
+    &.score--fail { background: $fail-color; }
+  }
+
+  // ── Elementos ─────────────────────────────────────────────────────────────
+  &__elements { display: flex; flex-direction: column; gap: 0.5rem; }
+}
+
+// ── Elemento ──────────────────────────────────────────────────────────────────
+.pc-element {
+  border: 1px solid $border;
+  border-radius: 10px;
+  background: $bg-card;
+  overflow: hidden;
+
+  &__header {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; padding: 0.85rem 1rem;
+    background: none; border: none; cursor: pointer;
+    text-align: left; transition: background 0.12s;
+    &:hover { background: $bg-hover; }
+  }
+
+  &__left { display: flex; align-items: center; gap: 0.5rem; }
+
+  &__chevron {
+    width: 16px; height: 16px; color: $text-dim; flex-shrink: 0;
+    transition: transform 0.2s;
+    &--open { transform: rotate(0deg); }
+    &:not(&--open) { transform: rotate(-90deg); }
+  }
+
+  &__name { font-size: 0.9rem; font-weight: 600; color: $text-hi; }
+
+  &__right { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+
+  &__pill {
+    font-size: 0.68rem; font-weight: 600; padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    &--pass    { color: $pass-color;    background: $pass-bg;    }
+    &--fail    { color: $fail-color;    background: $fail-bg;    }
+    &--pending { color: $pending-color; background: $pending-bg; }
+  }
+
+  &__score {
+    font-size: 0.85rem; font-weight: 700;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    min-width: 48px; text-align: right;
+    &.score--pass { color: $pass-color; }
+    &.score--warn { color: $warn-color; }
+    &.score--fail { color: $fail-color; }
+  }
+}
+
+// ── Lista de checks ───────────────────────────────────────────────────────────
+.pc-checks {
+  border-top: 1px solid $border;
+  display: flex; flex-direction: column;
+}
+
+.pc-check {
+  padding: 0.85rem 1rem 0.85rem 1.25rem;
+  border-bottom: 1px solid $border;
+  border-left: 3px solid transparent;
+  transition: background 0.12s;
+
+  &:last-child { border-bottom: none; }
+
+  &--pass    { border-left-color: $pass-color;    background: rgba(74,222,128,.03); }
+  &--fail    { border-left-color: $fail-color;    background: rgba(239,68,68,.04); }
+  &--pending { border-left-color: $pending-color; }
+
+  &__header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 0.75rem; margin-bottom: 0.3rem;
+  }
+
+  &__left { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+
+  &__icon {
+    width: 16px; height: 16px; flex-shrink: 0;
+    &--pass    { color: $pass-color; }
+    &--fail    { color: $fail-color; }
+    &--pending { color: $pending-color; }
+  }
+
+  &__name {
+    font-size: 0.875rem; font-weight: 500; color: $text-hi;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  &__rationale {
+    font-size: 0.78rem; color: $text-dim; margin: 0.25rem 0 0 1.5rem;
+    font-style: italic;
+  }
+
+  &__result {
+    margin-top: 0.6rem; margin-left: 1.5rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+
+  &__detail { display: flex; flex-direction: column; gap: 0.2rem; }
+
+  &__values {
+    display: flex; flex-wrap: wrap; gap: 0.75rem;
+  }
+
+  &__value-item { display: flex; flex-direction: column; gap: 0.2rem; }
+
+  &__result-label {
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.07em;
+    color: $text-dim; font-weight: 600;
+  }
+
+  &__code {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.78rem; color: $text-mid;
+    background: rgba(255,255,255,.04); border: 1px solid $border;
+    border-radius: 4px; padding: 0.2rem 0.5rem;
+    word-break: break-all;
+  }
+
+  &__time {
+    font-size: 0.7rem; color: $text-dim;
+  }
+}
+
+// ── Botones ───────────────────────────────────────────────────────────────────
+.btn {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px; border: 1px solid transparent;
+  font-size: 0.825rem; font-weight: 500; cursor: pointer;
+  transition: background 0.14s, border-color 0.14s, color 0.14s;
+  svg { width: 14px; height: 14px; }
+
+  &--sm { padding: 0.3rem 0.65rem; font-size: 0.78rem; }
+
+  &--ghost {
+    background: rgba(255,255,255,.04); border-color: $border-mid; color: $text-mid;
+    &:hover { background: $bg-hover; color: $text-hi; }
+  }
+}

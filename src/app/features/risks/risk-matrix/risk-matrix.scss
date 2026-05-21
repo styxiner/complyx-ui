@@ -1,0 +1,215 @@
+$bg-card:    #0f172a;
+$bg-row:     #111827;
+$bg-hover:   #1e293b;
+$border:     rgba(255,255,255,0.06);
+$border-mid: rgba(255,255,255,0.10);
+$text-hi:    #111827;
+$text-mid:   #94a3b8;
+$text-dim:   #475569;
+$accent:     #38bdf8;
+
+:host { display: block; }
+
+.risk-matrix {
+  padding: 1.75rem 2rem;
+  max-width: 1100px;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  &__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: $text-hi;
+    margin: 0 0 0.25rem;
+  }
+
+  &__subtitle {
+    font-size: 0.83rem;
+    color: $text-dim;
+    margin: 0;
+  }
+}
+
+// ── KPI cards ─────────────────────────────────────────────────────────────────
+.risk-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.risk-kpi {
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid $border;
+  background: $bg-row;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  &__value { font-size: 1.75rem; font-weight: 700; line-height: 1; }
+  &__label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: $text-dim; }
+
+  &--critical { border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.06); .risk-kpi__value { color: #f87171; } }
+  &--high     { border-color: rgba(251,146,60,.25); background: rgba(251,146,60,.06); .risk-kpi__value { color: #fb923c; } }
+  &--medium   { border-color: rgba(250,204,21,.25); background: rgba(250,204,21,.06); .risk-kpi__value { color: #facc15; } }
+  &--low      { border-color: rgba(74,222,128,.25); background: rgba(74,222,128,.06); .risk-kpi__value { color: #4ade80; } }
+}
+
+// ── Tabla ─────────────────────────────────────────────────────────────────────
+.risk-table-card {
+  background: $bg-card;
+  border: 1px solid $border;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.risk-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead tr { border-bottom: 1px solid $border; }
+
+  th {
+    padding: 0.7rem 1rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: $text-dim;
+    font-weight: 600;
+    text-align: left;
+
+    &.text-center { text-align: center; }
+  }
+
+  &__row {
+    border-bottom: 1px solid $border;
+    cursor: pointer;
+    transition: background 0.12s;
+
+    &:hover { background: $bg-hover; }
+    &:last-child { border-bottom: none; }
+
+    td {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      color: $text-hi;
+      vertical-align: middle;
+
+      &.text-center { text-align: center; }
+    }
+  }
+
+  &__threat { font-weight: 500; }
+  &__agent  { color: $text-mid; font-size: 0.82rem; }
+  &__score  { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.82rem; }
+}
+
+// ── Paginación ────────────────────────────────────────────────────────────────
+.risk-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid $border;
+
+  &__info    { font-size: 0.8rem; color: $text-dim; }
+  &__buttons { display: flex; gap: 0.5rem; }
+}
+
+// ── Panel lateral de detalle ──────────────────────────────────────────────────
+.risk-detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.risk-detail-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+}
+
+.risk-detail-panel {
+  position: relative;
+  z-index: 1;
+  width: min(520px, 100vw);
+  height: 100%;
+  background: $bg-card;
+  border-left: 1px solid $border-mid;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideIn 0.2s ease;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.25rem;
+    border-bottom: 1px solid $border;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $text-hi;
+    margin: 0;
+  }
+
+  &__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: none;
+    border: 1px solid $border;
+    color: $text-dim;
+    cursor: pointer;
+    transition: background 0.14s, color 0.14s;
+
+    svg { width: 14px; height: 14px; }
+    &:hover { background: $bg-hover; color: $text-hi; }
+  }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+// ── Botones globales ──────────────────────────────────────────────────────────
+.btn {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px; border: 1px solid transparent;
+  font-size: 0.825rem; font-weight: 500;
+  cursor: pointer; text-decoration: none;
+  transition: background 0.14s, border-color 0.14s, color 0.14s, opacity 0.14s;
+  svg { width: 14px; height: 14px; }
+  &[disabled] { opacity: 0.45; cursor: not-allowed; }
+
+  &--sm  { padding: 0.3rem 0.65rem;  font-size: 0.78rem; }
+  &--xs  { padding: 0.2rem 0.5rem;   font-size: 0.75rem; }
+
+  &--primary {
+    background: $accent; border-color: $accent; color: #0f172a; font-weight: 600;
+    &:hover:not([disabled]) { background: #7dd3fc; border-color: #7dd3fc; }
+  }
+  &--ghost {
+    background: rgba(255,255,255,.04); border-color: $border-mid; color: $text-mid;
+    &:hover:not([disabled]) { background: $bg-hover; color: $text-hi; }
+  }
+}
